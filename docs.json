@@ -26,94 +26,174 @@
         "pages": [
           "how-it-works/content-engine",
           "how-it-works/how-the-ai-works",
-          "how-it-works/quality-safety",
-          "how-it-works/ai-models-and-pipeline"
+          "how-it-works/ai-models-and-pipeline",
+          "how-it-works/quality-safety"
         ]
       },
       {
         "group": "Content SEO",
         "pages": [
-          "content-seo/overview",
-          "content-seo/business-setup",
-          "content-seo/content-plans",
-          "content-seo/blog-generation",
-          "content-seo/publishing",
-          "content-seo/preferences",
-          "content-seo/connect-platforms",
-          "content-seo/ai-error-recovery",
-          "content-seo/automated-generation",
-          "content-seo/blog-status-lifecycle",
-          "content-seo/blog-types",
-          "content-seo/competitors-audiences",
-          "content-seo/compliance-profiles",
-          "content-seo/content-safety-guardrails",
-          "content-seo/draft-approval-workflow",
-          "content-seo/generate-more-bonus-blogs",
-          "content-seo/image-generation",
-          "content-seo/internal-linking",
-          "content-seo/keyword-strategy-rotation",
-          "content-seo/promotions-calendar",
-          "content-seo/publishing-errors",
-          "content-seo/publishing-modes",
-          "content-seo/quota-and-limits",
-          "content-seo/regenerating-content",
-          "content-seo/scheduling-missed-posts",
-          "content-seo/seo-scoring",
-          "content-seo/sources-brand-voice",
-          "content-seo/user-direction",
-          "content-seo/word-count-targets"
+          {
+            "group": "Set up",
+            "pages": [
+              "content-seo/overview",
+              "content-seo/business-setup",
+              "content-seo/sources-brand-voice",
+              "content-seo/competitors-audiences",
+              "content-seo/preferences",
+              "content-seo/compliance-profiles"
+            ]
+          },
+          {
+            "group": "Plan what to write",
+            "pages": [
+              "content-seo/content-plans",
+              "content-seo/keyword-strategy-rotation",
+              "content-seo/promotions-calendar",
+              "content-seo/blog-types",
+              "content-seo/word-count-targets"
+            ]
+          },
+          {
+            "group": "Generate",
+            "pages": [
+              "content-seo/blog-generation",
+              "content-seo/image-generation",
+              "content-seo/internal-linking",
+              "content-seo/seo-scoring",
+              "content-seo/content-safety-guardrails",
+              "content-seo/user-direction",
+              "content-seo/regenerating-content",
+              "content-seo/generate-more-bonus-blogs"
+            ]
+          },
+          {
+            "group": "Automate & schedule",
+            "pages": [
+              "content-seo/automated-generation",
+              "content-seo/scheduling-missed-posts",
+              "content-seo/blog-status-lifecycle"
+            ]
+          },
+          {
+            "group": "Review & publish",
+            "pages": [
+              "content-seo/publishing-modes",
+              "content-seo/draft-approval-workflow",
+              "content-seo/connect-platforms",
+              "content-seo/publishing"
+            ]
+          },
+          {
+            "group": "Troubleshooting & limits",
+            "pages": [
+              "content-seo/publishing-errors",
+              "content-seo/ai-error-recovery",
+              "content-seo/quota-and-limits"
+            ]
+          }
         ]
       },
       {
         "group": "Local SEO",
         "pages": [
-          "local-seo/overview",
-          "local-seo/google-business-profile",
-          "local-seo/reviews",
-          "local-seo/advertising-compliance",
-          "local-seo/content-plan-management",
-          "local-seo/data-sync",
-          "local-seo/error-handling-sync-failures",
-          "local-seo/gbp-posts-calendar",
-          "local-seo/industry-presets-brand-intake",
-          "local-seo/keywords-local-rankings",
-          "local-seo/local-seo-shared-access",
-          "local-seo/locations-business-details",
-          "local-seo/onboarding-business-setup",
-          "local-seo/subscription-trials-limits"
+          {
+            "group": "Set up",
+            "pages": [
+              "local-seo/overview",
+              "local-seo/onboarding-business-setup",
+              "local-seo/locations-business-details",
+              "local-seo/industry-presets-brand-intake"
+            ]
+          },
+          {
+            "group": "Google Business Profile",
+            "pages": [
+              "local-seo/google-business-profile",
+              "local-seo/data-sync",
+              "local-seo/gbp-posts-calendar",
+              "local-seo/content-plan-management"
+            ]
+          },
+          {
+            "group": "Reviews & rankings",
+            "pages": [
+              "local-seo/reviews",
+              "local-seo/keywords-local-rankings"
+            ]
+          },
+          {
+            "group": "Compliance & access",
+            "pages": [
+              "local-seo/advertising-compliance",
+              "local-seo/local-seo-shared-access"
+            ]
+          },
+          {
+            "group": "Troubleshooting & limits",
+            "pages": [
+              "local-seo/error-handling-sync-failures",
+              "local-seo/subscription-trials-limits"
+            ]
+          }
         ]
       },
       {
         "group": "Social Media",
         "pages": [
-          "social-media/overview",
-          "social-media/connecting-platforms",
-          "social-media/brand-style",
-          "social-media/content-scheduling",
-          "social-media/approval-review-workflow",
-          "social-media/connection-management-sync",
-          "social-media/content-plans-generation",
-          "social-media/content-preferences-pillars",
-          "social-media/platform-character-limits",
-          "social-media/post-customization",
-          "social-media/post-deletion",
-          "social-media/post-quota-limits",
-          "social-media/post-states-failures",
-          "social-media/publishing-scheduling",
-          "social-media/repurpose-from-blog",
-          "social-media/website-extraction-assets"
+          {
+            "group": "Set up",
+            "pages": [
+              "social-media/overview",
+              "social-media/connecting-platforms",
+              "social-media/website-extraction-assets",
+              "social-media/brand-style"
+            ]
+          },
+          {
+            "group": "Plan content",
+            "pages": [
+              "social-media/content-preferences-pillars",
+              "social-media/content-plans-generation",
+              "social-media/content-scheduling"
+            ]
+          },
+          {
+            "group": "Create posts",
+            "pages": [
+              "social-media/post-customization",
+              "social-media/repurpose-from-blog",
+              "social-media/platform-character-limits"
+            ]
+          },
+          {
+            "group": "Review & publish",
+            "pages": [
+              "social-media/approval-review-workflow",
+              "social-media/publishing-scheduling",
+              "social-media/post-deletion"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "social-media/post-states-failures",
+              "social-media/connection-management-sync",
+              "social-media/post-quota-limits"
+            ]
+          }
         ]
       },
       {
         "group": "Account",
         "pages": [
-          "account/workspace-team",
-          "account/billing",
-          "account/addons-managed-services",
-          "account/payments-invoices",
           "account/plans-pricing",
+          "account/billing",
+          "account/trials-explained",
           "account/subscription-status-access",
-          "account/trials-explained"
+          "account/payments-invoices",
+          "account/addons-managed-services",
+          "account/workspace-team"
         ]
       },
       {
