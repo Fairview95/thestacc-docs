@@ -1,0 +1,50 @@
+---
+title: "How the AI works"
+description: "theStacc is not a thin wrapper around one chatbot."
+---
+
+theStacc is not a thin wrapper around one chatbot. It orchestrates several specialised AI engines, each picked for the job it is best at, and grounds them in live data. You never choose, tune, or configure any of it - the platform routes every task to the right engine automatically, and there is nothing for you to manage.
+
+<Frame caption="How theStacc routes each task to the writing, fast, or image engine - plus live data">
+
+![How theStacc routes each task to the writing, fast, or image engine - plus live data](/images/docs/ai-engines.svg)
+
+</Frame>
+
+## A multi-engine approach
+
+### The writing engine
+
+The heavy lifting - planning and writing long-form blog posts, monthly content plans, and structured social captions - runs on a top-tier writing engine.
+
+It does not just "start typing." For a blog post it works in a structured, guided flow: first it **plans** the post (title, meta description, a full section-by-section outline, and where images should go), and only then does it **write** the article to match that plan. Because the structure is locked in before a single sentence is written, posts come out well-organised and on-topic instead of meandering or drifting off into filler.
+
+This plan-then-write flow runs as a tightly bounded process. The engine is given a fixed number of steps to finish a post and an overall time budget for each one - if a generation can't complete within those limits it stops cleanly rather than running forever or wandering off the brief. You never see these guardrails; they simply mean every post stays focused on what you asked for. The exact step and time limits are documented in the developer-facing [AI Models & Generation Pipeline](/docs/how-it-works/ai-models-and-pipeline) article.
+
+### The fast engine
+
+Not every task needs the most powerful model. Quick jobs - learning your brand voice from writing samples, analysing your website, running safety and compliance checks, and drafting the first preview post so you see results instantly - run on a faster, lighter engine. This is what keeps the app feeling responsive and keeps generation affordable.
+
+### The image engine
+
+Hero images, in-article illustrations, and social graphics (including multi-slide carousels) are produced by a dedicated image engine.
+
+Every image is **original** - there is no stock-photo library involved, and nothing is pulled from the web. The engine generates a fresh picture for each placement: the post's plan decides how many images a post needs and what each one should show, and the engine creates them one slot at a time. Each image is also **sized to its slot** - a wide hero image for the top of an article, square or portrait graphics for social feeds - so visuals fit their destination cleanly without awkward cropping or stretching.
+
+### Live data
+
+Planning and tracking are grounded in live data, not guesses: real keyword and search-volume signals shape your content plan, and live local ranking data powers your "near me" and Map Pack tracking. This is why the topics theStacc picks reflect what people are actually searching for, and why your local ranking reports reflect what searchers actually see.
+
+## Why more than one engine
+
+Using several engines instead of one means theStacc can:
+
+- **Go deep where it matters** - full reasoning power for writing and planning, where quality shows.
+- **Stay fast where it counts** - lightweight processing for quick tasks, so the dashboard never feels slow.
+- **Keep costs sane** - matching each task to the right-sized engine is what lets theStacc generate content at volume without the price ballooning.
+
+## Always improving, nothing for you to manage
+
+The engines behind theStacc are upgraded continuously as the technology improves. Because everything is abstracted behind the platform, your content quality goes up over time with zero work on your side - no model to pick, no settings to change, no migrations, no re-learning. You focus on your business; theStacc handles the rest.
+
+Want to know what keeps that output accurate, on-brand, and safe to publish? See [Quality & safety](/docs/how-it-works/quality-safety). For the technical details - exact models, token limits, and timeouts - see [AI Models & Generation Pipeline](/docs/how-it-works/ai-models-and-pipeline).

@@ -1,0 +1,165 @@
+---
+title: "Error Handling & Sync Failures"
+description: "Most of the time, Local SEO just works in the background - your business data refreshes, posts publish, and review replies go out without you thinking about it."
+---
+
+Most of the time, Local SEO just works in the background - your business data refreshes, posts publish, and review replies go out without you thinking about it. But sometimes Google or our publishing partner is slow, a link won't pass Google's rules, or a sync gets interrupted. This page explains every error you might run into, in plain language: what it means, whether theStacc fixes it for you automatically, and what (if anything) you need to do.
+
+The short version: most failures are temporary and safe to retry, theStacc never silently loses your content, and the errors that need you almost always have a one-line fix in the message itself.
+
+## How posting and replies reach Google
+
+theStacc doesn't talk to Google Business Profile (GBP) directly. We publish your posts and review replies through a publishing partner (Zernio). When something goes wrong on that path, theStacc sorts the problem into one of four buckets and shows you a message tailored to that bucket. Knowing the bucket tells you whether to wait, retry, or contact support.
+
+### Configuration error (please contact support)
+
+**What you see:** "GBP service configuration error. Please contact support."
+
+**What it means:** Our connection credentials to the publishing partner were rejected (an authentication problem on our side). Retrying will not help - the problem is a setting only we can fix.
+
+**What to do:** Contact support. This one is on us, and we get an alert when it happens so we can act quickly. Your post or reply is not lost - once we fix the connection, you can publish it again.
+
+### Service is busy (try again in a minute)
+
+**What you see:** "GBP service is busy. Please try again in a minute."
+
+**What it means:** The publishing partner is temporarily rate-limited - too many requests in a short window. theStacc already tried a few times automatically before showing you this, waiting the amount of time the partner asked for between attempts.
+
+**What to do:** Wait a minute and click publish again. It almost always goes through on the next try.
+
+### Could not reach the service (try again)
+
+**What you see:** "Could not reach GBP service. Please try again."
+
+**What it means:** We couldn't connect to the publishing partner at all - a network blip, timeout, or dropped connection. theStacc retries this automatically before surfacing the message.
+
+**What to do:** Try again. These clear up on their own; if it persists for more than a few minutes, contact support.
+
+### Service returned an error (try again)
+
+**What you see:** "GBP service returned an error. Please try again."
+
+**What it means:** The publishing partner is having a problem on their end (an upstream outage or unexpected response). theStacc automatically retries the most common temporary versions of this before showing you the message.
+
+**What to do:** Try again shortly. If it keeps happening, contact support so we can check whether the partner is having a wider outage.
+
+> **theStacc retries the temporary stuff for you.** Rate limits, timeouts, and partner hiccups are retried automatically (a few attempts, with a short, growing wait between each). The message only appears after those automatic retries are exhausted - so by the time you see it, a manual click later is the right next step, not a frantic one.
+
+## Before we publish: pre-flight checks on posts
+
+Google Business Profile is strict about what it accepts, and when it rejects something it does so vaguely and after the fact. To save you from a confusing failure later, theStacc checks your post **before** sending it - and gives you a clear, specific reason if something won't pass. These checks don't use up any of your monthly post allowance, because nothing was sent to Google.
+
+### Call-to-action (CTA) link must be a secure web address
+
+If your post has a Call-to-action button (Book, Order, Shop, Learn More, Sign Up, Call), the link behind it has to be a normal secure website address. theStacc tidies up common typos for you first - it adds `https://` to a bare domain like `acme.com`, fixes a missing colon in `https//acme.com`, and strips tracking junk (`utm_`, `gclid`, `fbclid`, and similar) so the link stays clean.
+
+After that cleanup, if the link still isn't a secure `https://` web address, you'll get a clear message instead of a publish:
+
+> "CTA URL must be HTTPS and publicly reachable. GBP rejects http://, javascript:, data:, and shortened URLs."
+
+Links that are rejected at this stage:
+
+- **Insecure `http://` links** - Google requires `https://`.
+- **Non-web link types** - `mailto:`, `tel:`, `javascript:`, `data:`, `file:`, and `ftp:` links. These either won't render as a button or aren't safe.
+
+The fix is usually a single keystroke: paste the full `https://` version of your page and publish again.
+
+### Some links can't be reached by Google (the button is quietly dropped)
+
+A separate group of links are technically valid web addresses but still won't work as a GBP button because Google can't reach them. Rather than block your whole post over this, theStacc takes a gentler approach: **it publishes your post without the button** and logs why, so you're never stuck unable to post just because of an old saved link.
+
+Links that get the button dropped at publish time:
+
+- **Localhost / loopback addresses** - `localhost`, `127.0.0.1`, and similar. Google can't reach your own computer.
+- **Internal or tunneling domains** - addresses ending in `.local`, `.test`, `.invalid`, `.internal`, `.localhost`, or temporary tunneling services like ngrok.
+- **Bare IP addresses** - a raw number like `https://203.0.113.5/`, and private internal IPv6 addresses. GBP doesn't accept these.
+- **URL shorteners** - `bit.ly`, `t.co`, `tinyurl.com`, `goo.gl`, and the like. Google follows the redirect chain and rejects shortened links. Paste the final destination URL instead.
+
+The post still goes live - just without the button. If you wanted the button, swap in a reachable public `https://` link and publish again. (The editor warns you about these links ahead of time, too, so you can fix them before you ever click publish.)
+
+### Post is too long
+
+Google Business Profile rejects any post over **1,500 characters**. theStacc checks this before sending so you get an actionable message instead of a silent rejection on Google's side:
+
+> "Post content is N characters; Google Business Profile rejects anything over 1500. Shorten the content (or regenerate) and try again."
+
+For **offer** and **event** posts, the details you add (offer code, terms, and dates) get woven into the post body before it's sent. If your typed text fit but those extra details pushed the total over 1,500, the message tells you exactly that - so you know to trim either the body or the offer/event details, not just guess.
+
+## Before we publish: pre-flight checks on review replies
+
+Review replies don't have buttons or links, so the CTA and host checks above don't apply to them. They have their own guardrails:
+
+- **No drafted reply yet** - you'll be asked to generate a response first.
+- **We can't tell which review is which** - if two of your reviews look too similar to match safely, theStacc refuses to publish to the wrong one and asks you to copy and paste the reply manually instead. This is a safety stop, not a failure.
+- **The review hasn't synced yet** - if we can't find the review on your GBP account, you'll be asked to try again shortly or copy and paste.
+
+For businesses in regulated industries with an advertising-compliance profile turned on, both posts and review replies also pass through a compliance check before publishing. If the check holds your content, it won't be sent, and you'll see the specific reason so you can edit and republish. See [Advertising Compliance & Validation](/docs/local-seo/advertising-compliance) for how that gate works.
+
+## Data sync errors
+
+When you sync a location, theStacc refreshes three things from Google and our data sources: your **business info** (rating and review count), your **reviews**, and your **local keywords**. (See [Data Sync & Status](/docs/local-seo/data-sync) for the full walkthrough.) Each can succeed or fail independently, and how theStacc handles a failure depends on whether it's partial or total.
+
+### Partial success: one piece fails, the rest still saves
+
+A sync is treated as **successful as long as at least one of the three pieces came through**. If your reviews fail to load but your business info and keywords sync fine, the location is marked **completed** and you keep the data we did get. theStacc would rather give you useful partial data than throw the whole sync away over one slow step. A failed piece simply isn't updated - your existing data for it stays as it was.
+
+A sync is only marked **failed** when **all three pieces fail**. In that case theStacc records a combined reason listing what went wrong with each piece, so support (or you) can see the full picture.
+
+### What a failed sync records
+
+When a sync fails, the reason is saved to the location and shown in the dashboard. It's stored in one of two forms:
+
+- **A structured error** (the current format) - includes an error code, a short human-readable message, a suggested retry-after time, and a timestamp of when it happened. When the error is structured, the dashboard can show a friendly retry button alongside the explanation - especially for temporary AI-capacity hiccups, where the right move is simply to try again in a moment.
+- **Plain text** (the older fallback format) - just a short sentence describing what went wrong.
+
+The dashboard understands both and displays whichever it finds, so older locations and newer ones both show a sensible message. Recorded reasons are kept short (capped at 500 characters) so the display stays clean. You don't need to know which format you're looking at - just read the message and, if there's a retry button, use it.
+
+### Stuck or stale syncs, and force-claiming
+
+To make sure two syncs never run on the same location at once and corrupt each other, theStacc "claims" a location before syncing it. Only one sync can hold the claim at a time.
+
+- If a sync is **already running and was started recently (within the last 5 minutes)**, a second attempt politely steps aside and does nothing - the in-progress sync is doing the work.
+- If a sync looks **stuck or stale (started more than 5 minutes ago)** - for example, a previous run was interrupted and never finished - the new attempt safely takes over the claim and runs a fresh sync. This is the **force-claim**, and it's how a location that got stuck mid-sync recovers on its own the next time you (or a scheduled refresh) trigger a sync.
+
+So if a location ever appears to be stuck "syncing," you don't need to do anything special - simply trigger a sync again after a few minutes and theStacc will take over the stale claim and complete it. See [Data Sync & Status](/docs/local-seo/data-sync) for how sync status is displayed and refreshed.
+
+## Posts that get stuck or fail mid-publish
+
+Publishing a post moves it through a short series of states. If a publish fails, theStacc records a **publish failed** status with the specific reason attached, and the post is safe to **retry** - just open it and publish again. The reason shown is the same plain-language message from the four error buckets above (busy, couldn't reach, service error, configuration error) or a pre-flight reason (too long, bad link).
+
+Two safety behaviors worth knowing:
+
+- **theStacc never double-posts.** If your post actually went live on Google but our final bookkeeping step hiccuped, theStacc will **not** offer you a retry that would create a second identical post on Google. Instead it keeps the post marked as published and asks you to click **Sync** to refresh the live "View on GBP" link. Your single post is safe and live.
+- **A failed publish never strands your content.** Whatever the reason, the post keeps its content and lands in a clearly-failed state with the reason visible - never silently stuck on a spinner. Fix what the message points at (if anything) and retry.
+
+For the full lifecycle of a post from generation to publish, see [GBP Posts & Content Calendar](/docs/local-seo/gbp-posts-calendar).
+
+## "Resource not found" and why we don't say more
+
+If you try to open a location, post, or review that doesn't exist - or one that belongs to a workspace you don't have access to - theStacc returns the same generic **"Resource not found"** message in both cases. It deliberately does **not** tell you whether the item is missing or simply off-limits to you.
+
+This is intentional, and it protects you. If the system said "this exists but you can't see it" for things you're not allowed to access, someone probing your account could learn which IDs are real just by watching which error they get back. By giving the exact same answer for "doesn't exist" and "not yours," theStacc gives away nothing about other businesses' data. It's a small privacy safeguard that keeps everyone's workspaces sealed off from each other.
+
+If you hit "Resource not found" on something you expect to have access to, double-check you're in the right workspace and that the item wasn't deleted. If it still doesn't appear, contact support.
+
+## Quick reference
+
+| What you see | What it means | What to do |
+| --- | --- | --- |
+| GBP service configuration error | Our connection credentials were rejected | Contact support - we're already alerted |
+| GBP service is busy | Temporary rate limit (auto-retried first) | Wait a minute, publish again |
+| Could not reach GBP service | Network blip (auto-retried first) | Try again |
+| GBP service returned an error | Partner-side problem (auto-retried first) | Try again shortly |
+| CTA URL must be HTTPS... | The button link isn't a secure web address | Paste the full https:// link and republish |
+| Button quietly missing after publish | Link can't be reached by Google (shortener, localhost, bare IP) | Post is live; swap in a reachable link if you want the button |
+| Post content is N characters... | Over the 1,500-character GBP limit | Shorten the body (or offer/event details) |
+| Sync failed | All three sync pieces failed | Read the reason; use the retry button if shown |
+| Location stuck "syncing" | A prior sync was interrupted | Trigger a sync again after a few minutes |
+| Resource not found | Item is missing or not in your workspace | Check the right workspace; contact support if unexpected |
+
+## Related articles
+
+- [Data Sync & Status](/docs/local-seo/data-sync) - how syncing works and how to read sync status
+- [GBP Posts & Content Calendar](/docs/local-seo/gbp-posts-calendar) - the full post lifecycle and publishing flow
+- [Reviews](/docs/local-seo/reviews) - generating and publishing review replies
+- [Advertising Compliance & Validation](/docs/local-seo/advertising-compliance) - the compliance gate for regulated industries

@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
   "name": "theStacc",
+  "theme": "mint",
   "colors": {
     "primary": "#4f39f6",
     "light": "#8b76ff",
@@ -11,7 +11,121 @@
     "groups": [
       {
         "group": "Getting Started",
-        "pages": ["index"]
+        "pages": [
+          "index",
+          "getting-started/introduction",
+          "getting-started/quick-start",
+          "getting-started/key-concepts",
+          "getting-started/accounts-workspaces",
+          "getting-started/onboarding-first-steps",
+          "getting-started/troubleshooting-setup"
+        ]
+      },
+      {
+        "group": "How It Works",
+        "pages": [
+          "how-it-works/content-engine",
+          "how-it-works/how-the-ai-works",
+          "how-it-works/quality-safety",
+          "how-it-works/ai-models-and-pipeline"
+        ]
+      },
+      {
+        "group": "Content SEO",
+        "pages": [
+          "content-seo/overview",
+          "content-seo/business-setup",
+          "content-seo/content-plans",
+          "content-seo/blog-generation",
+          "content-seo/publishing",
+          "content-seo/preferences",
+          "content-seo/connect-platforms",
+          "content-seo/ai-error-recovery",
+          "content-seo/automated-generation",
+          "content-seo/blog-status-lifecycle",
+          "content-seo/blog-types",
+          "content-seo/competitors-audiences",
+          "content-seo/compliance-profiles",
+          "content-seo/content-safety-guardrails",
+          "content-seo/draft-approval-workflow",
+          "content-seo/generate-more-bonus-blogs",
+          "content-seo/image-generation",
+          "content-seo/internal-linking",
+          "content-seo/keyword-strategy-rotation",
+          "content-seo/promotions-calendar",
+          "content-seo/publishing-errors",
+          "content-seo/publishing-modes",
+          "content-seo/quota-and-limits",
+          "content-seo/regenerating-content",
+          "content-seo/scheduling-missed-posts",
+          "content-seo/seo-scoring",
+          "content-seo/sources-brand-voice",
+          "content-seo/user-direction",
+          "content-seo/word-count-targets"
+        ]
+      },
+      {
+        "group": "Local SEO",
+        "pages": [
+          "local-seo/overview",
+          "local-seo/google-business-profile",
+          "local-seo/reviews",
+          "local-seo/advertising-compliance",
+          "local-seo/content-plan-management",
+          "local-seo/data-sync",
+          "local-seo/error-handling-sync-failures",
+          "local-seo/gbp-posts-calendar",
+          "local-seo/industry-presets-brand-intake",
+          "local-seo/keywords-local-rankings",
+          "local-seo/local-seo-shared-access",
+          "local-seo/locations-business-details",
+          "local-seo/onboarding-business-setup",
+          "local-seo/subscription-trials-limits"
+        ]
+      },
+      {
+        "group": "Social Media",
+        "pages": [
+          "social-media/overview",
+          "social-media/connecting-platforms",
+          "social-media/brand-style",
+          "social-media/content-scheduling",
+          "social-media/approval-review-workflow",
+          "social-media/connection-management-sync",
+          "social-media/content-plans-generation",
+          "social-media/content-preferences-pillars",
+          "social-media/platform-character-limits",
+          "social-media/post-customization",
+          "social-media/post-deletion",
+          "social-media/post-quota-limits",
+          "social-media/post-states-failures",
+          "social-media/publishing-scheduling",
+          "social-media/repurpose-from-blog",
+          "social-media/website-extraction-assets"
+        ]
+      },
+      {
+        "group": "Account",
+        "pages": [
+          "account/workspace-team",
+          "account/billing",
+          "account/addons-managed-services",
+          "account/payments-invoices",
+          "account/plans-pricing",
+          "account/subscription-status-access",
+          "account/trials-explained"
+        ]
+      },
+      {
+        "group": "Developers",
+        "pages": [
+          "developers/public-blog-api",
+          "developers/static-site-integration",
+          "developers/deploy-hooks",
+          "developers/webhook-reference",
+          "developers/agent-keys-mcp",
+          "developers/mcp-tools-reference"
+        ]
       }
     ]
   }

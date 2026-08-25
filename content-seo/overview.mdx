@@ -1,0 +1,120 @@
+---
+title: "Content SEO Overview"
+description: "The Content SEO module generates AI-powered blog posts and publishes them to your website on autopilot."
+---
+
+The Content SEO module generates AI-powered blog posts and publishes them to your website on autopilot. The dashboard is your home base: it shows what's planned, what's being written right now, what's waiting on you, and what's already live.
+
+To open it, go to **Content \> Dashboard** (the Content section in the left sidebar).
+
+## The Content dashboard
+
+The dashboard has a header with quick stats and controls, then a main area that switches between a list and a calendar.
+
+### Stats bar
+
+At the top you'll see the page title, a month navigator (left and right arrows to move between months), and a view toggle (list or calendar). Below that are three stat cards that count blogs **for the month you're currently viewing**:
+
+- **Published** (green) - blogs that are live on your site.
+- **Queued** (purple) - blogs that are planned but not yet written (waiting to be generated, or waiting for you to pick a publish date).
+- **Ready** (amber) - blogs that have been generated and are awaiting your review, approval, or publishing.
+
+Move between months with the arrows and these numbers update with you. Blogs that are mid-generation, missed, failed, or rejected are intentionally left out of these three counts - they show up in the list and calendar instead, where you can act on them.
+
+### List view
+
+The default view is a clean table with four columns: **Date**, **Blog** (title, with its SEO score shown as a small colored percentage badge), **Status**, and **Keyword**. Click any row to open that blog's detail page.
+
+Above the table is a row of filter tabs so you can focus on what matters:
+
+- **All** - every blog in the visible month.
+- **Upcoming** - blogs that are planned, generating, generated, awaiting review, approved, or behind schedule.
+- **Published** - blogs that are live (filtered by the date they actually went live, so a post scheduled in one month but published in the next shows up in the month it published).
+- **Failed** - blogs where generation or publishing didn't succeed, so you can spot and fix them.
+
+If any blogs are behind schedule, a small amber note appears at the top of the list (for example, "3 blogs behind schedule"). Posting two or three in a day catches you back up - what matters is your monthly total, not posting every single day.
+
+### Calendar view
+
+Switch to the calendar with the grid icon in the view toggle. It lays out a full month as a five-week grid (Sunday through Saturday). Each blog appears on its scheduled day as a color-coded pill, so you can see your whole content rhythm at a glance. Click a pill to open that blog. Use the month arrows to move forward and back.
+
+Both views use the same color-coded status system, described next.
+
+## Status legend
+
+Every blog moves through a lifecycle, and the dashboard color-codes each one so you always know what needs your attention. These are the labels and colors you'll see on the list badges, calendar pills, and detail page:
+
+- **Scheduled** (slate / indigo) - planned for a future date, not yet generated. Shows a small countdown like "3d" until its date.
+- **Planning** (slate) - a placeholder slot still being set up, or a bonus blog waiting for you to choose a publish date.
+- **Generating** (blue) - the AI is writing this post right now (this also covers the brief step where the text is done and images are still being created).
+- **Pending Review** (amber) - generated and waiting for you to approve or reject. You'll only see this when you've chosen a publishing mode that requires approval and a publishing destination is connected.
+- **Generated** (emerald) - finished and ready, shown when you don't have a publishing integration connected (there's nothing to approve, so it's simply done).
+- **Ready to Publish** (violet) - approved and queued to go live. With an integration connected this can show as **Posting** with a countdown.
+- **Published** (green) - live on your website.
+- **Schedule Missed** (orange) - a scheduled date passed before the blog generated. You can catch up by generating it now.
+- **Generation Failed** (red) - the AI couldn't finish this post; it can be retried.
+- **Failed** (red) - a publish attempt didn't go through, or a draft was rejected; you can retry or regenerate.
+
+Behind these friendly labels, the platform tracks a more detailed set of internal states (for example, separate states for "text ready, images pending," "publishing in progress," and "unpublished"). For the complete map of every state, what triggers each move, and what you can do at each step, see [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle).
+
+## Per-project quota
+
+Your plan includes a set number of blogs per billing period, and that allowance is **per project**. If you run several projects, each one has its own independent allowance - using up one project's blogs doesn't touch another's.
+
+Where to check what you have:
+
+- Your plan's allowance for the period is shown on **Account \> Billing** (for example, "50 blogs / month").
+- On the Content dashboard, a **Generate more** action appears whenever the project still has room left in the current period. If it isn't showing, you've used this period's allowance - your next batch comes with your next plan via **Generate Next Month's Plan**.
+
+For exactly how the allowance is counted, how and when it resets or expires, and what "used this period" versus "remaining" means, see [Quota & Limits](/docs/content-seo/quota-and-limits).
+
+## Generating content
+
+When a content plan is generating, a progress panel appears on the dashboard showing:
+
+- A **Day X of Y** progress bar with a percentage.
+- Rotating status messages while the AI works ("Researching SEO keywords...", "Creating engaging titles...", and so on).
+- A small "Recently Generated" list previewing the latest posts as they come in, each with its day, title, and keyword.
+
+Generation is resumable - if you close the tab and come back, the dashboard picks up where it left off rather than starting over. For how the AI researches, writes, scores, and illustrates each post, see [Blog Generation](/docs/content-seo/blog-generation).
+
+## Bulk actions
+
+Bulk actions live on the **Content Plan** page (open it from the dashboard, or at **Content \> Dashboard \> Plan**). The plan shows every planned slot as a table row with a checkbox.
+
+- Tick individual rows, or use the header checkbox to **select all visible** rows.
+- A floating toolbar appears at the bottom of the screen showing **N selected**, a **Clear** button, and a **Regenerate N blog plans** button.
+- **Regenerate** refreshes the selected slots' titles and descriptions using your latest business information - handy after you update your audience, keywords, or competitors and want the plan to reflect it.
+
+If any slot can't be regenerated (for example, it's already approved or published), the toolbar tells you which ones and why, so the rest still go through. Bulk regeneration is available to project editors and uses AI, so it requires an active blog plan.
+
+A staleness banner can also appear above the plan offering to regenerate all out-of-date slots at once, without selecting each row by hand.
+
+## Per-blog actions
+
+Individual blog actions live on the **blog detail page** - click any blog from the list or calendar to open it. The available actions change with the blog's current status, so you only ever see the choices that make sense:
+
+- **Scheduled / not yet generated** - **Generate Content**.
+- **Pending Review** - **Approve** or **Reject**.
+- **Ready to Publish** - **Publish Now**.
+- **Rejected** - **Regenerate** (refreshes the title and description so you can try a new angle) or **Approve Anyway**.
+- **Published** - **View Live**, **Sync Changes** (when edits haven't been pushed yet), or **Unpublish**.
+- **Unpublished** - **Republish**.
+
+On the Content Plan page, each planned row also has an inline **Edit** action to tweak that slot's title and keyword before it's generated.
+
+## Blog detail page
+
+Clicking any blog opens the full editor and everything you need to review and refine it:
+
+- **Rich text editor** - a WYSIWYG editor with bold, italic, underline, strikethrough, highlight, headings, bullet and numbered lists, blockquotes, links, and images, plus undo and redo.
+- **Blog metadata** - edit the title, URL slug, and meta title and description for search engines.
+- **Section management** - regenerate an individual section or image without touching the rest of the post, or delete a section.
+- **SEO analysis panel** - a live SEO score with a category-by-category breakdown and specific suggestions to improve it.
+- **Sidebar** - the blog's status, scheduled and published dates, its target keyword, and the contextual action buttons described above.
+
+## Where to go next
+
+- [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) - every status and what each one means.
+- [Blog Generation](/docs/content-seo/blog-generation) - how each post is researched, written, scored, and illustrated.
+- [Quota & Limits](/docs/content-seo/quota-and-limits) - how your per-project blog allowance is counted and refreshed.

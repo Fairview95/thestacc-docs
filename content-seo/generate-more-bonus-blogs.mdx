@@ -1,0 +1,115 @@
+---
+title: "Generate More & Bonus Blogs"
+description: "Most of the time, theStacc plans your blogs for you and lays them out across your subscription period."
+---
+
+Most of the time, theStacc plans your blogs for you and lays them out across your subscription period. But sometimes you want a burst of extra posts - a seasonal push, a new product launch, or simply because you have room left on your plan and want to use it. That is what **Generate More** is for.
+
+Generate More adds a batch of extra "bonus" blogs to a project. Each one arrives with a real AI-written title, focus keyword, and category - not a blank placeholder - so you can review them and decide when each should publish.
+
+## What Generate More does
+
+When you ask for more blogs, theStacc does two things in one request:
+
+1. **Creates the bonus blogs.** It adds the number you asked for to the project, each in **Awaiting date** status. They do not land on your calendar with a date yet - they wait for you to choose when each one publishes.
+2. **Fills in titles, keywords, and categories.** In a single batched AI call, it plans all of the new blogs at once using your business analysis, so each bonus blog gets a real title, a focus keyword, and a category instead of generic "Bonus blog" text.
+
+Because everything is planned in one call, adding ten bonus blogs is about as fast as adding one - it usually takes 10 to 20 seconds. While that is running, keep the dialog open so the request can finish.
+
+Nothing is generated yet at this stage. The bonus blogs are planned, but no article body or image is written until you give each one a publish date (see [Picking dates](#picking-a-publish-date) below). Until then, they cost you nothing.
+
+## Where to find it
+
+Generate More lives on your **Content SEO** dashboard. When the button is available for your project, you will see a **Generate more (up to N)** button near your blog list, where N is how many more blogs you can add right now.
+
+The button is only shown when it can actually do something. It stays hidden when:
+
+- The project is still loading.
+- Your plan gives unlimited blogs - in that case you generate freely through the normal flow, so a "more" button would have nothing to add.
+- You are on a fixed-allotment plan that already filled its whole period up front (for example, a 30-blog plan where all 30 are already scheduled in your first cycle). Those customers add more blogs by generating the next period's plan instead.
+- You have no headroom left this period, or the current period has already ended.
+
+## What you need before it will work
+
+Generate More only works when all of the following are true.
+
+### An active plan that covers today
+
+The project must have an **active subscription** for the Content SEO module - not cancelled, not an expired trial. If the plan is no longer active, the request is refused with a message asking you to update your plan or contact support.
+
+There must also be a **content plan whose date range covers today**. Generate More attaches the new bonus blogs to your current content plan. If no plan covers the current date, you will see a message asking you to generate a content plan first. See [Content Plans & Keywords](/docs/content-seo/content-plans) for how plans are created.
+
+If you collaborate on someone else's project through a share link or invite, the **project owner's** plan and quota are what get checked - not your own account's.
+
+### Available headroom
+
+Every project has a blog quota for its current billing period. **Headroom** is simply how many more blogs you can still add this period:
+
+> headroom = your period quota − blogs already scheduled this period
+
+The dialog shows you this directly - for example, "You have 12 of 30 blogs scheduled. Add up to 18 more." You can request any number from 1 up to your remaining headroom in a single click. If you ask for more than your headroom, the request is rejected and you are pointed toward upgrading your plan for more capacity.
+
+## Bonus blogs count against your quota
+
+This is the key thing to understand: **bonus blogs are not free extras on top of your plan.** Each bonus blog you add consumes one slot of your period quota, exactly like a normally planned blog. That is why the dialog caps your request at your remaining headroom.
+
+The period here is your **subscription's billing window**, not a fixed calendar month. A yearly plan, for example, can pace its blogs across the whole year, so headroom is measured against your actual renewal cycle.
+
+One flexible exception: when you pick a publish date for a bonus blog, you may choose a date in a **future** period. theStacc allows this on purpose - if you have paid through that future period, you can plan ahead into it. Scheduling a bonus blog into a later period frees that slot back up in your current period's headroom.
+
+## Limits on how many you can add
+
+There are a few different limits at play, so here is exactly how they fit together:
+
+- **Your headroom** is the everyday limit. On a capped plan, you can never add more than your plan's quota minus what is already scheduled. This is the limit you will hit in normal use.
+- **A hard ceiling of 200 blogs per request** applies to every request, regardless of plan. This exists mainly to protect unlimited-style plans from accidentally asking for a huge batch in one click. If you request more than 200, you are asked to add 200 or fewer and simply click again for the rest.
+- **Fixed-allotment plans** (for example, plans that grant 30 blogs per period) are naturally bounded by that allotment through your headroom - there is no separate per-click number for them.
+
+If you drive theStacc through the **agent (MCP) integration**, note that the `generate_more` tool there accepts **1 to 10** blogs per call by design, even though the underlying limit is higher. Agents add blogs in smaller, reviewable batches.
+
+## Picking a publish date
+
+A bonus blog cannot generate until you tell theStacc when it should publish. Right after you add bonus blogs, a **Pick a date for your bonus blogs** panel appears on your dashboard listing each new blog with its AI-filled title and keyword.
+
+To schedule one:
+
+1. Find the bonus blog in the **Awaiting date** panel.
+2. Choose a date in the date picker. You can pick **today or any future date** - past dates are not allowed. (If you are in a timezone where it is already "tomorrow" relative to our servers, the system gently nudges a just-past date forward to today so you are not blocked near midnight.)
+3. Click **Set date**.
+
+That moves the blog from **Awaiting date** to **To be generated**: it drops off the awaiting list, joins your regular content calendar, and becomes eligible to generate on the date you chose - automatically by the scheduler, or whenever you trigger it manually.
+
+You do not have to schedule them all at once. Bonus blogs sit safely in **Awaiting date** for as long as you like, and theStacc never generates one until it has a date. To understand every status a blog can be in, see [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle). For how the calendar and scheduled dates drive automatic generation, see [Time-Based Scheduling](/docs/content-seo/scheduling-missed-posts).
+
+## If titles did not finish generating
+
+Adding the bonus blogs and writing their titles are two separate steps. Occasionally the blogs are created successfully but the batched title-fill step does not complete - for example, the AI call returns nothing, only some of the titles come back, or the project is missing the business analysis snapshot needed to plan titles.
+
+When this happens:
+
+- **Your bonus blogs still exist.** They were created and counted against your quota - you have not lost them.
+- You will see a clear warning that the bonus blogs were added but **title generation didn't complete**, sometimes with a short reason (for example, "Filled 7 of 10 bonus blogs").
+- Any blog whose title did not fill shows as **(Awaiting title...)** in the panel.
+
+### How to recover
+
+You have two paths, and you can use both:
+
+1. **Pick dates now anyway.** A missing title does not block scheduling. You can still set a publish date for each bonus blog. When a blog generates, theStacc refreshes its title and brief from your current business info as part of the generation step, so a blank title fills in then.
+2. **Re-run the title planning.** Use the regenerate-plan flow to fill titles and keywords for the awaiting blogs without waiting for generation. If the failure was caused by a missing business analysis snapshot, re-running your onboarding analysis first (or contacting support) restores what the title planner needs.
+
+If titles repeatedly fail to fill across retries, reach out to support so we can check the project's analysis data.
+
+## Quick reference
+
+- **What it adds:** N bonus blogs in **Awaiting date** status, each with an AI-written title, keyword, and category planned in one batched call.
+- **Requires:** an active Content SEO plan, a content plan covering today, and remaining headroom.
+- **Counts against quota:** yes - each bonus blog uses one slot of your period quota.
+- **Per-request ceiling:** up to your headroom, with a hard cap of 200 per request (1 to 10 per call via the agent integration).
+- **To generate one:** pick a publish date (today or later) to move it from **Awaiting date** to **To be generated**.
+
+## Related articles
+
+- [Quota & Limits](/docs/content-seo/quota-and-limits) - how your period quota, headroom, and usage are calculated.
+- [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) - what **Awaiting date**, **To be generated**, and every other status mean.
+- [Time-Based Scheduling](/docs/content-seo/scheduling-missed-posts) - how scheduled dates drive automatic generation on your calendar.

@@ -1,0 +1,125 @@
+---
+title: "Workspace & Team"
+description: "Your workspace is where you and your team run theStacc."
+---
+
+Your workspace is where you and your team run theStacc. Work is organised into **projects** — each project is one website or brand, with its own content, settings, members, and billing. This guide covers how to manage projects, invite people, choose the right role for each person, and keep notifications useful.
+
+For how accounts and projects fit together, see [Key Concepts](/docs/getting-started/key-concepts). For subscriptions and plans, see [Billing & Plans](/docs/account/billing).
+
+## Projects
+
+theStacc supports multiple projects under one account. Use the **project selector** at the top of the sidebar to switch between them. Each project keeps its own:
+
+- Module settings (Content SEO, Local SEO, Social Media)
+- Content plans, keywords, and generated content
+- Team members and invitations
+- Billing
+
+To start a new project, open the project selector and choose **Create New Project**. You'll be guided through setup for the new site.
+
+Most day-to-day settings (your website details, audience, writing style, publishing) live inside each module's own settings, not in a separate "workspace settings" area. To set up the basics for a project, see [Business Setup](/docs/content-seo/business-setup).
+
+## Members
+
+Manage who has access to a project under **Settings \> Members** (shown as **Team Members** in the sidebar). The page lists everyone with access, plus any invitations that haven't been accepted yet.
+
+Only **admins** of a project can invite people, change roles, remove members, or manage the invite link. If you don't see the **Invite** button or the invite-link card, you don't have admin access on that project.
+
+### Where access comes from
+
+Members can reach a project two different ways, and the Members page shows both:
+
+- **Account members** — the people who own or help run the whole account. They automatically have access to every project under it. On the Members page their role appears as a **static badge** (for example \*Owner\*), not a dropdown. You can't change or remove an account member from the project's Members page, because their access is managed at the account level, not per project.
+- **Project members** — people invited to this one project. Their role appears as an editable dropdown, and they can be removed from the project here.
+
+This keeps a clear line: account-level access is account business; project-level access is managed on the project.
+
+### Inviting members by email
+
+1. Go to **Settings \> Members**.
+2. Click **Invite**.
+3. Choose a **Role** (the modal shows what each role can do).
+4. Enter the person's **email address**.
+5. Click **Send Invitation**.
+
+The person receives an email inviting them to collaborate on the project as the role you chose. If they don't have a theStacc account yet, the email walks them through creating one and joining. If they already have an account, they also get an in-app notification.
+
+While an invitation is waiting to be accepted, it shows on the Members page as **Invite Pending** with the role and the date it was sent. Each invitation is valid for **7 days**. You can:
+
+- **Resend** a pending invitation (the paper-plane icon) — this sends the email again and resets the clock to a fresh 7 days.
+- **Cancel** a pending invitation (the trash icon) — the link stops working and the person can no longer join with it.
+
+### Expired invitations
+
+If 7 days pass without the invitation being accepted, the row changes to a muted **Expired** badge. Instead of the resend icon, you'll see a **Send again** button. Clicking it reopens the invite form pre-filled with the same email and role — you can change either before sending. Sending a fresh invitation automatically clears the old expired one, so no cleanup is needed.
+
+### Invitation rules
+
+A few guardrails keep invitations clean:
+
+- **You can't invite the same email twice.** If an active (not-yet-expired) invitation already exists for that address, theStacc tells you it's already pending and offers to resend the email or copy the invite link instead of creating a duplicate.
+- **You can't invite yourself.**
+- **You can't invite someone who already has access** — whether through the account or as an existing member of the project.
+
+## Roles and permissions
+
+Every member has one role. Roles are the same idea at the account level and the project level; the difference is scope (account roles apply everywhere, project roles apply to that one project).
+
+- **Owner** — Full access to everything, including billing and deleting the project. This is the person who set up the account.
+- **Admin** — Full access to everything **except** billing and deleting the project. Admins can manage settings, content, integrations, and the team (invite, remove, and change roles).
+- **Editor** — Can create, edit, approve, and publish content, and manage keywords and integrations. Editors **cannot** change project settings or touch billing.
+- **Viewer** — Read-only. Viewers can see blogs, keywords, settings, and integrations, but can't change anything.
+
+### Changing and removing members
+
+For project members (the editable-dropdown rows):
+
+- **Change a role** by picking a new role from the dropdown next to their name.
+- **Remove a member** with the trash icon. They lose access to the project immediately and can no longer view or edit anything in it.
+
+A few protections apply:
+
+- **You can't change your own role**, and **you can't remove yourself** from a project.
+- **You can't change or remove an account-source member** from the project's Members page — their badge is fixed here because their access lives at the account level.
+- A project always needs at least one admin, so the **last admin can't be demoted or removed** from the project.
+
+## Share-link invites
+
+Sometimes email is unreliable, or you'd rather drop a link into WhatsApp, Slack, or a text. Each project can have one optional **invite link** that lets anyone who opens it join the project at a role you choose.
+
+Find it on the **Members** page, in the **Invite link** card (admins only).
+
+1. Choose the role the link should grant — **Admin**, **Editor**, or **Viewer**.
+2. Click **Create link**.
+3. Copy the link and share it through any channel you like.
+
+Anyone who opens the link and signs in joins the project at that role. People who are already account members don't get a duplicate entry — the link simply takes them into the project.
+
+### Admin links carry a warning
+
+If you set the link's role to **Admin**, theStacc asks you to confirm and shows a warning. Anyone who opens an admin link can manage members and access billing, so treat an admin link like a password and only share it with people you fully trust. Editor and Viewer links apply right away without a confirmation.
+
+### Rotating and disabling the link
+
+There's only ever one active link per project, and you stay in control of it:
+
+- **Regenerate** creates a brand-new link and instantly stops the old one. Use this if a link was shared too widely or with the wrong person.
+- **Disable link** turns the link off completely. Anyone who still has the old URL can no longer join. People already in the project keep their access.
+
+You can change the link's role at any time from the same card.
+
+## Notifications
+
+theStacc keeps each member in the loop with notifications that appear in the dashboard and are also sent by email:
+
+- **Approval notifications** — a blog or post is ready for you to review.
+- **Blog issue alerts** — a generation problem or SEO concern that needs attention.
+- **Milestone celebrations** — a publishing milestone has been reached.
+- **Warning notifications** — something needs action, such as an integration that needs reconnecting.
+
+## Related
+
+- [Key Concepts](/docs/getting-started/key-concepts) — how accounts, projects, and modules fit together
+- [Billing & Plans](/docs/account/billing) — subscriptions, trials, and invoices
+- [Business Setup](/docs/content-seo/business-setup) — set up a project's website and brand details

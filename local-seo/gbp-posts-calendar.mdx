@@ -1,0 +1,141 @@
+---
+title: "GBP Posts & Content Calendar"
+description: "Google rewards businesses that keep their Google Business Profile (GBP) active."
+---
+
+Google rewards businesses that keep their Google Business Profile (GBP) active. theStacc writes a steady stream of GBP posts for you, lays them out on a monthly calendar, and lets you edit and publish them in a couple of clicks. This page explains how the content calendar works, what each post type contains, and the limits that apply.
+
+## How many posts you get
+
+When you generate a month, theStacc creates **one post per day** by default, so a full month is about **30 posts**. Posting consistently is itself a ranking signal, which is why the default cadence is daily.
+
+A few things are worth knowing up front:
+
+- **First three posts are written for you.** When you finish Local SEO onboarding, theStacc generates the full content for the first three posts automatically so you have something ready to review and publish right away.
+- **The rest start as titles.** To keep generation fast and avoid spending content credits on posts weeks out, the other posts are created as titles only. Their full content is written on demand the first time you open them (more on this below).
+- **On a demo or 10/10/10 plan you get 10 posts.** If your Local SEO module is on a 10-post plan, a generation produces **10 posts spread across the month** (roughly one every three days) instead of 30 daily posts.
+
+## Post types
+
+Every GBP post is one of three types. theStacc mixes them automatically across the month (about 50% updates, 35% offers, 15% events) so your profile doesn't feel one-note.
+
+### Update
+
+A general post: a tip, a result, an industry insight, or a behind-the-scenes detail that positions you as the expert. Updates carry these fields:
+
+- **Title** (optional)
+- **Content** - the body of the post
+- **CTA type** - the action button (see below)
+- **CTA URL** - where the button sends people
+- **Scheduled date**
+
+### Offer
+
+A promotion or special. In addition to the update fields, offers can include:
+
+- **Offer code** - a code customers mention to redeem
+- **Offer terms** - general terms like "while supplies last" or "contact us for details"
+- **Valid until** - an expiry date for the offer
+
+### Event
+
+A dated happening - a sale weekend, an open house, a workshop. Events lead with what attendees gain and include the date and time alongside the standard fields.
+
+Google's posting system doesn't have separate native formats for offers and events, so when you publish one of those, theStacc folds the extra details (offer code, terms, valid-until, event dates) into the post body automatically. That keeps the information visible to customers on Google even though it publishes as a standard post.
+
+### CTA buttons
+
+Every post can carry one call-to-action button. The available types are **Book**, **Order online**, **Buy / Shop**, **Learn more**, **Sign up**, and **Call now**. If you set a CTA type, give it a CTA URL so the button has somewhere to go.
+
+## Post statuses
+
+Each post moves through a clear set of statuses. The badge on the calendar and in the editor tells you exactly where a post stands:
+
+- **Pending content** - the title exists but the body hasn't been written yet. Open the post and theStacc generates its full content on demand.
+- **Generated** - content is written and ready to review, edit, or publish.
+- **Copied** - you copied the post to your clipboard (for pasting into Google manually). It's still yours to publish later.
+- **Publishing** - theStacc is sending the post to Google right now.
+- **Published** - the post is live on your Google Business Profile.
+- **Publish failed** - Google or the connection rejected the post. theStacc records the reason so you can fix it (for example, content too long, or the CTA link wasn't reachable) and retry.
+
+A post must be **Generated** or **Copied** to publish - you can't publish one that's still **Pending content**.
+
+## Generating a month of posts
+
+1. Open your posts calendar in **Local SEO** and choose **Generate Month** (or **Generate Posts**).
+2. Pick the **year** and **month** you're generating for.
+3. Choose how many posts to create. The default is **30** (one per day).
+4. Decide whether to **include offers** and **include events** in the mix. Both are on by default.
+5. Start the run. Generation happens in the background - titles appear first, and the first three posts get full content automatically. The calendar updates as posts come in.
+
+If posts already exist for that location, theStacc won't duplicate them - generation is skipped so you don't end up with two posts competing for the same day.
+
+### Keeping posts fresh (diversity guard)
+
+A common complaint with AI posts is that they all start to sound the same. theStacc guards against this: each time it writes a post's content, it looks at the **last five** posts already written for that business and instructs the AI to use a different opening, a different angle, and different bullet points. The result is a month of posts that read like a real person wrote them, not 30 copies of the same template.
+
+### Generating the next month
+
+When your current month of posts is running low, theStacc shows a prompt to **generate the next plan**. It picks up where your current content ends and builds the following window of titles, ready for you to fill in and publish.
+
+## Regenerating and editing posts
+
+You're always in control of the final wording.
+
+### Regenerate a single post
+
+If a post isn't quite right, open it and choose **Regenerate**. theStacc rewrites that one post - applying the same diversity guard so the new version differs from your recent posts - without touching the rest of your calendar.
+
+### Edit a post inline
+
+Open any post before it's published and edit it directly:
+
+- **Title**
+- **Content**
+- **CTA** type and URL
+- **Scheduled date**
+
+For offers, you can also adjust the offer code and terms. Save your changes and the post is ready to publish.
+
+### Copy to clipboard
+
+Prefer to post on Google yourself? Use **Copy** to copy the post content to your clipboard, then paste it into your Google Business Profile manually. The post is marked **Copied** so you can keep track of which ones you've handled.
+
+### Editing a post that's already published
+
+Google doesn't allow editing a published post through its API. So if you need to change a live post, the flow is: unpublish it from Google (which returns it to **Generated**), make your edits, then publish again as a fresh post.
+
+## CTA link rules
+
+Google is strict about the links behind CTA buttons, so theStacc checks them for you.
+
+- **At save time**, the link must be HTTPS. If you paste something with the wrong scheme - plain `http://`, `mailto:`, `tel:`, `javascript:`, and similar - the save is rejected with a clear error so you can fix it in one keystroke. theStacc also auto-corrects common typos (a missing colon, or a bare domain like `www.example.com`) and strips tracking parameters before saving.
+- **At publish time**, theStacc checks the host. Links Google can't reach - URL shorteners (bit.ly, t.co, and the like), bare IP addresses, `localhost`, and internal or tunneling domains - are blocked. Rather than failing the whole post, theStacc publishes it **without the button** (a soft-fail) so your message still goes live, and notes why the button was dropped.
+
+For the complete list of link rules and how CTAs render on Google, see [Google Business Profile](/docs/local-seo/google-business-profile).
+
+One more limit worth knowing: Google rejects post content over 1,500 characters. If a post (including any offer or event details folded into the body) exceeds that, theStacc tells you before publishing so you can shorten it.
+
+## Limits to know
+
+### Free trial
+
+On the free trial, content generation is capped at **3 post contents per location**. That's enough to see the quality and try the workflow end to end before you subscribe.
+
+### Published-posts counter
+
+The posts page shows a counter of how many posts you've actually published to Google this month - **out of 30 per location** - so you can see your progress against a full month's plan at a glance. This is informational; it tracks the posts that went live this calendar month for that location.
+
+### Plan caps
+
+Your subscription plan sets how many posts you can generate per cycle. On a 10-post (10/10/10) plan, that's 10 per location for the 30-day period. If you hit your plan's cap, theStacc lets you know and points you to upgrade for more.
+
+## Compliance for regulated businesses
+
+If your business is in a regulated industry and your project has an advertising-compliance profile set up, every GBP post passes through a compliance check before it can publish. A post flagged as **block** or **hold for review** will not go live - it's marked as failed with the reason, and you'll need to edit it and publish again. This protects you from putting non-compliant claims in front of customers. Most businesses are not regulated and never see this gate. Learn more in [Advertising Compliance](/docs/local-seo/advertising-compliance).
+
+## Related
+
+- [Google Business Profile](/docs/local-seo/google-business-profile) - connect and optimize your profile, and full CTA link rules
+- [Reviews](/docs/local-seo/reviews) - monitor and respond to customer reviews
+- [Advertising Compliance](/docs/local-seo/advertising-compliance) - how the compliance gate works for regulated verticals

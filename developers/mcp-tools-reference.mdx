@@ -1,0 +1,222 @@
+---
+title: "MCP Tools Reference"
+description: "The theStacc MCP server lets an AI agent (like Claude) work on your blog for you — reviewing the content plan, drafting and generating posts, editing them,…"
+---
+
+The theStacc MCP server lets an AI agent (like Claude) work on your blog for you — reviewing the content plan, drafting and generating posts, editing them, swapping in your own images, and publishing to your site. This page documents every tool the agent can call, what each one does, what you can pass to it, and what comes back.
+
+Before you read this, make sure the MCP server is set up and connected to a project. That is covered in [Agent Keys & MCP Server](/docs/developers/agent-keys-mcp). Each agent key is tied to **one project**, so every tool here works on that single project automatically — the agent never has to choose a project.
+
+## A few things that are true for every tool
+
+- **One project per key.** The agent key the server runs with is scoped to a single project. The agent doesn't pick a project; it's already decided by the key.
+- **You stay in control of approval and publishing.** An agent can write, edit, and prepare posts all day, but it can only publish a post **you** have approved in the dashboard. More on this under [publish\_blog](#publish-blog).
+- **Status drives everything.** Most tools only work when a post is in the right status (for example, you can't publish a post that's still generating). The full map of statuses is in [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle). The relevant statuses are called out under each tool below.
+- **Generation runs in the background.** Tools that create or generate a post return right away with a post ID — they don't wait for the writing to finish. The agent checks progress by polling [generation\_status](#generation-status).
+- **Errors are clear.** If a tool can't do what was asked (the key is invalid, the post isn't approved, a file can't be read, a publish is blocked for compliance), it returns a readable error message instead of silently failing.
+
+## Planning and review
+
+Start here. These tools let the agent understand the project and see what work is already lined up.
+
+### get\_project\_context
+
+Returns the project this agent key is attached to.
+
+**What you get back:**
+
+- The project's ID
+- The account it belongs to
+- The project's name
+
+This is usually the first call an agent makes, so it knows which project it's working in. It only works for agent keys — a normal logged-in user has no single "implied" project, so this isn't available to them.
+
+### review\_content\_plan
+
+The natural starting point for any real work. It returns two things together:
+
+- **The blog list** — every planned and draft post in the project, each with its ID, title, status, and scheduled date. This is the essential part.
+- **The plan summary** — your content plan's dates, whether it has expired, how many plans exist, and whether a new plan can be generated. This part is best-effort: if it can't be loaded for any reason, the tool still returns the blog list and simply leaves the plan summary empty. Nothing breaks.
+
+Use this to decide what to do next: which posts still need to be generated, which are waiting for review, and whether the plan needs topping up.
+
+## Generation
+
+These tools create content. Remember: they all kick off work in the background and hand back a post ID immediately — the agent then polls [generation\_status](#generation-status) to follow along.
+
+### generate\_blog
+
+Generates a post that's **already in your plan**, by its ID.
+
+**What you pass:**
+
+- **blog\_id** (required) — the ID of the planned post to generate.
+- **additional\_direction** (optional, up to 2,000 characters) — extra steering for this one post ("lead with a customer story," "keep it under 800 words," "mention our weekend hours").
+
+**What happens:** the post moves to **Generating** and the tool returns right away. The AI plans the article, writes it, and creates its images in the background. When it's done the post lands in **Pending Review** for you to look at.
+
+**Which statuses this works on:** a post that is waiting to be generated, was generated but failed, was missed, or is already in review (you can regenerate one you didn't like). It will **not** generate a bonus post that's still **Awaiting Date** — pick a publish date for that post first. If the post is already generating, the tool reports that rather than starting a second run.
+
+### generate\_more
+
+Adds brand-new planned posts to the project — handy when the plan is running low and you want the agent to line up more topics.
+
+**What you pass:**
+
+- **count** (required) — how many posts to add, from **1 to 10**.
+
+**What happens:** the new posts are created with AI-picked titles and keywords and land in **Awaiting Date** status. They are \*not\* generated yet. A human picks a publish date for each one in the dashboard before they can be generated. This is deliberate — it keeps a person in the loop on when new content goes out, and it respects your plan's remaining capacity (you can't add more than your subscription allows for the period).
+
+After a human sets dates, the agent can generate each one with [generate\_blog](#generate-blog).
+
+### draft\_from\_abstract
+
+Starts a brand-new post from the agent's **own brief**, instead of from the auto-plan. Use this when the agent has a specific topic in mind that isn't already a planned keyword.
+
+**What you pass:**
+
+- **abstract** (required, 10 to 4,000 characters) — what the article should be about, in plain words. Cover the angle, the points to hit, the audience — whatever should steer it.
+- **blog\_type** (optional) — the kind of article, for example `how_to`. If you pass a type the generator doesn't recognize, it falls back to a how-to.
+
+**What happens:** a new post is created and immediately begins generating, and you get back its ID with status **Generating**. The AI uses your abstract as its source of truth for the article's direction, so the piece follows your specific pointers rather than just a generic keyword. Poll [generation\_status](#generation-status) to follow it. Like every other generation, this counts against your plan's per-period article allowance.
+
+### generation\_status
+
+Checks how a post's generation is going. The agent polls this after `generate_blog`, `draft_from_abstract`, or `generate_more`-then-generate.
+
+**What you pass:**
+
+- **blog\_id** (required).
+
+**What you get back:**
+
+- **status** — where the post is in its lifecycle (generating, done, failed, and so on).
+- **status\_message** — a short human-readable note about the current step.
+- **word\_count** — how many words have been written so far.
+- **images\_generated** and **images\_total** — image progress (for example, 2 of 3 done).
+- **error** — set if something went wrong.
+
+When the status shows the post has moved to **Pending Review**, generation is complete and it's ready for you to read.
+
+## Editing
+
+Once a post exists, these tools let the agent read it and refine it.
+
+### get\_blog
+
+Returns a single post in full: its complete content, title, excerpt, meta title and description, status, and other details. Use it before editing so the agent is working from the latest version.
+
+**What you pass:**
+
+- **blog\_id** (required).
+
+### edit\_blog
+
+Saves changes to a post's text and metadata. You only send the fields you want to change; anything you leave out is untouched.
+
+**What you can change (all optional):**
+
+- **title**
+- **content** (the full article body)
+- **excerpt**
+- **meta\_title**
+- **meta\_description**
+
+**Important status behavior:** if you edit the **content** of a post that's sitting in **Pending Review** (it was generated and is awaiting your approval), saving moves it to **Modified — Pending Review**. That's the signal that the draft changed after generation and is waiting on a fresh look. Editing only metadata (title, excerpt, meta fields) does not flip the status. See [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) for what each review status means.
+
+### regenerate\_section
+
+Rewrites **one section** of a post with AI — useful for tightening an intro or punching up a weak paragraph without touching the rest.
+
+**What you pass:**
+
+- **blog\_id** (required).
+- **section\_html** (required, up to 100,000 characters) — the exact HTML of the section to rewrite.
+- **tone** (0 to 100, default 50) — a slider from **0 = formal and professional** to **100 = casual and conversational**.
+- **length** (0 to 100, default 50) — a slider from **0 = shorter** to **100 = longer**.
+- **additional\_prompt** (optional, up to 1,000 characters) — any extra instruction for the rewrite.
+
+**What you get back:** the rewritten HTML for that section. This tool returns the new wording — it doesn't drop it into the post for you. The agent takes the returned HTML and saves it into the article with [edit\_blog](#edit-blog).
+
+### regenerate\_image
+
+Generates a fresh version of **one image** in the post.
+
+**What you pass:**
+
+- **blog\_id** (required).
+- **image\_src** (required, up to 2,000 characters) — the current image's source URL, so the system knows which image to replace.
+- **image\_alt** (up to 500 characters) — the image's alt text, used as context for the new image when you don't give a custom prompt.
+- **style** (0 to 100, default 50) — a slider across three looks: **0 = modern/minimalist**, **50 = abstract/artistic**, **100 = realistic/photographic**.
+- **custom\_prompt** (optional, up to 1,000 characters) — describe exactly what you want; this takes priority over the alt text as the basis for the image.
+
+**What you get back:** the URL of the newly generated image. As with section rewrites, the agent then places the new image into the post with [edit\_blog](#edit-blog).
+
+## Images
+
+### upload\_image
+
+Puts **your own** image into a post — a real product photo, a screenshot, a team picture — instead of an AI-generated one.
+
+**What you pass:**
+
+- **blog\_id** (required).
+- **file\_path** (required) — the path to a local image file. PNG, JPG, and WebP are the typical formats.
+- **alt\_text** (optional, up to 500 characters) — alt text for accessibility and SEO.
+- **placement** (default `replace`) — where the image goes:
+
+- **replace** — swaps an existing image in the post for yours.
+
+- **append** — adds your image at the end of the post.
+
+- **none** — only stores the image in your library and hands back an HTML snippet you can place yourself with [edit\_blog](#edit-blog).
+
+- **image\_index** (default 0) — which existing image to replace when placement is `replace`. It's zero-based, so 0 is the first image, 1 is the second, and so on. If there's no image at that position, the upload is added at the end instead.
+
+**Limits and handling:** the file can be up to **15 MB**. The image is converted to **WebP** (which keeps your pages fast) and stored in the project's asset library so you can reuse it. If the file can't be read or isn't a valid image, you get a clear error.
+
+**What you get back:**
+
+- **asset\_id** — the stored image's ID in your asset library.
+- **public\_url** — the live URL of the stored WebP image.
+- **img\_html** — a ready-to-use `<img>` snippet (handy when placement is `none`).
+
+If you upload into a post that's already published, the post is flagged to re-sync so the change reaches your live site.
+
+## Publishing
+
+### publish\_blog
+
+Publishes a post to the site connected to the project (WordPress, Webflow, Ghost, Shopify, Zepio, or a webhook).
+
+**What you pass:**
+
+- **blog\_id** (required).
+- **integration\_id** (optional) — which connected destination to publish to. Leave it out to use the project's active integration.
+
+**The approval rule (this matters):** an agent can publish **only** a post that a human has set to **Approved** in the dashboard. The agent cannot approve a post itself — the Approve click in the dashboard is the gate. If the agent tries to publish a post that isn't approved, the tool stops and tells it to ask the project owner to approve the post first. This is what keeps an automated agent from pushing anything to your live site without a person signing off.
+
+**Compliance holds:** for projects in regulated industries, a post may be checked against compliance rules right before it goes out. If the post is held or blocked, the tool surfaces that as an error rather than publishing — and an agent can never override a compliance hold (only a human can, and only for holds that are overridable at all). Most projects never see this.
+
+**What you get back on success:** confirmation that the post is published, plus the **published URL** where it's now live.
+
+## How the tools fit together
+
+A typical agent run looks like this:
+
+1. **get\_project\_context** — confirm which project we're in.
+2. **review\_content\_plan** — see what's planned and what's waiting.
+3. **generate\_blog** (or **draft\_from\_abstract** for a fresh topic) — write a post.
+4. **generation\_status** — poll until it's done.
+5. **get\_blog** — read the result.
+6. **edit\_blog**, **regenerate\_section**, **regenerate\_image**, **upload\_image** — refine it.
+7. \*A human reviews and clicks Approve in the dashboard.\*
+8. **publish\_blog** — push the approved post live.
+
+The two human checkpoints — picking publish dates for bonus posts, and approving before publish — are intentional. The agent does the heavy lifting; you keep the final say.
+
+## Related reading
+
+- [Agent Keys & MCP Server](/docs/developers/agent-keys-mcp) — how to create an agent key and connect the MCP server.
+- [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) — what every blog status means and how posts move between them.
+- [Public Blog API](/docs/developers/public-blog-api) — read your published posts as JSON for a static site or custom frontend.

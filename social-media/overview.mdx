@@ -1,0 +1,119 @@
+---
+title: "Social Media Overview"
+description: "The Social Media module plans, writes, and publishes AI-generated posts to your connected social accounts — Instagram, LinkedIn, Facebook, and X."
+---
+
+The Social Media module plans, writes, and publishes AI-generated posts to your connected social accounts — Instagram, LinkedIn, Facebook, and X. Everything you create lives on one dashboard, where you can watch posts move from idea to published, review what's coming up, and fix anything that needs your attention before it goes live.
+
+<Frame caption="How a monthly social plan becomes native captions and visuals for each platform">
+
+![How a monthly social plan becomes native captions and visuals for each platform](/images/docs/social-plan.svg)
+
+</Frame>
+
+## The dashboard at a glance
+
+The Social dashboard has three parts: a **stats bar** at the top, a switch between **calendar** and **list** views, and **filter tabs** to narrow down what you're looking at. Use the arrows next to the month name to move between months, and the list/grid toggle to switch views.
+
+### Stats bar
+
+Three cards summarize your pipeline at a glance:
+
+- **Published** - posts that have gone live on at least one platform.
+- **Scheduled** - posts that are generating, generated, approved, or waiting for their scheduled publish time. These are on track to publish.
+- **Draft** - posts waiting for your review (statuses **Pending Review** and **Modified**). These need a decision before they can move forward.
+
+### Filter tabs
+
+Beneath the stats bar, four tabs filter the calendar and list:
+
+- **All** - every post.
+- **Upcoming** - posts still on their way to being published.
+- **Published** - posts already live.
+- **Failed** - posts where publishing didn't complete, so you can retry them.
+
+## Calendar view
+
+The calendar shows a monthly grid with your posts placed on the day they're scheduled. Each day cell shows the posts planned for that date, with a **platform icon** for every account a post targets, so you can see your posting rhythm across the month at a glance. Days with multiple posts stack them together. Move between months with the arrows, and expand the calendar for a fuller view. Click any post to open it.
+
+## List view
+
+The list view is a table of your posts with these columns:
+
+- **Preview** - a thumbnail of the post's image (when it has one).
+- **Post** - the caption preview and topic.
+- **Format** - whether the post is an Image, Carousel, or Text post (see [Post formats](#post-formats) below).
+- **Pillar** - the content pillar the post belongs to.
+- **Date** - the scheduled publish date and time.
+- **Status** - the post's current state, plus a per-platform indicator showing how publishing went on each connected account.
+
+Click any row to open the full post editor, where you can edit captions, manage images, preview each platform, and publish.
+
+## Post statuses
+
+Every post carries a status that tells you exactly where it is in its journey. You'll see these on the calendar, in the list, and on the post page.
+
+### Generation states
+
+- **Pending** (To Be Generated) - queued for the AI to create.
+- **Generating** - the AI is writing the caption and creating the image now. This usually takes 30-90 seconds.
+- **Generated** - content is ready and waiting for your review.
+- **Failed** - generation didn't complete. A retry is available (see [Post-state badges](#post-state-badges-ready-warnings-and-failures)).
+
+### Review states
+
+These are the states where a post is waiting on you:
+
+- **Pending Review** - generated and waiting for your approval.
+- **Modified** (Modified Pending Review) - you edited a post after it was generated, so it's back in the review queue for a fresh look.
+- **Approved** - you've approved it; it's cleared to publish at its scheduled time.
+- **Rejected** - you declined this post, so it won't publish.
+
+### Publishing and archive states
+
+- **Scheduled** - approved and waiting for its scheduled publish time to arrive.
+- **Publishing** - actively being sent to your connected platforms.
+- **Published** - live on every targeted platform.
+- **Partially Published** (Partial) - it went live on some platforms but not all. The per-platform indicators show which succeeded and which need a retry.
+- **Missed** - the scheduled publish time passed before the post could go out.
+- **Cancelled** - publishing was stopped for this post.
+
+For a deeper walkthrough of what each failure means and how to recover, see [Post States & Failures](/docs/social-media/post-states-failures).
+
+## Post formats
+
+Every post has a format that decides what kind of content the AI produces and how it appears on each platform:
+
+- **Image** - a single caption paired with one generated image. This is the default for most posts.
+- **Carousel** - a multi-slide post viewers swipe through, with a cohesive visual system across all slides. Great for listicles, step-by-steps, and case studies.
+- **Text** - a caption with no image. By default the Social module turns text-only ideas into image posts so your feed always has a visual; **Text** appears only if your project has opted back into text posts.
+- **Image** (legacy "Text-Image") - older posts created before the current format names will show as Image.
+
+## How each platform handles your posts
+
+The same post can target several platforms at once, and the module tailors the caption to each one. A few platform rules are worth knowing because they affect what publishes successfully:
+
+- **Instagram** - every Instagram post needs an image; Instagram doesn't allow text-only posts. Carousels can hold between 2 and 10 images.
+- **LinkedIn** - publishes text and image posts. A multi-image "carousel" only renders as a true swipeable carousel when uploaded as a PDF document; otherwise the images post as separate images. LinkedIn also tends to show posts with external links to fewer people, so the editor will suggest moving links to the first comment.
+- **Facebook** - publishes text and image posts with a very high caption limit, so length is rarely a concern here.
+- **X (Twitter)** - allows up to 4 images per tweet, with a 280-character caption limit on the free tier (X Premium raises this to 25,000). Links always count as 23 characters regardless of their actual length.
+
+The post editor checks these rules before you publish and flags anything that would be rejected, so you can fix it first. For how to connect each account and what each connection supports, see [Connecting Platforms](/docs/social-media/connecting-platforms).
+
+## Post-state badges: Ready, warnings, and failures
+
+Beyond the status, each post is classified into a readiness state that tells you whether it's safe to publish and what to do if it isn't. You'll see this on the post page as a colored banner or inline note:
+
+- **Ready** (green) - the post is generated and good to review and publish.
+- **Ready with warnings** (amber) - the post generated, but something needs your attention before it will publish cleanly. The most common case is a caption that's over a platform's character limit; edit it and the warning clears.
+- **Failures** (red) - generation didn't finish. The banner names the specific problem and offers the matching fix. For example, when the caption is ready but the image step failed, you'll get a **Generate image** button; when both are missing, you'll get a **Try again** button.
+
+To understand each failure type and its recovery action in detail, see [Post States & Failures](/docs/social-media/post-states-failures).
+
+## Where to go next
+
+- [Content Plans & Generation](/docs/social-media/content-plans-generation) - how the AI builds a monthly plan from your content pillars and fills your calendar.
+- [Publishing & Scheduling](/docs/social-media/publishing-scheduling) - how and when posts go live, and how to retry the ones that don't.
+- [Connecting Platforms](/docs/social-media/connecting-platforms) - connect Instagram, LinkedIn, Facebook, and X.
+- [Post Quota & Limits](/docs/social-media/post-quota-limits) - how many posts your plan includes and how the count refreshes.
+- [Post States & Failures](/docs/social-media/post-states-failures) - the full list of post states and how to recover from each one.

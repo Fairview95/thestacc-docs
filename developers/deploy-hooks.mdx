@@ -1,0 +1,215 @@
+---
+title: "Deploy Hooks"
+description: "A deploy hook lets your static site rebuild automatically whenever theStacc publishes, updates, or unpublishes a blog post."
+---
+
+A deploy hook lets your static site rebuild automatically whenever theStacc publishes, updates, or unpublishes a blog post. Without one, you'd have to log in to your hosting platform and trigger a rebuild by hand every time your content changes.
+
+It's a small piece of setup that you do once. After that, fresh content goes live on your site on its own.
+
+## How deploy hooks work
+
+A deploy hook is just a special URL that your hosting platform gives you. When something POSTs to that URL, your platform starts a new build. theStacc stores that URL on your project and POSTs to it for you at the right moments.
+
+Here's the full flow:
+
+1. A blog is published (or updated, or unpublished) in theStacc.
+2. theStacc sends a POST request to your deploy hook URL.
+3. Your hosting platform receives the request and starts a new build.
+4. During the build, your site fetches the latest content from the [Public Blog API](/docs/developers/public-blog-api).
+5. New static HTML pages are generated and deployed.
+
+The whole thing usually takes one to three minutes, depending on how long your site takes to build.
+
+## A build trigger, not a publishing destination
+
+It's worth being clear about what a deploy hook is and isn't, because it's easy to confuse with your publishing integration.
+
+- A **publishing integration** (WordPress, a custom webhook, and so on) is a **destination** — it's where theStacc sends the actual blog content.
+- A **deploy hook** is a **build trigger** — it carries no content. It only tells your hosting platform "something changed, please rebuild," and your site then pulls the content itself from the Public Blog API.
+
+The two are completely separate and can be used together. A static site typically uses the [Public Blog API](/docs/developers/public-blog-api) to read content plus a deploy hook to know when to rebuild. You do not need a publishing integration for the deploy hook to fire.
+
+## Events that trigger a rebuild
+
+theStacc fires your deploy hook when:
+
+- A blog is **published**.
+- A published blog is **updated** and re-synced.
+- A published blog is **unpublished** (removed from your site).
+
+Draft edits, content generation, and approval steps do **not** trigger a rebuild. The hook only fires for changes that affect what visitors see on your live site.
+
+Each event fires the hook immediately, as a background task. If several blogs go live close together (for example, when you approve a batch), each one fires the hook, so your hosting platform may queue more than one build. Most platforms handle this gracefully by superseding older queued builds with the newest one.
+
+## Setting up a deploy hook
+
+There are two parts: get a hook URL from your hosting platform, then paste it into theStacc.
+
+### Step 1: Get your deploy hook URL
+
+\#\#\#\# Cloudflare Pages
+
+1. Open your project in the Cloudflare dashboard.
+2. Go to **Settings \> Builds & deployments \> Deploy hooks**.
+3. Click **Add deploy hook**.
+4. Name it "theStacc" and select your production branch.
+5. Copy the generated URL (it looks like `https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/...`).
+
+\#\#\#\# Vercel
+
+1. Open your project in the Vercel dashboard.
+2. Go to **Settings \> Git \> Deploy Hooks**.
+3. Create a hook named "theStacc" for your production branch.
+4. Copy the generated URL (it looks like `https://api.vercel.com/v1/integrations/deploy/...`).
+
+\#\#\#\# Netlify
+
+1. Open your site in the Netlify dashboard.
+2. Go to **Site configuration \> Build & deploy \> Build hooks**.
+3. Click **Add build hook**.
+4. Name it "theStacc" and select your production branch.
+5. Copy the generated URL (it looks like `https://api.netlify.com/build_hooks/...`).
+
+\#\#\#\# GitHub Pages
+
+GitHub Pages has no built-in deploy hook, so you use a GitHub Actions workflow that listens for a repository dispatch event:
+
+```yaml
+name: Rebuild site
+on:
+  repository_dispatch:
+    types: [thestacc-publish]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and deploy
+        run: |
+          npm install
+          npm run build
+```
+
+Because theStacc sends a plain POST (not a GitHub dispatch event), you'll need a small bridge — for example a Cloudflare Worker or a similar webhook-to-dispatch service — that converts the incoming POST into a GitHub repository dispatch. Point your deploy hook URL in theStacc at that bridge.
+
+### Step 2: Add the URL to theStacc
+
+1. Go to **Settings \> Publishing \> API Access** in your theStacc dashboard.
+2. Find the **Deploy Hook** field.
+3. Paste the full URL you copied. It must start with `https://`.
+4. Click **Save**.
+5. Click **Test Hook** to confirm the connection. This sends a real POST to your URL and starts a test build on your hosting platform.
+
+Once a hook is saved, the **Test Hook** and **Remove** buttons appear so you can re-test or clear it at any time.
+
+> The Deploy Hook field is visible to project admins only, because the URL is effectively a secret that can trigger your build pipeline.
+
+## Build optimization
+
+Each deploy hook triggers a full site rebuild, so it pays to keep builds fast:
+
+- **Cache API responses.** If your framework supports build caching, the Public Blog API returns standard caching headers you can take advantage of.
+- **Use incremental builds.** Frameworks like Next.js and Astro can regenerate only new or changed pages instead of the whole site.
+- **Avoid unnecessary rebuilds.** theStacc only fires the hook for published-content changes, never for drafts or internal edits, so your build queue stays clean by default.
+
+## Monitoring builds
+
+After you've set up a hook, do one end-to-end check:
+
+1. Publish a test blog in theStacc.
+2. Open your hosting platform's build logs — you should see a new build start within seconds.
+3. Wait for the build to finish, then open your site and confirm the new blog appears.
+4. Load the published URL in your browser and check that the content renders correctly.
+
+From then on, your hosting platform's build history is the source of truth for whether a rebuild ran.
+
+## Troubleshooting
+
+If a publish doesn't seem to trigger a build, work through these:
+
+- **Re-run Test Hook.** In **Settings \> Publishing \> API Access**, click **Test Hook**. It reports back whether the request succeeded and the HTTP status your platform returned. A failure message tells you whether theStacc couldn't connect, timed out, or got a non-success status.
+- **Check the URL.** It must be a complete, public `https://` URL copied directly from your hosting platform. theStacc rejects URLs that are too short, contain spaces, or point at private or internal addresses, so a partial paste won't save.
+- **Confirm the hook still exists on your platform.** If you deleted or regenerated the hook in Cloudflare, Vercel, or Netlify, the old URL stops working — generate a new one and update it in theStacc.
+- **Check that automatic builds aren't disabled** on your hosting platform, and that any environment variables your build needs (such as your Public Blog API key) are set there.
+
+One important detail: **deploy hooks do not auto-retry.** theStacc fires the hook once per qualifying event in the background. If that single request fails — your platform was down, the URL was wrong, the request timed out — theStacc logs it and moves on; it does not try again, and the failure never blocks or breaks your publish in theStacc. To recover from a missed build, fix the cause and either re-test the hook or trigger a manual rebuild on your hosting platform.
+
+## Security
+
+Your deploy hook URL is stored securely and is only ever shown to project admins — it's never exposed in the public part of the app. The URL itself is the credential: anyone who has it can start a build, so treat it like a password.
+
+theStacc also validates the URL before saving it and again before firing it, and refuses to send requests to private or internal network addresses.
+
+If you think your URL has leaked:
+
+1. Delete the hook on your hosting platform.
+2. Create a new one.
+3. Paste the new URL into **Settings \> Publishing \> API Access** and save.
+
+## Managing deploy hooks programmatically
+
+If you'd rather configure the hook through the API instead of the dashboard, theStacc exposes these endpoints on the project. All of them require an authenticated project **admin**.
+
+### Get the current hook
+
+```
+GET /api/v1/projects/{project_id}/deploy-hook
+```
+
+Returns the saved URL and a boolean for whether one is set:
+
+```json
+{
+  "deploy_hook_url": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/...",
+  "has_hook": true
+}
+```
+
+When no hook is configured, `deploy_hook_url` is `null` and `has_hook` is `false`.
+
+### Save or update the hook
+
+```
+PUT /api/v1/projects/{project_id}/deploy-hook
+```
+
+Body:
+
+```json
+{ "deploy_hook_url": "https://api.netlify.com/build_hooks/..." }
+```
+
+The URL must be a public `https://` address. theStacc rejects it if it points at a private or internal address, is shorter than 20 characters, or contains spaces. On success it returns the saved URL with `has_hook` set to `true`.
+
+### Test the hook
+
+```
+POST /api/v1/projects/{project_id}/deploy-hook/test
+```
+
+Sends a real POST to your saved URL and returns whether it worked:
+
+```json
+{
+  "success": true,
+  "status_code": 200,
+  "message": "Deploy hook triggered successfully"
+}
+```
+
+If theStacc can't reach the URL or the request times out, `success` is `false` and `message` explains what went wrong.
+
+### Remove the hook
+
+```
+DELETE /api/v1/projects/{project_id}/deploy-hook
+```
+
+Clears the saved URL and returns `204 No Content`. After this, publishing no longer triggers a rebuild until you add a hook again.
+
+## Next steps
+
+- Review the [Public Blog API](/docs/developers/public-blog-api) reference for the endpoints your build uses to fetch content.
+- Follow the [Static Site Integration](/docs/developers/static-site-integration) guide if you haven't connected your site yet.

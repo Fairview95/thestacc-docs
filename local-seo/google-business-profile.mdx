@@ -1,0 +1,140 @@
+---
+title: "Google Business Profile"
+description: "Your Google Business Profile (GBP) is the single most important asset for local search visibility."
+---
+
+Your Google Business Profile (GBP) is the single most important asset for local search visibility. It is what shows up in the map pack and in "near me" searches. theStacc connects directly to your GBP so you can publish posts, reply to reviews, and keep your listing active without ever leaving the app.
+
+## Connecting your profile
+
+You connect your GBP in two places, and both lead to the same secure Google sign-in:
+
+- During **Local SEO onboarding**, when you first set up the module.
+- Any time afterward, from **Local SEO \> Settings \> Setup \> Connection**.
+
+When you click **Connect GBP**, theStacc opens a Google sign-in window where you grant permission. Behind the scenes, theStacc uses a connection broker (our GBP posting partner) to handle the OAuth handshake securely, so your Google password is never seen or stored by theStacc.
+
+Your GBP needs to be **claimed and verified** with Google before you connect.
+
+### How the connection works, step by step
+
+1. You click **Connect GBP**. theStacc requests a one-time Google authorization link for your business.
+2. A Google sign-in window opens. Sign in with the Google account that owns or manages the business.
+3. You grant theStacc permission to post to and read your Business Profile.
+4. Google sends you back to theStacc. The app then **polls for status** every few seconds, watching for the connection to complete. This can take a moment while Google finishes setting things up.
+5. Once Google confirms, the window closes automatically and your profile shows as **Connected**, with the date you connected it.
+
+If your Google account manages more than one business, theStacc shows a **Select a GBP Location** list after sign-in so you can pick exactly which location to link (more on that below).
+
+### If the connection does not complete
+
+- **Popup blocked.** If your browser blocks the sign-in window, theStacc shows "Popup was blocked." Allow popups for the site and click **Connect GBP** again.
+- **Connection timed out.** theStacc waits up to about five minutes for you to finish signing in. If you close the window or step away, it stops waiting and you can simply try again.
+
+For a deeper explanation of connection errors ("GBP service configuration error," "GBP service is busy," and similar messages), see [Connection & broker errors](/docs/local-seo/data-sync).
+
+## Choosing which location to connect
+
+After you sign in, theStacc asks Google which Business Profiles your account can manage and shows them to you as a **Select a GBP Location** list. Each entry shows the business name and address so you can tell them apart.
+
+- If your account manages **one** location, theStacc connects it automatically.
+- If it manages **several**, pick the one you want to link to this project.
+
+The location you pick is the one theStacc will post to and pull reviews from. theStacc stores the link to that specific profile so future posts always go to the right place. You can switch to a different location later by disconnecting and reconnecting.
+
+## Managing your connection
+
+Once connected, the **Connection** tab gives you everything you need to keep things healthy:
+
+### Recheck (health check)
+
+Google tokens can quietly expire, or a profile can be disconnected on Google's side, and the app may still show "Connected." Click **Recheck** to ask Google live whether the connection still works:
+
+- If it is healthy, you see "Connection is healthy - you can publish to GBP."
+- If it is not, theStacc tells you why and marks the profile as disconnected so it stops offering **Publish** until you reconnect.
+
+The last time you ran a recheck is shown next to your connection date, so you always know how fresh the status is.
+
+### Disconnect
+
+Click **Disconnect** to unlink your GBP from the project. This stops all posting and review syncing and turns auto-publish off. Your saved business details stay intact, and you can reconnect at any time without redoing your whole setup.
+
+### Auto-Publish
+
+The **Auto-Publish** toggle controls whether theStacc publishes your scheduled GBP posts for you. When it is on, theStacc publishes each post on its scheduled date during a **daily run at 8 AM UTC**. When it is off, your posts stay as drafts until you publish them by hand.
+
+- Auto-publish only works while GBP is connected. If you disconnect, it turns off automatically.
+- Only posts that are ready (generated, not still being written and not previously failed) are published.
+
+## Profile optimization
+
+Once connected, theStacc analyzes your profile and generates an optimization score covering the parts of your listing that move local rankings.
+
+### Business information
+
+- Business name accuracy
+- Address and service-area configuration
+- Phone number and website URL
+- Business hours, including holiday hours
+- Business description with keyword optimization
+
+### Categories
+
+Your primary category is the strongest single ranking factor for local search. theStacc analyzes your competitors and suggests the best primary and secondary categories for your business.
+
+### Attributes
+
+Google supports dozens of attributes (wheelchair accessible, free Wi-Fi, outdoor seating, and many more). theStacc identifies which ones are relevant to your business and helps you fill them in.
+
+## Google Posts
+
+theStacc generates and publishes local posts to your Google Business Profile to keep it active, which is itself a ranking signal.
+
+- **Length is tuned for GBP.** Posts are written to land around 600-800 characters (with a 400-900 character target range). Google shows only about the first 250 characters before a "Read more" fold, so theStacc front-loads the most concrete, specific value. Google's hard limit is 1,500 characters; theStacc will not let an over-length post publish.
+- **Content targets your local keywords** so each post does double duty as fresh, relevant content.
+- A **monthly calendar** shows every scheduled and published post. Filter by **Upcoming** or **Published**.
+- You can **edit posts inline** before publishing, **copy** post content to your clipboard, and **regenerate** any post that needs improvement.
+- Posts are sent to GBP as clean plain text. Google Business Profile does not render Markdown, so theStacc strips formatting automatically.
+
+Configure posting frequency in **Local SEO \> Settings \> Preferences**. For the full posting and scheduling workflow, see [GBP Posts & Calendar](/docs/local-seo/gbp-posts-calendar).
+
+### Call-to-action buttons
+
+Each post can include a Google call-to-action button. theStacc supports these button types:
+
+- **Book**
+- **Order online**
+- **Buy / Shop**
+- **Learn more**
+- **Sign up**
+- **Call now**
+
+When you add a button, you also provide the link it points to. Google is strict about which links it will accept, so theStacc checks and cleans your link before publishing (see the rules below).
+
+### Rules for call-to-action links
+
+Google Business Profile silently rejects links it considers unsafe or unreachable, which can quietly fail a post. To prevent that, theStacc enforces clear rules on CTA links:
+
+- **HTTPS only.** Your link must start with `https://`. theStacc auto-fixes common slips for you: a bare domain like `surgepv.com` or `www.surgepv.com` becomes `https://surgepv.com`, and a missing-colon typo like `https//x.com` is repaired.
+- **Blocked link types.** Links using `http://`, `javascript:`, `data:`, `file:`, `ftp:`, `mailto:`, or `tel:` are rejected. These either will not render as a button or are a security risk. You will see a message that the CTA URL must be HTTPS and publicly reachable.
+- **Blocked destinations.** Links that point somewhere Google cannot reach are rejected, including `localhost` and loopback addresses, bare IP addresses, and internal or test domains ending in `.local`, `.test`, `.invalid`, or `.internal`. Developer tunneling domains (ngrok and similar) are also blocked.
+- **No URL shorteners.** Shortened links (bit.ly, t.co, tinyurl, and the like) are rejected because Google follows the redirect chain and rejects the hop. Paste the final destination URL instead.
+- **Tracking parameters are removed silently.** theStacc strips analytics junk such as `utm_source`, `utm_medium`, `utm_campaign` and other `utm_*` tags, plus ad-click IDs like `gclid` and `fbclid`, before the link goes to Google. The link still works exactly the same for the person who clicks it; per-post analytics on GBP are deprecated, so these tags are dead weight that can trip Google's link validator. You do not need to do anything.
+
+theStacc warns you in the editor if a link looks like it will be rejected, so you can fix it before publishing. If a link is otherwise fine but points to a blocked destination, theStacc publishes the post **without** the button rather than failing the whole post.
+
+## Performance tracking
+
+Track your local SEO performance over time:
+
+- **GBP score** - overall profile health
+- **Map pack appearances** - how often you show in the local 3-pack
+- **Search queries** - what searches trigger your listing
+- **Customer actions** - calls, direction requests, and website visits
+- **Photo views** - how your gallery performs versus competitors
+
+## Related articles
+
+- [GBP Posts & Calendar](/docs/local-seo/gbp-posts-calendar) - planning, editing, scheduling, and publishing posts
+- [Reviews](/docs/local-seo/reviews) - monitoring and replying to Google reviews
+- [Connection & broker errors](/docs/local-seo/data-sync) - what the GBP service error messages mean and how to recover

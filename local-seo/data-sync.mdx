@@ -1,0 +1,115 @@
+---
+title: "Data Sync & Status"
+description: "When you add a business location to Local SEO, theStacc reaches out to Google to pull in your live data - your star rating, your reviews, and a starter set…"
+---
+
+When you add a business location to Local SEO, theStacc reaches out to Google to pull in your live data - your star rating, your reviews, and a starter set of local keywords. This page explains exactly what gets synced, how to read the sync status, when to run a manual sync, and what happens if part of a sync fails.
+
+## What syncs after you add a location
+
+The moment you confirm a business (or add a new location), theStacc kicks off a background sync. You don't have to wait on the page - it runs on its own and the dashboard updates as it goes.
+
+A sync pulls three things, in order:
+
+1. **Business info** - your current **star rating** and **total review count**, pulled straight from your Google Business Profile listing.
+2. **Reviews** - up to **100 of your most recent reviews**, imported so you can read and respond to them inside theStacc.
+3. **Keywords** - **10 starter local keywords** generated for your business, so you have something to work with right away. You can add, edit, or remove keywords later from your keyword settings.
+
+### A note on rating and review count
+
+Your **rating** and **review count** always come from Google's actual listing - they are never calculated from the handful of reviews theStacc imports. A sync only imports a sample of your reviews (up to 100), so averaging that sample would give a wrong number. This is why your displayed rating matches Google exactly, even when theStacc has only imported some of your reviews.
+
+If Google has no rating data for your listing yet (common for brand-new businesses or those with a very thin profile), theStacc records that the sync ran but leaves your rating blank, showing a dash (-) instead of a misleading 0.
+
+### Fetching reviews can take a moment
+
+Pulling reviews from Google is the slowest step. **Taking 30 or more seconds is completely normal** - theStacc has to ask Google for your reviews and wait for the results to come back. The dashboard shows "Fetching reviews (this may take a moment)..." while this happens. It is not stuck - just let it run.
+
+### What each review brings in
+
+For every review theStacc imports, it captures:
+
+- **Author name** - the reviewer's name
+- **Author photo** - the reviewer's profile image
+- **Star rating** - 1 to 5 stars
+- **Review text** - what the customer wrote
+- **Date posted** - the timestamp of the review
+
+These are the fields you'll see on the **Local SEO \> Reviews** page. New reviews come in marked as "new" so you can spot which ones still need a response. See [Reviews](/docs/local-seo/reviews) for how to read, filter, and respond to them.
+
+## Reading the sync status
+
+While a sync is running, the dashboard shows where it is in the process. There are six possible states:
+
+| Status | What it means |
+| --- | --- |
+| **Idle** | No sync is running. This is the resting state. |
+| **Syncing business data** | Pulling your rating and review count from Google. |
+| **Fetching reviews** | Importing your reviews. This is the step that can take 30+ seconds. |
+| **Generating keywords** | Creating your starter local keywords. |
+| **Completed** | The sync finished and your data is refreshed. |
+| **Failed** | The sync hit a problem. Your dashboard will show why and let you retry. |
+
+A sync always moves through these stages in order: **idle, then syncing business, then syncing reviews, then syncing keywords, then either completed or failed.** The dashboard updates the message automatically as each stage finishes, so you can watch the progress in real time.
+
+## Running a manual sync
+
+Your data refreshes automatically the first time you set up a location, and again on a return visit if your data has gone stale. But you can also refresh it yourself at any time.
+
+To run a manual sync:
+
+1. Open your Local SEO dashboard for the location.
+2. Click the **Sync Data** button (it has a refresh icon).
+3. Watch the status message - it will move through "Syncing business data," "Fetching reviews," and "Generating keywords" before showing "Sync complete! Data refreshed."
+
+When to use **Sync Data**:
+
+- **You just got new reviews on Google** and want them pulled in now rather than waiting for the next automatic refresh.
+- **Your star rating or review count changed** and you want the dashboard to match Google.
+- **A previous sync failed** and you want to try again.
+- **Your data looks stale** - for example, the "Last synced" timestamp is old.
+
+Running **Sync Data** requires editor access to the project. If the button is greyed out, you have view-only access; ask a project owner or admin to run the sync or grant you editor rights.
+
+If you click **Sync Data** while a sync is already running, theStacc won't start a second one - it simply lets the in-progress sync finish.
+
+## Partial syncs: when one step fails but others succeed
+
+The three steps - business info, reviews, and keywords - run independently. If one step fails, theStacc keeps the data from the steps that worked rather than throwing everything away.
+
+For example: if your **business info syncs successfully** but the **reviews step fails** (this can happen for some international listings, or if Google is temporarily slow to respond), your rating, review count, and keywords are still saved. The sync is marked **completed** because useful data came through. You simply won't have the reviews from that run.
+
+A sync is only marked **failed** when \*all three\* steps fail - meaning theStacc couldn't pull your business info, your reviews, \*or\* generate keywords. In that case nothing useful came back, and the dashboard shows the error.
+
+### How to retry a partial or failed sync
+
+Either way, the fix is the same: click **Sync Data** to run the whole sync again. A retry re-attempts every step, so a step that failed last time gets another chance. Reviews and keywords you already have are preserved - theStacc skips anything it has already imported and only adds what's new, so retrying never creates duplicates.
+
+If retrying doesn't resolve a failure, see [Error Handling & Sync Failures](/docs/local-seo/error-handling-sync-failures) for how to read the error details and what each type of failure means.
+
+## Stuck syncs and the 5-minute rule
+
+Very occasionally a sync can get "stuck" - for example, if the server restarts in the middle of one. Without a safeguard, the location could stay frozen in a "syncing" state and the **Sync Data** button would appear to do nothing.
+
+theStacc guards against this automatically. **If a sync has been in progress for more than 5 minutes, it's treated as stale.** The next time you click **Sync Data** (or the next automatic sync runs), theStacc clears the stuck sync and starts a fresh one in its place. You don't have to do anything special - just click **Sync Data** again and it will run.
+
+This means a wedged sync can never block you permanently. The worst case is a single click that doesn't appear to respond, after which the next click takes over cleanly.
+
+## How sync errors are recorded
+
+When a sync fails, theStacc stores the details so the dashboard can show you what went wrong instead of leaving you guessing. A stored error includes:
+
+- **An error code** - a short label for the type of failure (for example, a temporary AI overload versus a generic sync failure).
+- **A message** - a plain-language explanation of what happened.
+- **A retry-after hint** - for failures that are temporary (like a busy AI service), how long to wait before trying again. For most errors this is zero, meaning you can retry right away.
+- **A timestamp** - when the failure occurred.
+
+When the failure is a temporary AI overload, the dashboard shows a retry badge with a button so you can try again in one click. For other failures, the dashboard shows the error message along with the **Sync Data** button to retry. The error is cleared automatically the next time a sync completes successfully.
+
+For a fuller breakdown of error types, what they mean, and how to recover from each one, see [Error Handling & Sync Failures](/docs/local-seo/error-handling-sync-failures).
+
+## Related
+
+- [Reviews](/docs/local-seo/reviews) - reading, filtering, and responding to the reviews a sync imports
+- [Error Handling & Sync Failures](/docs/local-seo/error-handling-sync-failures) - understanding sync errors and recovering from failures
+- [Local SEO Overview](/docs/local-seo/overview) - the full Local SEO dashboard and what each metric means

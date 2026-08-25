@@ -1,0 +1,107 @@
+---
+title: "Image Generation"
+description: "Every blog you generate comes with its own images, planned and created automatically so each post looks finished the moment it lands in review."
+---
+
+Every blog you generate comes with its own images, planned and created automatically so each post looks finished the moment it lands in review. You don't have to source stock photos or open a design tool. This article explains how images are planned, what the different options mean, what happens when an image doesn't come out, and how to swap in your own photos when you'd rather use the real thing.
+
+## How images are planned
+
+Before the AI writes a single word, it plans the article, and part of that plan is an **image plan**. For each image it intends to create, it decides:
+
+- **Purpose** - what the image is for, such as a hero image at the top, a section illustration, or an infographic.
+- **Section heading** - which part of the article the image belongs to.
+- **Description** - a short, plain-language summary of what the image should show. This also becomes the image's alt text for SEO and accessibility.
+- **Aspect ratio** - the shape of the image (see below).
+- **Detailed prompt** - the precise instruction sent to the image generator, describing the visual style, composition, color palette, mood, and subject. Your chosen image style (and brand colors, when set) are baked into this prompt.
+
+Most posts are planned with two to four images. By design, the AI does not put words or text into the images themselves, which keeps them clean and reusable.
+
+## Aspect ratios
+
+The aspect ratio sets the shape of each image. theStacc supports:
+
+- **16:9** - widescreen landscape. This is the **default** and is used for the hero image and most in-article illustrations.
+- **4:3** - the classic, slightly squarer landscape shape.
+- **1:1** - a perfect square, handy for social-style or grid layouts.
+- **3:4** - a portrait (taller-than-wide) shape.
+
+The planner picks the ratio per image, and the hero image is always a 16:9 landscape.
+
+## How images appear in your post
+
+theStacc writes your article and creates the images in two stages, so you never have to wait on a blank screen.
+
+1. **Text first.** The AI writes the full article and drops in numbered placeholders, **IMAGE\_1**, **IMAGE\_2**, and so on, where each image will go. As soon as the text is written, the blog moves to a **text ready, images pending** state and you can start reading and editing right away.
+2. **Images next.** In the background, theStacc generates the planned images, two at a time. As each one succeeds, its placeholder is swapped for the real image in your content.
+3. **Featured image.** The first successful image, the hero, becomes the post's featured image automatically.
+
+When all the images are in, the blog lands in **Pending Review** for you to look over. You can watch the progress on the blog detail page, where a shimmer placeholder shows messages like "Generating image 2 of 4..." until each one arrives.
+
+## Image styles
+
+Every image is generated in the visual style you've chosen for the project, so your blog looks consistent post after post. The available styles are:
+
+- **Photorealistic** - a natural photography look with realistic, high-quality photos. This is the default.
+- **Flat Illustration** - a clean 2D vector style with flat colors and minimal shadows.
+- **Cinematic** - a dramatic, movie-like feel with cinematic lighting and bold contrasts.
+- **Watercolor** - soft, painterly textures with organic edges.
+- **Sketch** - hand-drawn line art, like pencil sketches with crosshatching and minimal color.
+- **Brand & Text** - a stock-photo base designed to carry clean branded typography.
+
+You set your default image style under **Content SEO \> Settings \> Preferences**. See [Preferences](/docs/content-seo/preferences) for how to choose it. If you've added brand colors there, theStacc weaves them into the image compositions for a more on-brand look.
+
+## When an image doesn't come out
+
+Image generation occasionally fails, for example if the image service is briefly busy or a prompt gets caught by the safety check. theStacc is built so that a missing image never costs you the whole article.
+
+When an image fails:
+
+- The **IMAGE\_N placeholder stays** in your content instead of a broken image.
+- The failure is recorded so you can retry just that image later.
+- Because your text is already written and saved, the blog still becomes reviewable. You'll see a friendly amber panel on the blog reading something like "2 images failed to generate - your blog text is saved and ready. Only the images need a redo."
+
+Your article is never thrown away or rewritten just because an image didn't render.
+
+> A blog only ends up in a true failed state when the whole generation can't complete, for example if the AI service is overloaded before any text is written. That case is handled separately, and you can read more in [Blog Generation](/docs/content-seo/blog-generation).
+
+## Retrying failed images
+
+When one or more images are missing, click **Retry images** on the blog. This re-runs image generation for only the placeholders that failed, reusing the original plan and prompt for each one.
+
+The big benefit: **retrying images does not re-write your article.** The AI writing step is skipped entirely, so you only pay for the handful of images that need a redo, never for regenerating the whole post. Successful retries drop straight into your content and the blog updates in place. Anything that still fails stays marked so you can retry again or adjust it.
+
+If a particular image keeps failing because of its prompt, you don't have to keep retrying the same instruction. Edit the image's prompt and regenerate it (see below), then retry again with the new wording.
+
+## Regenerating a single image
+
+If an image came out fine but isn't quite what you wanted, you can regenerate just that one without touching the rest of the post.
+
+1. Open the blog and select the image in the editor.
+2. Use the **Modern - Realistic** style slider to nudge the look. Toward Modern gives a clean, minimalist design; the middle leans abstract and artistic; toward Realistic gives a detailed, photographic result.
+3. Optionally type a new prompt in the **Image Prompt** box to describe exactly what you want.
+4. Click **Regenerate**.
+
+This is a per-image override, so you can fine-tune one image's style and prompt independently of your project default. When you provide a custom prompt for an image that already exists, theStacc edits the existing image to keep its composition while applying your changes; otherwise it creates a fresh one.
+
+## Using your own real images
+
+Sometimes a real photo beats a generated one, like an actual product shot, a screenshot, or your own brand photography. You can upload your own image to replace a generated one.
+
+When you upload an image, it's stored in your project's asset library and placed into the post as normal media. By default it replaces the first image in the article, or you can add it at the end instead. Your uploaded files are saved so you can reuse them across posts.
+
+This is also available to automated agents through theStacc's MCP server, so an assistant can drop a product screenshot straight into a draft in place of an AI image. See [Connect Platforms](/docs/content-seo/connect-platforms) for more on connecting tools.
+
+## Delivery, format, and safety
+
+A few things happen behind the scenes to keep your images fast and appropriate:
+
+- **WebP conversion.** Generated images are saved in the modern WebP format, which is typically 30-50% smaller than an equivalent PNG with no visible quality loss. Smaller images mean faster-loading pages and better Core Web Vitals scores, which helps your SEO.
+- **CDN delivery.** Images are served from a content delivery network, so they load quickly for your readers wherever they are.
+- **Safety moderation.** Every image request runs through a content safety check. If a prompt is rejected, you'll see a clear, friendly message such as "Image rejected by content safety check. Try a different prompt," and you can simply reword the prompt and try again.
+
+## Related articles
+
+- [Blog Generation](/docs/content-seo/blog-generation) - how a full post, text and images, is created end to end.
+- [Preferences](/docs/content-seo/preferences) - set your default image style, brand colors, and writing style.
+- [Publishing](/docs/content-seo/publishing) - how your finished post and its featured image go live on your site.

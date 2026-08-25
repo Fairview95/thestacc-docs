@@ -1,0 +1,138 @@
+---
+title: "Post Customization"
+description: "Every post theStacc generates comes ready to publish, but you stay in full control of the details."
+---
+
+Every post theStacc generates comes ready to publish, but you stay in full control of the details. This guide covers the settings and per-post edits that shape your captions: default and per-platform captions, hashtags, emoji style, first comments, your call-to-action (CTA) bank, and the language your content is written in.
+
+Most of these live in two places:
+
+- **Per-post edits** happen in the post editor (click any post on your dashboard). These apply to that one post.
+- **Account-wide preferences** live under **Social Media \> Settings \> Preferences** (hashtags, emoji, CTAs) and **Social Media \> Settings \> Brand & Style** (content language). These shape every post we generate from now on.
+
+## Default caption vs per-platform captions
+
+Each post has one **default caption** plus an optional **per-platform caption** for every connected platform.
+
+- The **default caption** is the base version of your message. It is what publishes anywhere you have not written a custom version.
+- A **per-platform caption** is a tailored variant for a single platform (for example, a punchy short version for X and a longer story for LinkedIn).
+
+When we generate a post, theStacc writes the default caption and platform-optimized variants at the same time, because each platform rewards a different length and tone. You can edit any of them in the post editor.
+
+**How it resolves at publish time:** for each platform, if a per-platform caption exists for it, that override wins and is the exact text that publishes there. If there is no override for that platform, the default caption is used. This is decided per platform, so a single post can ship a custom caption to X and the default caption to Facebook in the same publish.
+
+This is also why per-platform captions matter for length: X (Twitter) caps a free-tier post at 280 characters, while LinkedIn and Instagram allow far more. Writing a shorter X variant keeps that platform inside its limit without forcing your other captions to be short too. The editor shows a live character counter per platform and will warn you (and block publishing) if a caption is over that platform's limit. See [Content & Scheduling](/docs/social-media/content-scheduling) for the editor and counters.
+
+## Hashtags
+
+You can add or remove hashtags on any post directly in the post editor. Account-wide hashtag behavior is set under **Social Media \> Settings \> Preferences** in the **Hashtags** section.
+
+### Hashtag strategy
+
+Choose how hashtags are added to your posts:
+
+- **Auto** \*(default)\* - theStacc picks relevant hashtags for each post automatically.
+- **Manual** - hashtags are driven by your own lists (below) rather than auto-suggested topics.
+- **None** - no hashtags are added to your posts at all.
+
+When the strategy is set to **Auto** or **Manual**, two lists become available:
+
+- **Always include** - hashtags that should appear on your posts (for example, your branded tag like `#YourBrand`).
+- **Never use** - hashtags that should never appear (for example, a competitor's tag).
+
+### Auto-spacing fixes glued hashtags
+
+When you add hashtags by typing, pasting, or inserting chips, they often end up stuck together, like `#GreenEnergy#JaipurSolar`. Instagram still treats those as two separate clickable tags, but they render as a wall of text with no spaces and wrap awkwardly mid-tag on the live post.
+
+theStacc fixes this automatically when you save. A run of glued hashtags is separated with a single space, so `#a#b` becomes `#a #b` and `#GreenEnergy#JaipurSolar` becomes `#GreenEnergy #JaipurSolar`. The fix is safe and precise:
+
+- It only adds spaces between back-to-back hashtags. Already-spaced tags are left exactly as they are.
+- It never touches links. A URL fragment like `docs.example.com/guide#section2` is left intact, and an inline reference like `text#tag` is not split.
+- It runs on your default caption, your per-platform captions, and your first comments, so wherever you put your tags, they come out clean.
+
+This normalization happens behind the scenes every time you save, so you never have to think about spacing your tags by hand.
+
+## Emoji usage
+
+Set how often emojis appear in your captions under **Social Media \> Settings \> Preferences** in the **Emoji Usage** section. Three options control the style across all generated captions:
+
+- **Minimal** - emojis used sparingly, only where they genuinely add meaning.
+- **Moderate** \*(default)\* - a few emojis per caption to add personality.
+- **Frequent** - leans into emoji as part of the brand voice.
+
+This setting changes how captions are written for every post going forward. It does not retroactively rewrite posts you have already generated. If you want to change the emoji feel of an existing post, edit its caption directly or regenerate it.
+
+## First comments
+
+A **first comment** is text that posts as the owner's very first reply to a post, immediately after it goes live. It is the standard way to keep your caption clean while still pinning a call to action or a link where people will see it.
+
+theStacc supports a first comment per platform, drafted automatically for Instagram and LinkedIn (the platforms where a first comment is most effective). You can edit or write your own first comment for each platform in the post editor.
+
+A few things worth knowing:
+
+- First comments are **per platform**, so your Instagram first comment and your LinkedIn first comment can say different things.
+- On Instagram, LinkedIn, and Facebook, your post's hashtags are automatically appended to the first comment at publish time. This is why many creators keep their caption clean and let the tags ride along in the first reply.
+- The same hashtag auto-spacing described above also runs on first comments when you save.
+
+This is especially useful on LinkedIn, where putting a link in the post body reduces reach. Keeping the link in the first comment lets you share it without the penalty.
+
+## Your CTA bank
+
+A call to action (CTA) tells the reader what to do next, like "Book a demo" or "Shop now." Instead of pasting one CTA everywhere, theStacc lets you save a small **bank** of CTAs and automatically picks the right one for each post type. Set this up under **Social Media \> Settings \> Preferences** in the **Call to Action** section.
+
+Each CTA in your bank has three parts:
+
+- **Text** - the wording of the call to action (for example, "Book a call").
+- **URL** - where it sends people (for example, your Calendly or pricing page).
+- **Intent** - what kind of action it is. This is how theStacc matches the right CTA to the right post.
+
+You can save up to five CTAs in your bank.
+
+### Intent and how it is matched
+
+Intent is one of five values: **Book / Demo**, **Sign up**, **Learn more**, **Download**, or **Shop / Buy**. theStacc matches a post's archetype to the right intent, so results and case-study posts get your "Book" CTA, educational posts get your "Learn more" CTA, and so on. If no CTA in your bank matches a given post type, theStacc falls back to the first CTA in your bank.
+
+When you add a CTA, theStacc takes a best guess at the intent from the link and text so you do not have to set it manually:
+
+- A Calendly, cal.com, SavvyCal, or "book / demo / schedule" link is guessed as **Book / Demo**.
+- A Stripe, checkout, shop, store, cart, or "buy / order" link is guessed as **Shop / Buy**.
+- A signup, register, trial, or "get started" link is guessed as **Sign up**.
+- A download, PDF, guide, template, checklist, or ebook link is guessed as **Download**.
+- Anything else defaults to **Learn more**.
+
+The guess is just a starting point. You can override the intent on any CTA using the dropdown next to it, and your choice is always respected.
+
+If you have not saved any CTAs but your project has a website on file, theStacc synthesizes a default "Visit our website" CTA so your posts still carry a real link.
+
+### CTA frequency
+
+Under the same **Call to Action** section, choose how often a CTA should appear in your posts:
+
+- **Never** - no CTAs in posts.
+- **Rarely** - roughly 1 in 10 posts.
+- **Sometimes** \*(default)\* - roughly 1 in 4 posts.
+- **Often** - roughly 1 in 2 posts.
+- **Always** - every post includes a CTA.
+
+Not every great post needs a hard sell, so spacing CTAs out keeps your feed from feeling like an ad reel. Whether a given post includes a CTA is decided consistently, so editing or regenerating the same post does not make the CTA randomly appear and disappear.
+
+## Content language
+
+theStacc can write your captions and your content plan in your audience's language. Set it under **Social Media \> Settings \> Brand & Style** in the **Content language** section. The default is English (US).
+
+More than 30 languages are supported, including:
+
+- English (US and UK), Spanish, French, German, Portuguese, Italian, Dutch
+- Japanese, Korean, Chinese (Simplified), Thai, Vietnamese, Indonesian, Malay, Filipino/Tagalog
+- Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu
+- Arabic, Turkish, Russian, Polish, Swedish, Danish, Norwegian, Finnish
+
+When you pick a non-English language, all generated content is written entirely in that language using its native script, including every topic in your content plan and every caption. English remains the default and behaves exactly as before, so existing English users are unaffected.
+
+This is an account-wide setting that shapes new content. It does not translate posts you have already generated.
+
+## Related articles
+
+- [Content & Scheduling](/docs/social-media/content-scheduling) - the post editor, per-platform caption fields, live character-limit counters, and scheduling.
+- [Brand & Style](/docs/social-media/brand-style) - brand color, logo, image style, brand voice, content language, and your words-to-avoid list.
+- [Connecting Platforms](/docs/social-media/connecting-platforms) - connect Instagram, Facebook, LinkedIn, and X so your customized posts can publish.

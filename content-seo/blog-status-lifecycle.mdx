@@ -1,0 +1,153 @@
+---
+title: "Blog Status Lifecycle"
+description: "Every blog post in theStacc has a status that tells you exactly where it is in its journey, from \"planned but not written yet\" all the way to \"live on your…"
+---
+
+Every blog post in theStacc has a **status** that tells you exactly where it is in its journey, from "planned but not written yet" all the way to "live on your website." The status is what colors each card on your calendar and what decides which buttons you see on a post.
+
+This page is the complete map. It lists every status, explains what each one means in plain language, and shows how a post moves from one to the next, including what happens when something goes wrong.
+
+You rarely need to think about most of these. theStacc moves posts through the happy path on autopilot. This reference is here for the moments you want to understand \*why\* a post is where it is, or what to do to nudge it forward.
+
+## The short version
+
+A typical post follows this path:
+
+**Planned → Generating → Pending review → Approved → Scheduled → Publishing → Published.**
+
+Depending on your publishing mode, theStacc may skip the review and approval steps and publish for you automatically. The rest of this page fills in every status along the way, plus the side roads (failures, rejections, and missed dates) and how to get back on track.
+
+## All 15 statuses
+
+Each status below shows its plain-language label first, then the exact technical name theStacc uses behind the scenes (you may see the technical name in the Public Blog API or in support conversations).
+
+### Before generation
+
+- **Awaiting date** (`awaiting_user_date`) — A bonus blog you added that doesn't have a publish date yet. It sits quietly out of your calendar until you pick a date. theStacc will not generate it until you do. See [Bonus blogs](#bonus-blogs-picking-a-date) below.
+- **Planned** (`to_be_generated`) — The post is on the calendar with a scheduled date, but the AI hasn't written it yet. This is where most new posts start. On its scheduled day, automated generation picks it up.
+
+### While the AI is working
+
+- **Generating** (`generating`) — The AI is actively researching the keyword, writing the post, and creating images. A post stays here until generation finishes one way or another.
+- **Text ready, images pending** (`text_ready_images_pending`) — The written content is finished and saved, but one or more images are still being generated. Your words are safe; only the pictures are catching up.
+
+### Done generating, waiting on you
+
+- **Pending review** (`generated_pending_review`) — Generation finished and the post is waiting for you to review it. This is the main "please take a look" state.
+- **Modified, pending review** (`modified_pending_review`) — You edited the body of a post that was already in review, so it needs another look before it can be approved. See [What "Modified, pending review" means](#what-modified-pending-review-means).
+
+### Approved and on the way out
+
+- **Approved** (`approved`) — You've reviewed and approved the post. It's ready to publish.
+- **Scheduled** (`scheduled`) — The post is approved and queued to publish automatically at a set time.
+- **Publishing** (`publishing`) — theStacc is actively pushing the post to your website or CMS right now. This is usually brief.
+- **Published** (`published`) — The post is live on your website. Done.
+- **Unpublished** (`unpublished`) — The post was live but you took it down. It's back to a draft you can edit and re-publish.
+
+### When something needs attention
+
+- **Generation failed** (`generation_failed`) — The AI couldn't finish writing the post. No quota is consumed for a failed generation, and you can retry.
+- **Publish failed** (`publish_failed`) — The post was written and approved, but theStacc couldn't push it to your website (for example, your CMS rejected the request).
+- **Rejected** (`rejected`) — You declined the post during review. It won't publish unless you regenerate it or change your mind.
+- **Schedule missed** (`missed`) — The post's scheduled date passed before it ever got generated, so automated generation skipped it. You can still generate it manually.
+
+## How a post moves through its life
+
+theStacc enforces a strict set of allowed moves between statuses, so a post can never jump somewhere that doesn't make sense (it can't go straight from "Planned" to "Published," for instance). Here are the transitions that matter to you.
+
+### Generation: from planned to a draft
+
+When a **Planned** post's day arrives (or you click **Generate** yourself), it moves into **Generating**. From there, one of three things happens:
+
+- **Generating → Pending review** — The post and all its images finished cleanly. It's ready for you to look at.
+- **Generating → Text ready, images pending** — The writing finished but images are still being created. Once the images land, the post moves on to **Pending review** on its own.
+- **Generating → Generation failed** — Something went wrong and the AI couldn't finish. Nothing is charged against your plan, and you can retry.
+
+### Review: deciding what to do with a draft
+
+When a post is **Pending review** (or **Modified, pending review**), you're in control. From here a post can go to:
+
+- **Approved** — You approve it. It's ready to publish.
+- **Rejected** — You decline it.
+- **Modified, pending review** — You edit the body and it needs another review (this only applies to a draft you've already had in review; see below).
+- **Scheduled** — If automated publishing is on, theStacc can take an approved draft straight into the publish queue.
+- **Published** — You can publish a reviewed draft directly with one click, without a separate approve step.
+
+### Publishing: getting the post live
+
+Once a post is **Approved**, it goes live one of two ways:
+
+- **Approved → Published** — You publish it now.
+- **Approved → Scheduled** — It's queued to publish automatically at the set time.
+
+When a **Scheduled** post's publish time arrives:
+
+- **Scheduled → Publishing** — theStacc starts pushing it to your website.
+- **Publishing → Published** — The push succeeded. The post is live and theStacc saves the live URL.
+- **Publishing → Publish failed** — The push didn't succeed (for example, your CMS was unreachable or rejected the request).
+
+After a post is **Published**, you can take it back down:
+
+- **Published → Unpublished** — You unpublish it. theStacc also asks your connected platform to remove or draft the post where possible, then the post becomes an editable draft again.
+- **Unpublished → Published** — You re-publish it as-is.
+- **Unpublished → Scheduled** — You queue it to re-publish automatically later.
+
+### Recovery: getting back on track after a problem
+
+Nothing here is a dead end. Every "something went wrong" status has a way forward:
+
+- **Rejected → Planned** — Regenerate the post from scratch. You can change the title, keyword, or angle first, and the AI writes a fresh draft.
+- **Generation failed → Planned** — Retry generation. theStacc resets the post so it can be generated again.
+- **Publish failed → Scheduled** — Re-queue the post to try publishing again.
+- **Publish failed → Unpublished** — Set it back to a draft so you can fix something (for example, reconnect your integration) before trying again.
+
+For transient publishing hiccups, theStacc also retries publishing for you automatically a limited number of times before it gives up and marks a post **Publish failed**.
+
+## Bonus blogs: picking a date
+
+When you add extra blogs beyond your plan's schedule ("bonus blogs"), they don't land on your calendar with a date right away. They start in **Awaiting date** so they don't pile up on today's calendar.
+
+To bring one into your schedule, open the blog and pick a publish date (today or any future date; past dates aren't allowed). That moves it:
+
+- **Awaiting date → Planned** — The date is set, the blog joins your regular calendar, and it will generate on the date you picked, either automatically or when you trigger it.
+
+Until you pick a date, theStacc never generates a bonus blog, so it costs you nothing to keep a few waiting in the wings.
+
+## What "Modified, pending review" means
+
+This status trips people up, so it's worth spelling out.
+
+When a freshly generated post is sitting in **Pending review** and you edit its body content in the editor, theStacc moves it to **Modified, pending review**. The meaning is simple: \*you changed a draft that was waiting for review, so it needs to be reviewed (and approved) again with your changes.\*
+
+It behaves exactly like **Pending review** for everything that follows: you can approve it, reject it, publish it directly, or regenerate it. The only difference is the label, which is your reminder that this draft now includes your edits.
+
+Note that editing a post that is **not** in review (for example, one that's already **Published**) does not move it here. Editing a published post just flags it to re-sync the changes to your website the next time you publish.
+
+## Schedule missed: what happens and what to do
+
+Automated generation only ever looks at posts scheduled for **today**. If a **Planned** post's scheduled date comes and goes without it being generated (for example, automated generation was off, or you hadn't connected a publishing integration yet), a daily cleanup flips it to **Schedule missed**.
+
+A missed post isn't lost. Once it's marked missed, theStacc's automation stops trying, and it waits for you:
+
+- **Schedule missed → Generating** — Open the post and click **Generate** to write it manually. You can also regenerate its plan (title, keyword, angle) first.
+
+When you regenerate the plan for a missed post, it stays missed and keeps its original date; only the title, keyword, and details are rewritten. Generating it manually is what actually brings it to life.
+
+To avoid missed posts in the first place, make sure automated generation is turned on and a publishing integration is connected before your scheduled dates arrive. See the cron and automated generation guide linked below.
+
+## Where statuses show up
+
+- **Calendar view** — Each post is a color-coded card. Several technical statuses share a single calendar color to keep things readable (for example, "Pending review" and "Modified, pending review" both show as **Pending Review**, and "Generating," "Text ready, images pending," and "Publishing" all show a working/in-progress state).
+- **Blog list** — A sortable table with a **Status** column.
+- **Blog detail page** — The full status, plus the buttons available for the post's current state.
+- **Public Blog API** — Only **Published** posts are returned, and the API also reports each post's status field for your own tooling.
+
+## A note on what you'll actually see
+
+If you don't have a publishing integration connected, theStacc treats a finished draft as simply "done" rather than nudging you toward a review-and-publish flow, because there's nowhere to publish it yet. Connect an integration to unlock the full approve-and-publish lifecycle. See [Publishing](/docs/content-seo/publishing) to set one up.
+
+## Related articles
+
+- [Draft & Approval Workflow](/docs/content-seo/draft-approval-workflow) — how to review, edit, approve, and reject drafts in detail.
+- [Publishing](/docs/content-seo/publishing) — publishing modes (no auto-publish, requires approval, auto-publish), integrations, and how posts go live.
+- [Cron & Automated Generation](/docs/content-seo/automated-generation) — how theStacc generates and publishes posts on autopilot, and how to keep posts from being missed.

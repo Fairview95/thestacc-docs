@@ -1,0 +1,78 @@
+---
+title: "Accounts & Workspaces"
+description: "An account is the top-level container in theStacc."
+---
+
+An **account** is the top-level container in theStacc. It is the unit you bill against, the place your projects live, and the boundary for who is on your team. Most people only ever need one account. But because a single login can belong to several accounts, agencies and people who help run more than one business can keep everything tidy and separate.
+
+## What an account is
+
+Every account has three things:
+
+- A **name** - what you call it (for example, your business name or your agency name).
+- A **slug** - a short, URL-friendly version of the name (lowercase, dashes instead of spaces). theStacc generates this for you automatically.
+- An **owner** - the person who created the account. The owner has full control, including billing and team management.
+
+Your login (your email and password, or Google sign-in) is separate from your accounts. **One person can belong to more than one account.** You might own one account for your own business and be a member of another that a client or colleague owns. When you sign in, theStacc loads the accounts you belong to and picks one as your current account.
+
+## Creating an account
+
+When you first sign up, theStacc creates your starting account for you during onboarding - you do not need to do anything extra. If you later need a second, separate account (for example, to run a different business under its own billing), you can create one.
+
+When you create an account:
+
+1. **Enter a name.** The name must be between 1 and 100 characters. An empty name is not allowed.
+2. **theStacc creates the slug for you.** It takes your name, lowercases it, turns spaces into dashes, and strips out any characters that are not letters, numbers, or dashes. For example, "Joe's Coffee Shop" becomes `joes-coffee-shop`.
+3. **If that slug is already taken**, theStacc automatically adds a short unique code to the end so your account still gets created (for example, `joes-coffee-shop-1a2b3c4d`). You never hit a dead end because of a name clash.
+4. **You become the Owner.** Whoever creates an account is automatically assigned the **Owner** role for it, with full access.
+
+A few rules worth knowing:
+
+- You cannot create an account with an empty name.
+- Slugs are always unique across theStacc - no two accounts share one, which is why the unique code is appended when there is a conflict.
+
+## Listing and switching accounts
+
+theStacc keeps track of every account you belong to and which one is currently active.
+
+Your **current account** determines what you see: the projects, team members, and subscriptions on screen all belong to the account you are currently in. When you sign in, theStacc selects your current account automatically (the one you last used, or your first account if you have only ever had one).
+
+In day-to-day use, you move between your businesses using the **project selector** at the top of the sidebar. Each project belongs to exactly one account, so choosing a project from the selector also puts you in that project's account. Use the dropdown to search your projects and switch between them, or choose **Create New Project** to start a new one.
+
+## How projects relate to accounts
+
+A **project** is a single business, website, or brand that you are running theStacc for. Every project belongs to **one account**. An account can hold many projects.
+
+Each project carries its own setup, completely separate from your other projects:
+
+- Its own **module configuration** - whether Content SEO, Local SEO, and Social Media are turned on for that project.
+- Its own **content plans and keywords**.
+- Its own **team access** - you can share an individual project with specific people.
+- Its own **subscription** - billing can be attached to the project itself.
+
+This separation means one business's blog calendar, keyword list, and connected publishing site never mix with another's, even when both live under the same account.
+
+## Account-level vs project-level subscriptions
+
+theStacc supports billing at two levels, and it checks both:
+
+- **Project-level subscription** - the plan is attached to a specific project. This is the common setup: each project pays for the modules it uses.
+- **Account-level subscription** - the plan belongs to the account and can apply across it.
+
+When theStacc checks whether a module (Content SEO, Local SEO, or Social Media) is unlocked, it first looks for a subscription on the project. If it does not find one there, it falls back to a matching subscription on the account.
+
+### Sharing access across accounts
+
+Because a project can be shared with people outside the account that owns it, theStacc makes sure collaborators get the access they need. When someone is added to a project as a member, their access to that project's paid features comes from the **project owner's** plan - not from their own account.
+
+In plain terms: if you are invited to help on someone else's project, you can work on it using **their** subscription. You do not need your own paid plan on your own account just to collaborate on theirs. This keeps invited teammates and agencies productive without forcing everyone to buy a plan.
+
+## Roles and team members
+
+The person who creates an account is its **Owner**. Owners have full control, including billing. To add other people, assign roles, and manage who can do what, see [Workspace & Team](/docs/account/workspace-team).
+
+## Related
+
+- [Workspace & Team](/docs/account/workspace-team) - invite members, assign roles, and manage access.
+- [Billing & Plans](/docs/account/billing) - module subscriptions, trials, and managing your plan.
+- [Key Concepts](/docs/getting-started/key-concepts) - how modules, content plans, and publishing fit together.

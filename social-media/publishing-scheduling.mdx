@@ -1,0 +1,109 @@
+---
+title: "Publishing & Scheduling"
+description: "Once a post is approved, you decide how and when it goes live."
+---
+
+Once a post is approved, you decide how and when it goes live. You can publish to all of its platforms at once, push to just one platform now and the rest later, or schedule it for a future time. This guide walks through every option.
+
+If a post still needs sign-off first, see [Approval & Review Workflow](/docs/social-media/approval-review-workflow). To check the live state of a post after it ships, see [Post States & Failures](/docs/social-media/post-states-failures).
+
+## Publish now vs scheduled
+
+When you publish a post, you choose one of two timings:
+
+- **Publish now** - The post is sent to your connected accounts immediately. theStacc reads each platform's result the moment it's accepted, so the dashboard reflects what actually happened right away (no waiting for a callback).
+- **Schedule for later** - The post is queued and goes live at the date and time you pick, in your project's timezone. You can keep editing a scheduled post up until it fires, and your edits are pushed through so the live post matches what you last saved.
+
+### The 5-minute minimum
+
+A scheduled time must be **at least 5 minutes in the future**. If you pick a time that's sooner than that (or in the past), the publish is rejected with a clear message, so nothing fires at an unintended moment. If you genuinely want it out right away, use **Publish now** instead.
+
+## Publishing to specific platforms
+
+A post can target several platforms at once (Instagram, Facebook, LinkedIn, and X). You don't have to publish to all of them in the same go.
+
+When you publish, a **Publish to...** dialog lists every platform the post targets and shows each one's current state:
+
+- **Connected, ready to publish** - Checked by default.
+- **Last attempt failed - retry?** - Checked by default so you can re-try it.
+- **Already published** - Unchecked by default (re-publishing is opt-in).
+- **Scheduled / Publishing** - In flight already; can't be re-selected.
+- **Not connected** - Disabled, with a link to connect the account.
+
+Tick the platforms you want for this run and confirm. A common pattern:
+
+1. Publish to **LinkedIn now** while you finish setting up Instagram.
+2. A day or two later, connect Instagram and open the same post.
+3. The dialog shows LinkedIn as **Already published** (unchecked) and Instagram as **ready to publish**. Tick **Instagram only** and publish.
+
+Each publish run only touches the platforms you selected. Earlier results are preserved - publishing to Instagram later never disturbs the LinkedIn post that's already live. You can come back as many times as you need until every platform you want is covered.
+
+A few guardrails keep this clean:
+
+- You must pick **at least one** platform.
+- A platform that's already published successfully can't be published to again in the same selection (this prevents accidental duplicates). Platforms whose last attempt **failed** are the exception - those are the retry path.
+- You can only select platforms that are actually on the post's target list.
+
+## Per-platform publish records
+
+Because publishing is tracked per platform, theStacc keeps a separate record for **each** platform on a post, rather than one blanket "published" flag. Every record holds:
+
+- The **broker post ID** - the identifier from the publishing service that handles delivery to the social networks.
+- The **published time** (for posts that went out now) or the **scheduled time** (for posts queued for later).
+- The **status** - `published`, `queued`, `scheduled`, or `failed`.
+- The **live post URL** once the post is actually live, so you can click straight through to it on the platform. A record marked failed never shows a link.
+- An **error message** on failure - the platform's own reason, such as a caption that exceeded the character limit. This is shown per platform so a failure on one (say, X) doesn't hide the success of another (say, LinkedIn).
+
+Because each platform is recorded independently, the post's overall status rolls up to match reality:
+
+- All attempted platforms succeeded -\> **Published**.
+- Some succeeded and some failed -\> **Partially Published** (with a retry option for the failed ones).
+- One or more platforms are scheduled for later -\> **Scheduled**.
+- Every attempted platform failed -\> **Failed**.
+
+For what each of these states means and how to recover from a failure, see [Post States & Failures](/docs/social-media/post-states-failures).
+
+## Double-click protection
+
+If you tap **Publish** twice in quick succession - or your connection hiccups and the request retries - theStacc recognizes the repeat and returns the original result instead of publishing a second time. This protection is keyed to the exact post and the exact set of platforms you selected, so a rapid re-click of the same publish collapses into a single real publish.
+
+This only collapses \*identical, back-to-back\* publishes. A genuinely new action - for example, publishing to LinkedIn now and then deliberately publishing to X a little later - is always treated as its own publish.
+
+## Choosing how new posts go out
+
+The options above cover publishing a post by hand. You can also decide how \*automatically generated\* posts behave, so your content plan runs with as much or as little hands-on involvement as you want.
+
+Go to **Social Media \> Settings \> Connections** and find the **How should posts go out?** card. Pick one of three presets:
+
+- **Full Autopilot** - theStacc creates each scheduled post **and publishes it** to your connected accounts automatically. There is no review step.
+- **Draft for Me** - theStacc creates each scheduled post and holds it in **Review**. You approve the ones you want, and each approved post publishes at its scheduled time.
+- **Manual** - Automatic posting is off. You create and publish posts yourself from the Social Dashboard.
+
+### How the presets work
+
+Each preset is a combination of two settings that theStacc saves together for you:
+
+| Preset | Auto-generation | Publishing mode | What happens to a generated post |
+| --- | --- | --- | --- |
+| **Full Autopilot** | On | `auto` | Published automatically at its scheduled time |
+| **Draft for Me** | On | `approval_required` | Held in **Pending Review** until you approve it |
+| **Manual** | Off | `manual` | No new posts are generated automatically; you publish from the dashboard |
+
+A few notes:
+
+- Only **project admins** can change this setting.
+- **Full Autopilot** and **Draft for Me** require at least one connected account (they create real posts for real destinations). **Manual** is always available, even with nothing connected - it simply turns automatic posting off.
+- If no preset has been chosen yet, posts default to the **Full Autopilot** behavior.
+- Changing the preset doesn't touch posts that are already published or already scheduled - it affects how future generated posts are handled.
+
+### Posting schedule
+
+Below the preset picker, the **Posting schedule** card is where you set the specific dates and start time your automatic posts should go out (in your project's timezone). Pick a date, set a start time, and click **Add to schedule**. A generated content plan maps its posts onto these slots in order.
+
+Set the time a little ahead for exact posting. A time that's very soon or already past will post as soon as the post is generated. You can still change any individual post's time on the dashboard.
+
+## Related
+
+- [Approval & Review Workflow](/docs/social-media/approval-review-workflow) - how the **Draft for Me** review step works, and how to approve, edit, or reject a post before it publishes.
+- [Connection Management & Sync](/docs/social-media/connection-management-sync) - connecting accounts, fixing expired connections, and re-syncing a post's live state.
+- [Post States & Failures](/docs/social-media/post-states-failures) - what each status means and how to retry a failed or partially published post.

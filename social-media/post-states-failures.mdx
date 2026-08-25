@@ -1,0 +1,161 @@
+---
+title: "Post States & Failures"
+description: "Every social post moves through a few states as theStacc generates its caption and image."
+---
+
+Every social post moves through a few states as theStacc generates its caption and image. Most of the time you will only ever see two of them: the post is ready, or it is published. But generation involves an AI writing engine and an AI image engine, and occasionally one of those steps does not finish. When that happens, theStacc tells you exactly what went wrong and gives you a single button to fix it.
+
+This page lists every state a post can be in, the message you will see, and what to do next.
+
+## Where you see the state
+
+Open any post from the calendar or the post list to reach its detail page. If a post needs your attention, a colored **state banner** appears at the top of that page, above the post content. The banner has three parts:
+
+- An icon and color that match the severity (green for OK, blue for in progress, amber for a warning, red for an error).
+- A short, plain-language message explaining what happened.
+- A single action button, where one makes sense, that runs the fix for you.
+
+When you click the button, theStacc kicks off the fix and the page refreshes itself so the banner updates to the new state. You do not have to reload.
+
+The banner only shows up when it is genuinely useful - for catastrophic failures and for posts that are still generating. For smaller issues, such as just the image failing, the fix lives right next to the thing that needs fixing instead (for example, a **Generate image** button under the empty image slot). So a post with no banner is not necessarily a post with no issue - always glance at the image and caption sections too.
+
+## The healthy states
+
+### Ready
+
+The caption and image both generated successfully. The banner is green and reads:
+
+> Post is ready to review.
+
+There is nothing to fix. Review the caption and image, then approve or publish the post. (Because this state is healthy and the status badge already says so, theStacc usually does not draw a separate banner for it - the post simply appears ready.)
+
+### Ready with warnings
+
+The post generated fine, but one or more of its captions is longer than a platform allows (for example, an X caption over the character limit). The post will not publish cleanly until you trim it. The message reads:
+
+> Post is generated, but one or more captions exceed platform limits. Edit before publishing.
+
+**What to do:** Edit the caption for the flagged platform and shorten it. The per-platform caption editor shows you the exact character count and limit for each platform, so you can see precisely how much to cut. Once you are under the limit, the warning clears.
+
+### Published
+
+The post has already gone out to your connected platforms. The message reads:
+
+> Post has been published.
+
+This is a settled, final state. There is nothing to act on here.
+
+### In progress
+
+Generation is actively running. The banner is blue with a spinning icon and reads:
+
+> Generating... this usually takes 30-90 seconds.
+
+**What to do:** Wait. The page polls in the background and updates itself the moment generation finishes - you do not need to refresh. This covers posts that are actively generating, publishing, or queued to run.
+
+## The failure states
+
+When something goes wrong, theStacc does not just say "failed." It looks at what is actually on the post - whether the caption is there, whether an image is there, and which step broke - and gives you the most specific message and the right fix. Here is every failure type.
+
+### Total failure
+
+Neither the caption nor the image generated. This usually means the AI service was briefly overloaded when your post tried to generate. The banner is red and reads:
+
+> Couldn't generate this post. The AI service may be temporarily overloaded - please try again.
+
+**What to do:** Click **Try again**. This re-runs the full generation from scratch. Overload errors are almost always temporary, so a retry a minute or two later usually succeeds.
+
+### Image failed only
+
+The caption generated successfully, but the image step did not produce an image - so the post has writing but no picture. The message reads:
+
+> Caption is ready, but the image couldn't be generated. Try generating just the image again.
+
+**What to do:** Click **Generate image**. theStacc keeps your finished caption and re-runs only the image step, so you are not paying for or waiting on a full regeneration. Your caption is untouched.
+
+This is one of the states that often shows its fix inline (a **Generate image** button under the empty image slot) rather than as a top banner. Either way, the action is the same.
+
+### Caption failed only
+
+The reverse situation - an image is attached, but the caption came back empty. The message reads:
+
+> Image is ready, but the caption couldn't be generated. Try regenerating the caption.
+
+**What to do:** Click **Regenerate caption** to re-run generation for this post.
+
+### Text-only failed
+
+Some post formats are text-only by design - they never produce an image. When one of those fails, theStacc gives you a format-specific message rather than the generic one, so you are not left wondering where the missing image is:
+
+> Text generation failed for this post. Please try again.
+
+**What to do:** Click **Try again** to re-run generation. (See [Image Generation](/docs/content-seo/image-generation) for which formats are text-only and therefore never carry an image.)
+
+### Worker died / reaped
+
+The generation job started but the worker handling it stopped before finishing - usually an infrastructure hiccup rather than anything wrong with your post. theStacc detects this and marks the post as failed. The message reads:
+
+> Generation worker stopped before finishing. Please try again.
+
+**What to do:** Click **Try again**. A fresh run will normally pick up a healthy worker and complete.
+
+### Stuck generating
+
+A post that has been sitting in the generating state for more than 25 minutes is treated as stuck - the worker almost certainly crashed without reporting it. Rather than leave the page spinning forever, theStacc surfaces this so you can recover. The banner is red and reads:
+
+> Generation has been stuck for more than 25 minutes - the worker likely crashed. Please try again.
+
+**What to do:** Click **Try again** to start a clean run. (Behind the scenes, theStacc also sweeps and clears these stuck posts automatically, but the banner lets you act immediately instead of waiting.)
+
+### Other failures
+
+If a post fails in a way that does not match any of the patterns above, theStacc still does not leave you stranded. It shows a generic message:
+
+> Generation failed. Please try again.
+
+**What to do:** Click **Try again**.
+
+## What the image step can produce
+
+The state of a post is driven largely by what happened during image generation. There are exactly three outcomes for the image step:
+
+- **Success** - an image was generated and attached. The post can become **Ready**.
+- **Failed** - the image step ran but produced zero images (for example, the image provider had an outage). For formats that are supposed to have a picture, the post is marked failed rather than quietly looking ready, so you never accidentally publish a post with a blank image slot. This is what produces the **Image failed only** state.
+- **Skipped** - the post is a text-only format that is not meant to have an image at all. An empty image slot here is intentional, not a failure.
+
+That last distinction is why theStacc separates **Text-only failed** from **Image failed only**: a missing image on a text format is normal, but a missing image on an image format is a problem to fix. For more on how images are created, sized for each platform, and branded with your logo, see [Image Generation](/docs/content-seo/image-generation).
+
+## Editing an image without double-firing
+
+When you refine an image with an instruction (for example, "make the background warmer"), the edit runs as a background job that can take around a minute and a half. While it is running, theStacc locks the controls so you cannot accidentally start a second, conflicting edit on the same image.
+
+Concretely, while an image edit is in progress:
+
+- The refine prompt box, the **Refine** button, and the reference options are all disabled.
+- The button shows **Refining...** with a spinner so you know the edit is still working.
+- A second click - or pressing Enter again - does nothing until the current edit finishes.
+
+When the edit completes, theStacc swaps the new image in place and confirms it. If the edit fails or times out, the controls unlock and you get a clear message so you can try again. This guard means one edit instruction equals exactly one edit - no duplicate runs, no wasted generation, and no race between two edits fighting over the same picture.
+
+Image regeneration (generating a brand-new image rather than editing the current one) is guarded the same way. If a regeneration is already running for a post, theStacc blocks a second one and shows a "regenerating, please wait" state with a live timer, so you wait for the first run instead of starting a duplicate.
+
+## A quick map of states to actions
+
+| State | What it means | Button |
+| --- | --- | --- |
+| Ready | Caption and image both succeeded | (none - review and publish) |
+| Ready with warnings | A caption is over a platform's limit | Edit caption |
+| In progress | Still generating | (none - wait) |
+| Published | Already live | (none) |
+| Image failed only | Caption is ready, image is missing | Generate image |
+| Caption failed only | Image is ready, caption is missing | Regenerate caption |
+| Text-only failed | A text-only post failed to generate | Try again |
+| Total failure | Both caption and image failed | Try again |
+| Worker died / reaped | The job stopped before finishing | Try again |
+| Stuck generating | Stuck for more than 25 minutes | Try again |
+| Other failure | An unclassified failure | Try again |
+
+## Related
+
+- [Content Plans & Generation](/docs/social-media/content-plans-generation) - how posts get created and what each generation step does.
+- [Image Generation](/docs/content-seo/image-generation) - how images are produced, sized per platform, branded, and which formats are text-only.

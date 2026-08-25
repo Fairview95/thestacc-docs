@@ -1,0 +1,532 @@
+---
+title: "Static Site Integration"
+description: "This guide walks you through connecting theStacc to your static site."
+---
+
+This guide walks you through connecting theStacc to your static site. By the end, your site will automatically display AI-generated blog posts — fully rendered as static HTML for perfect SEO.
+
+It uses the [Public Blog API](/docs/developers/public-blog-api), which exposes your published posts as JSON. Your site fetches that JSON at build time and turns it into static HTML pages, so Google sees ordinary, fully rendered pages — it has no idea the content came from an API.
+
+## Prerequisites
+
+Before starting, make sure you have:
+
+1. A theStacc project with **Content SEO** enabled and at least one published blog
+2. Your **Public API Key** (more on where to find it below)
+3. A static site built with Astro, Next.js, Hugo, Nuxt, or any other static site generator
+4. Your site deployed on Cloudflare Pages, Vercel, Netlify, or similar
+
+## Overview
+
+The integration has three parts:
+
+1. **Fetch** — Your site calls the theStacc API at build time to get blog data
+2. **Render** — Your generator turns the API response into static HTML pages
+3. **Rebuild** — A deploy hook triggers a new build whenever you publish or unpublish a post
+
+This guide covers the first two parts. See [Deploy Hooks](/docs/developers/deploy-hooks) for automatic rebuilds.
+
+## Get your API key
+
+Every project has its own **Public API Key**. To find it, open your project and go to **Content \> Settings \> Publishing**, then scroll to the **API Access** section.
+
+In that section you'll see:
+
+- **Public API Key** — your key, starting with `pk_live_`. Use **Reveal** to show it and **Copy** to copy it to your clipboard.
+- **Rotate Key** — generates a brand-new key and immediately invalidates the old one. Use this if the key was ever exposed. After rotating, update the key everywhere you've stored it, or your builds will start failing.
+- **Revoke** — removes the key entirely. Any site using it will stop fetching content until you generate a new one.
+
+If you don't see a key yet, click **Generate API Key** to create one.
+
+Keep your API key private. Store it as an environment variable in your build process — never commit it to your repository.
+
+## Environment setup
+
+Store your API key as an environment variable. **Never hardcode it in your source files.**
+
+Create or update your `.env` file:
+
+```
+THESTACC_API_KEY=pk_live_your_key_here
+THESTACC_API_URL=https://api.thestacc.com/blog/api/v1/public/blogs
+```
+
+Add `.env` to your `.gitignore` if it's not already there.
+
+For your hosting platform, add the same variables in the dashboard so they're available during the build:
+
+- **Cloudflare Pages** — **Settings \> Environment variables**
+- **Vercel** — **Settings \> Environment Variables**
+- **Netlify** — **Site configuration \> Environment variables**
+
+The API base path is `https://api.thestacc.com/blog/api/v1/public/blogs`. The three endpoints you'll use are:
+
+- `GET /` — list published blogs (metadata only by default; add `include_content=true` for full HTML)
+- `GET /{slug}` — one published blog by slug (always includes full HTML content)
+- `GET /sitemap` — a lightweight list of slugs and dates for building your sitemap
+
+Full parameters, defaults, and response shapes are in the [Public Blog API reference](/docs/developers/public-blog-api).
+
+## Astro
+
+Astro is the most straightforward integration since it supports static and server-rendered pages natively.
+
+### Create the API helper
+
+Create `src/lib/thestacc.ts`:
+
+```typescript
+const API_KEY = import.meta.env.THESTACC_API_KEY;
+const API_URL = import.meta.env.THESTACC_API_URL;
+
+export async function getAllBlogs() {
+  const res = await fetch(`${API_URL}?api_key=${API_KEY}`);
+  if (!res.ok) throw new Error(`Failed to fetch blogs: ${res.status}`);
+  const data = await res.json();
+  return data.blogs;
+}
+
+export async function getBlogBySlug(slug: string) {
+  const res = await fetch(`${API_URL}/${slug}?api_key=${API_KEY}`);
+  if (!res.ok) return null;
+  return await res.json();
+}
+```
+
+### Create the blog listing page
+
+Create `src/pages/blog/index.astro`:
+
+```astro
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogs } from '../../lib/thestacc';
+
+const blogs = await getAllBlogs();
+---
+
+<BaseLayout title="Blog">
+  <h1>Blog</h1>
+  <div class="blog-grid">
+    {blogs.map((blog) => (
+      <a href={`/blog/${blog.slug}`}>
+        <img src={blog.featured_image_url} alt={blog.title} />
+        <h2>{blog.title}</h2>
+        <p>{blog.excerpt}</p>
+        <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+```
+
+The list endpoint returns metadata only by default (no `content`), which is exactly what a listing page needs.
+
+### Create the blog detail page
+
+Create `src/pages/blog/[slug].astro`:
+
+```astro
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogs, getBlogBySlug } from '../../lib/thestacc';
+
+export async function getStaticPaths() {
+  const blogs = await getAllBlogs();
+  return blogs.map((blog) => ({
+    params: { slug: blog.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const blog = await getBlogBySlug(slug);
+
+if (!blog) return Astro.redirect('/404');
+---
+
+<BaseLayout title={blog.meta_title} description={blog.meta_description}>
+  <article>
+    <img src={blog.featured_image_url} alt={blog.title} />
+    <h1>{blog.title}</h1>
+    <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+    <div class="blog-content" set:html={blog.content} />
+  </article>
+</BaseLayout>
+```
+
+The single-blog endpoint always includes the full HTML in `content`. `set:html` renders it directly. Style the `.blog-content` class in your CSS to match your site's design.
+
+### Generate the sitemap
+
+If you use `@astrojs/sitemap`, the blog pages are automatically included since they're generated as static routes. For a hand-built sitemap, use the [sitemap endpoint](/docs/developers/public-blog-api#get-blog-sitemap-data) described later in this guide.
+
+## Next.js (App Router)
+
+### Create the API helper
+
+Create `lib/thestacc.ts`:
+
+```typescript
+const API_KEY = process.env.THESTACC_API_KEY;
+const API_URL = process.env.THESTACC_API_URL;
+
+export async function getAllBlogs() {
+  const res = await fetch(`${API_URL}?api_key=${API_KEY}`, {
+    next: { revalidate: false },
+  });
+  if (!res.ok) throw new Error('Failed to fetch blogs');
+  const data = await res.json();
+  return data.blogs;
+}
+
+export async function getBlogBySlug(slug: string) {
+  const res = await fetch(`${API_URL}/${slug}?api_key=${API_KEY}`, {
+    next: { revalidate: false },
+  });
+  if (!res.ok) return null;
+  return await res.json();
+}
+```
+
+### Create the blog listing page
+
+Create `app/blog/page.tsx`:
+
+```tsx
+import { getAllBlogs } from '@/lib/thestacc';
+import Link from 'next/link';
+import Image from 'next/image';
+
+export default async function BlogPage() {
+  const blogs = await getAllBlogs();
+
+  return (
+    <main>
+      <h1>Blog</h1>
+      <div className="blog-grid">
+        {blogs.map((blog) => (
+          <Link key={blog.id} href={`/blog/${blog.slug}`}>
+            <Image src={blog.featured_image_url} alt={blog.title} width={800} height={400} />
+            <h2>{blog.title}</h2>
+            <p>{blog.excerpt}</p>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
+}
+```
+
+### Create the blog detail page
+
+Create `app/blog/[slug]/page.tsx`:
+
+```tsx
+import { getAllBlogs, getBlogBySlug } from '@/lib/thestacc';
+import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+  const blogs = await getAllBlogs();
+  return blogs.map((blog) => ({ slug: blog.slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const blog = await getBlogBySlug(params.slug);
+  if (!blog) return {};
+  return {
+    title: blog.meta_title,
+    description: blog.meta_description,
+    openGraph: { images: [blog.featured_image_url] },
+  };
+}
+
+export default async function BlogPost({ params }) {
+  const blog = await getBlogBySlug(params.slug);
+  if (!blog) notFound();
+
+  return (
+    <article>
+      <img src={blog.featured_image_url} alt={blog.title} />
+      <h1>{blog.title}</h1>
+      <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+      <div
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: blog.content }}
+      />
+    </article>
+  );
+}
+```
+
+For a fully static export, add `output: 'export'` to your `next.config.js` and use `generateStaticParams` as shown above. If you'd rather refresh content on a schedule without redeploying, see the **Incremental Static Regeneration** note under [Build-time error handling](#build-time-error-handling) below.
+
+## Hugo
+
+### Create the data fetch script
+
+Hugo doesn't fetch API data natively. Use a build script that runs before Hugo.
+
+Create `fetch-blogs.sh`:
+
+```bash
+#!/bin/bash
+set -e
+mkdir -p content/blog
+
+# Fetch all blogs, including full HTML content
+RESPONSE=$(curl -s --fail "$THESTACC_API_URL?api_key=$THESTACC_API_KEY&include_content=true")
+
+# Generate a markdown file for each blog
+echo "$RESPONSE" | jq -c '.blogs[]' | while read -r blog; do
+  SLUG=$(echo "$blog" | jq -r '.slug')
+  TITLE=$(echo "$blog" | jq -r '.title')
+  DESC=$(echo "$blog" | jq -r '.meta_description')
+  DATE=$(echo "$blog" | jq -r '.published_at')
+  IMAGE=$(echo "$blog" | jq -r '.featured_image_url')
+  CONTENT=$(echo "$blog" | jq -r '.content')
+
+  cat > "content/blog/$SLUG.html" <<EOF
+---
+title: "$TITLE"
+description: "$DESC"
+date: "$DATE"
+featured_image: "$IMAGE"
+markup: html
+---
+
+$CONTENT
+EOF
+done
+```
+
+Note the `include_content=true` query parameter — the list endpoint returns metadata only by default, so you must ask for the HTML body. The script uses the `.html` extension and `markup: html` frontmatter so Hugo renders the API's HTML content as-is instead of treating it as markdown. In your Hugo template, use `{{ .Content | safeHTML }}` to output the content without escaping. The `set -e` and `--fail` flags make the build stop loudly if the API call fails, instead of publishing empty pages (see [Build-time error handling](#build-time-error-handling)).
+
+Update your build command on Cloudflare Pages (or wherever you deploy):
+
+```
+bash fetch-blogs.sh && hugo
+```
+
+## Nuxt 3 (Vue.js)
+
+### Create the API composable
+
+Create `composables/useThestacc.ts`:
+
+```typescript
+export async function getAllBlogs() {
+  const config = useRuntimeConfig()
+  const data = await $fetch(config.public.thestaccApiUrl, {
+    query: { api_key: config.thestaccApiKey },
+  })
+  return data.blogs
+}
+
+export async function getBlogBySlug(slug: string) {
+  const config = useRuntimeConfig()
+  return await $fetch(`${config.public.thestaccApiUrl}/${slug}`, {
+    query: { api_key: config.thestaccApiKey },
+  })
+}
+```
+
+### Add runtime config
+
+In your `nuxt.config.ts`:
+
+```typescript
+export default defineNuxtConfig({
+  runtimeConfig: {
+    thestaccApiKey: process.env.THESTACC_API_KEY,
+    public: {
+      thestaccApiUrl: process.env.THESTACC_API_URL,
+    },
+  },
+})
+```
+
+Keeping `thestaccApiKey` outside the `public` block means it stays server-side and never ships to the browser.
+
+### Create the blog listing page
+
+Create `pages/blog/index.vue`:
+
+```vue
+<script setup>
+const blogs = await getAllBlogs()
+</script>
+
+<template>
+  <div>
+    <h1>Blog</h1>
+    <div class="blog-grid">
+      <NuxtLink v-for="blog in blogs" :key="blog.id" :to="`/blog/${blog.slug}`">
+        <img :src="blog.featured_image_url" :alt="blog.title" />
+        <h2>{{ blog.title }}</h2>
+        <p>{{ blog.excerpt }}</p>
+        <time>{{ new Date(blog.published_at).toLocaleDateString() }}</time>
+      </NuxtLink>
+    </div>
+  </div>
+</template>
+```
+
+### Create the blog detail page
+
+Create `pages/blog/[slug].vue`:
+
+```vue
+<script setup>
+const route = useRoute()
+const blog = await getBlogBySlug(route.params.slug as string)
+
+useHead({
+  title: blog?.meta_title,
+  meta: [
+    { name: 'description', content: blog?.meta_description },
+  ],
+})
+</script>
+
+<template>
+  <article v-if="blog">
+    <img :src="blog.featured_image_url" :alt="blog.title" />
+    <h1>{{ blog.title }}</h1>
+    <time>{{ new Date(blog.published_at).toLocaleDateString() }}</time>
+    <div class="blog-content" v-html="blog.content" />
+  </article>
+</template>
+```
+
+`v-html` renders the HTML content directly. Style the `.blog-content` class in your CSS to match your site's design.
+
+### Static generation
+
+For static export on Cloudflare Pages, Vercel, or Netlify, run:
+
+```
+npx nuxi generate
+```
+
+Nuxt pre-renders all pages at build time — the output is pure static HTML with the same SEO as any other static site generator.
+
+## Styling the content
+
+The API returns HTML in the `content` field — the same HTML that gets published to WordPress or Ghost, including headings (`h2`, `h3`, `h4`), paragraphs, lists, blockquotes, links, and images with alt text. Add CSS to style it within your site's design:
+
+```css
+.blog-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content p {
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.blog-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.blog-content ul, .blog-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+}
+```
+
+If you use Tailwind CSS, apply the [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin) plugin and wrap the content in a `prose` class:
+
+```html
+<div class="prose prose-lg" set:html={blog.content} />
+```
+
+## Build-time error handling
+
+Because content is fetched while your site builds, you need a plan for the rare case where the API can't be reached during a build — for example, a transient network blip or a `500` from the server.
+
+**What happens by default.** In each helper above, the list fetch throws an error when the response isn't OK (`if (!res.ok) throw new Error(...)`). That's intentional: if the blog list can't be fetched, the build **fails loudly and stops**, and your hosting platform keeps the previous successful deploy live. Your visitors keep seeing the last good version of your site — they never see a half-built site with missing posts. This is the safest default.
+
+The single-blog helpers instead return `null` on a non-OK response so one missing or unpublished post (a `404`) doesn't take down the whole build — the page-not-found path handles it gracefully.
+
+**Add a short retry.** Most build failures are momentary. A small retry-with-backoff around the list fetch makes builds far more resilient:
+
+```typescript
+async function fetchWithRetry(url: string, attempts = 3) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(url);
+    if (res.ok) return res;
+    if (res.status === 401 || res.status === 404) return res; // don't retry auth/not-found
+    await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+  }
+  throw new Error(`Failed after ${attempts} attempts`);
+}
+```
+
+Don't retry a `401` (your API key is wrong, missing, or was revoked) or a `404` — those won't fix themselves. Do retry `500` and network errors. See the [Public Blog API error reference](/docs/developers/public-blog-api#error-handling) for the full list of status codes.
+
+**Don't call the API from the browser.** The Public Blog API is built for build-time fetching, not live client requests — a typical build makes only a handful of calls. Fetching from client-side code would expose your key and add a runtime dependency on the API. Always fetch at build time.
+
+**Incremental Static Regeneration (ISR) as an alternative.** If you'd rather your pages refresh on a schedule instead of failing the build, frameworks like Next.js support ISR: serve the last-built version, then quietly re-fetch in the background every N seconds. Set `revalidate` to a number of seconds (for example, `next: { revalidate: 3600 }` for hourly) instead of `false`. With ISR, a momentary API outage means visitors simply keep seeing the previous cached page until the next successful refresh — no broken build, no missing content. The trade-off is that new posts can take up to your revalidate window to appear unless a [deploy hook](/docs/developers/deploy-hooks) also triggers a rebuild. Most sites are happiest with a deploy hook plus the fail-loud default above; ISR is an option if you want time-based refreshes on top.
+
+## Keeping your site up to date with Deploy Hooks
+
+Fetching at build time means new posts only appear when your site rebuilds. You don't want to trigger that by hand every time. A **deploy hook** does it for you: theStacc sends a request to your hosting platform whenever a post is **published** or **unpublished**, which kicks off a fresh build that pulls in the latest content.
+
+You'll find the **Deploy Hook** field right below your API key, under **Content \> Settings \> Publishing \> API Access**. Paste the deploy hook URL from your Cloudflare Pages, Vercel, or Netlify dashboard, click **Save**, then click **Test** to confirm it triggers a build. The URL must be an HTTPS URL.
+
+For the full walkthrough — getting the URL from each platform, GitHub Pages via GitHub Actions, and troubleshooting — see [Deploy Hooks](/docs/developers/deploy-hooks).
+
+## Generating a sitemap
+
+A sitemap helps Google discover and re-crawl your posts. The Public Blog API has a dedicated, lightweight endpoint built for exactly this:
+
+```
+GET https://api.thestacc.com/blog/api/v1/public/blogs/sitemap?api_key=YOUR_API_KEY
+```
+
+It returns only `slug`, `published_at`, and `updated_at` for every published post (up to 5,000 posts), so it's fast and cheap to call during a build. Loop over the results to emit `<url>` entries for your `sitemap.xml`, mapping `updated_at` to `<lastmod>`. Full response shape is in the [Public Blog API sitemap reference](/docs/developers/public-blog-api#get-blog-sitemap-data).
+
+If your generator already produces a sitemap that includes your blog routes (such as `@astrojs/sitemap`), you don't need to call this endpoint separately — the blog pages are picked up automatically because they're static routes.
+
+## Testing locally
+
+Run your site locally with the environment variables set, then verify:
+
+1. The blog listing page shows all published blogs
+2. Each blog detail page renders content correctly
+3. Images load properly
+4. Meta tags are set (check with **View Source**)
+5. Internal links within blog content work and point to real, published posts
+6. A non-existent slug returns your 404 page (not a crash)
+7. The build fails cleanly if you set a wrong API key — confirming your error handling works
+
+## Next steps
+
+- Review the [Public Blog API](/docs/developers/public-blog-api) reference for every endpoint, parameter, default, and limit
+- Set up [Deploy Hooks](/docs/developers/deploy-hooks) so your site rebuilds automatically when blogs are published
+- Add an XML sitemap for SEO using the [sitemap endpoint](/docs/developers/public-blog-api#get-blog-sitemap-data)

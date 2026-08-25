@@ -1,0 +1,88 @@
+---
+title: "Website Auto-Extraction & Asset Uploads"
+description: "The fastest way to set up your Social Media brand kit is to let theStacc read your website for you."
+---
+
+The fastest way to set up your Social Media brand kit is to let theStacc read your website for you. Paste your URL and we pull your business name, tagline, logo, brand colors, and writing voice straight off your homepage, then fill in the blanks you haven't filled yourself. After that, you can upload a logo by hand and add style reference images so every AI-generated post looks like it came from your brand.
+
+This guide covers three things:
+
+- **Auto-extract from website** — one click to fill your brand kit from your site
+- **Brand logo upload** — add or replace your logo manually
+- **Style reference images** — upload examples so AI matches your visual style
+
+## Auto-extract from your website
+
+This lives under **Social Media \> Settings \> Business Details**, in the **Website** field. Type or paste your website URL, then click **Auto-fill brand kit from this site**. While it works, the button reads **Scanning site…**.
+
+You don't need to type the full address — if you leave off `https://`, we add it for you. Only public `http://` and `https://` websites are supported.
+
+### What we pull from your site
+
+theStacc reads your homepage (and, when helpful, common pages like your About and Pricing pages) and extracts:
+
+- **Business name** — taken from your page title or site name. We trim common suffixes, so a title like "Acme Coffee | The best beans in town" becomes just "Acme Coffee."
+- **Tagline / description** — your meta description or, failing that, your main headline. This seeds your business's core identity.
+- **Logo** — we find the logo in your header or navigation and upload it to your brand storage so it's saved with your project (see Brand logo, below).
+- **Brand colors** — pulled from your site's theme color, CSS, and the most-used colors on the page. Plain blacks, whites, and grays are filtered out so you're left with your actual brand colors, and duplicates are removed. The most vivid color becomes your primary brand color.
+- **Call-to-action (CTA) suggestions** — we detect buttons and links like "Book a Demo," "Start Free Trial," or "Shop Now," and tag each one with its intent (book, sign up, download, shop, or learn more). These seed your CTA bank so captions can point readers to the right next step.
+- **Voice samples** — real paragraphs of your own writing, collected to learn how your brand sounds.
+
+### Your edits are always safe
+
+The extraction **only fills empty fields**. If you've already typed a business name, chosen a brand color, or written anything yourself, we never overwrite it. Extracted brand colors are added to your existing palette (we stop at six total), and detected CTAs only seed your CTA bank if you haven't built one yet. You can edit everything afterward.
+
+The one field we always keep current is your **website URL** — we save it so you can see what was scanned and re-run the extraction later against an updated site.
+
+### Your brand voice is learned in the background
+
+When we find at least three usable paragraphs of your writing, theStacc analyzes them in the background to build a brand voice profile. This continues after the scan finishes, so you can keep working — the learned voice is saved automatically and then replaces the generic voice preset in every caption we write. If your site doesn't have enough copy to learn from, this step is simply skipped and you can set a voice preset manually instead.
+
+You'll see a confirmation noting what was found, for example: \*"Extracted business name, logo, 4 brand colors, voice (8 samples queued) — your brand kit has been auto-filled."\*
+
+### Limits and good to know
+
+- You can run the extraction up to **5 times every 5 minutes** per project.
+- Some sites block automated readers or load their content with JavaScript. theStacc has fallbacks to handle most of these, but if a site is fully blocked you may need to add a few details by hand.
+- If the scan finds nothing new, you'll see a note saying so — just fill the details in manually.
+- The detected logo is downloaded only if the link actually returns an image; if it doesn't, the rest of your brand kit still saves and you can upload a logo yourself.
+
+## Upload your brand logo
+
+To add or replace your logo by hand, go to **Social Media \> Settings \> Brand & Style** and find the **Brand Logo** card. Drop in an image or click to upload.
+
+- Accepted formats: **PNG, JPG, and SVG** (WebP and GIF also work).
+- Maximum size: **5MB**.
+
+Your logo is stored securely with your project's brand assets and saved to your brand kit. It's used in AI-generated social images — especially with the **Brand & Text** image style, which builds the visual around your logo and brand colors. See [Brand & Style](/docs/social-media/brand-style) for how the logo fits into your overall look.
+
+## Upload style reference images
+
+If you already have images whose look you love — past posts, ad creatives, moodboard shots — you can teach theStacc that style. In **Social Media \> Settings \> Brand & Style**, choose the **Custom** image style. A **Your Reference Images** drop zone appears.
+
+1. Drag and drop your images onto the zone, or click to browse.
+2. Each image is uploaded and analyzed automatically.
+3. Add as many as you like, up to the limit.
+
+- Accepted formats: **PNG and JPG**.
+- Maximum size: **5MB each**.
+- Up to **10 reference images** per project. You can mix several references — add more, or remove any one, at any time.
+
+### What we learn from each image
+
+theStacc analyzes every reference you upload and extracts a style guide describing:
+
+- **Color palette** — the dominant colors in the image
+- **Typography mood** — the feel of the lettering (for example, bold condensed sans-serif with uppercase headings)
+- **Layout** — minimal or busy, alignment, and how much negative space there is
+- **Visual mood** — a few descriptors like professional, warm, minimalist, bold, or playful
+- **Background style** — solid color, gradient, photography, pattern, or texture
+
+From this, theStacc writes an **Extracted Style Prompt** — a short, plain-language style directive that's injected into every image we generate, so your posts consistently match the look you uploaded. You'll see this prompt below your reference images, along with the visual-mood tags as pills. You can edit the prompt directly to fine-tune the direction.
+
+Want even more control? The **Custom Image Rules** field right below lets you add your own instructions (for example, "Always use dark backgrounds" or "No people in images"). These are appended to every image prompt.
+
+## Where to go next
+
+- Set your primary brand color, image style, font pairing, and voice in [Brand & Style](/docs/social-media/brand-style).
+- Shape what your posts actually talk about with content pillars and your strategy in [Content & Scheduling](/docs/social-media/content-scheduling).

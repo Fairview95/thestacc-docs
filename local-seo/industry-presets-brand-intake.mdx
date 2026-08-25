@@ -1,0 +1,124 @@
+---
+title: "Industry Presets & Brand Intake"
+description: "Brand intake is where you tell theStacc what makes your business *yours*."
+---
+
+Brand intake is where you tell theStacc what makes your business \*yours\*. The more specific you are, the less your Google Business Profile posts read like generic "professional service" filler - and the more they sound like a real business that customers want to call.
+
+You'll find these settings under **Local SEO \> Settings \> Setup \> Brand Voice**. It sits right next to the **Business Details** tab, where you set up your services, hours, and customer pain points - see [Locations & Business Details](/docs/local-seo/locations-business-details) for that part.
+
+## Why this matters
+
+Without brand context, every solar installer's posts sound the same, every dentist's posts sound the same, and Google's readers can tell. The fields below feed directly into the post generator so your copy can reference real differentiators (your certifications, your warranty, your seasonal offers) instead of safe, forgettable boilerplate.
+
+Nothing here is required to publish posts. But filling it in is the single biggest lever you have on post quality.
+
+## The brand intake fields
+
+### Unique selling points (USPs)
+
+Short, concrete differentiators - the reasons a customer should pick you over the business down the road. "NABCEP-certified installers" or "Permit-ready plan sets in 24 hours" qualify. "Professional service" or "best quality" do not - they're generic, so the generator is told to ignore that style of claim.
+
+Add them one at a time. Each entry must be **200 characters or fewer**.
+
+### Certifications / credentials
+
+Your trust signals - accreditations, professional licenses, and industry awards. Think "BBB A+", "EPA Lead-Safe", or a named professional body. These give your posts credibility cues that customers and Google both reward.
+
+Like USPs, each entry is capped at **200 characters**.
+
+### Brand tone
+
+How your posts should sound. You pick **one** tone from a fixed list - you can't type a freeform tone, because the generator only knows how to act on these specific voices:
+
+- **Friendly expert** (`friendly_expert`) - warm and competent. The balanced default for most service businesses.
+- **Professional** (`professional`) - formal and precise. Good for legal, medical, and finance.
+- **Playful** (`playful`) - casual and light. Good for restaurants and salons.
+- **Authoritative** (`authoritative`) - confident and direct. Good for legal and security.
+- **Warm local** (`warm_local`) - community-rooted and neighborly. Good for independent businesses.
+
+If you leave tone unset, posts fall back to a balanced default. To clear a tone you've already picked, click the selected tile again to deselect it.
+
+### Conversion goals
+
+The actions you most want a profile visitor to take. The generator uses these to bias which call-to-action it writes into each post. Pick any combination of:
+
+- **Book a consultation** (`book_consultation`)
+- **Request a quote** (`request_quote`)
+- **Phone call** (`call`)
+- **Place an order** (`order`)
+- **Shop online** (`shop`)
+- **Sign up** (`sign_up`)
+
+### Seasonal triggers
+
+Per-month hooks that tell the generator what angle to lean on at different times of year - for example, "spring rebates and longer sun hours" in March through May.
+
+Each trigger has two parts:
+
+- **Months** - one or more months (January through December) when the angle applies. You must select at least one month.
+- **Angle** - a short phrase the generator references for posts scheduled in those months. It must be non-empty and **200 characters or fewer**.
+
+When a post is scheduled in a month with a matching trigger, the generator weaves that angle in. Months with no trigger simply get no seasonal hook - nothing breaks.
+
+## Industry presets: a head start
+
+Filling in five fields from scratch is a lot of typing. Presets give you a tailored starting point you can review and tweak.
+
+### Built-in presets
+
+theStacc ships hand-tuned presets for two industries today:
+
+- **Solar Installer** - suggests USPs like "NABCEP-certified installers", "25-year performance warranty", and "Local crews, no subcontracting"; common customer pain points (rising utility bills, pushy door-knockers, unclear payback); conversion goals of \*request a quote\* and \*book a consultation\*; a \*friendly expert\* tone; and seasonal angles for spring rebates, peak-summer bill shock, and the year-end federal tax-credit deadline.
+- **Restaurant / Café** - suggests USPs like "Locally sourced ingredients from named farms" and "Family recipes passed down through generations"; pain points around special occasions and dietary needs; conversion goals of \*book a consultation\* and \*place an order\*; a \*warm local\* tone; and seasonal angles for Valentine's Day, Mother's Day brunch, fall menus, and holiday private events.
+
+theStacc tries to match a preset automatically based on your business's primary Google category. A category like "Solar energy contractor" matches the solar preset; "café" or "bistro" matches the restaurant preset. If nothing matches, you won't see a hardcoded suggestion - and that's where AI generation comes in (below).
+
+### Presets suggest - they never overwrite
+
+This is the most important thing to understand: applying a preset **never changes your saved data automatically**. It returns a set of suggestions - USPs, pain points, certifications, conversion goals, tone, seasonal triggers, and the list of available tone options - and shows them to you in a review dialog.
+
+When you click **Apply**, theStacc \*merges\* the suggestions with what you already have:
+
+- Your existing entries are kept exactly as they are.
+- Suggested entries that you don't already have are added.
+- Your tone is only set from the preset if you haven't already chosen one - a deliberate tone choice is never overwritten.
+- Your seasonal triggers are kept as-is if you already have any; the preset's triggers only fill in when yours are empty.
+
+This review-before-save design is intentional. Auto-applying presets would make every business in an industry sound identical - the exact problem brand intake exists to solve.
+
+## AI-generated presets for everyone else
+
+Most businesses aren't solar installers or restaurants. If your category doesn't match a built-in preset, you can have theStacc generate one tailored to your specific business.
+
+In the **Brand Voice** tab, click **Generate** on the "Auto-fill with AI" banner. theStacc reads the context you've already provided - your business name, primary category, description, services, and any pain points - and produces a brand-intake suggestion built specifically for you, including USPs, pain points, certifications (left empty when your category has no common formal credentials, like a yoga studio), conversion goals, a best-fit tone, and any genuinely seasonal angles.
+
+A few things to know:
+
+- **It's a suggestion, just like a preset.** The result opens in the same review dialog, and **Apply** merges it the same way - your filled-in fields stay, missing ones get added. Nothing is saved until you click Apply.
+- **It costs a small amount.** Each generation is a single AI call (roughly half a cent), triggered only when you click Generate.
+- **It can occasionally fail.** If the AI can't produce a result (for example, a momentary timeout), you'll see an error message. Just try again in a moment, or pick a similar industry preset from the list instead.
+
+## Validation: what gets rejected
+
+theStacc validates brand intake when you save so that a bad value never silently slips through and quietly breaks your posts later.
+
+- **Tone must be one of the five allowed values.** Because the UI only offers those five tiles, you can't normally pick a bad one - but if an invalid tone reaches the server, the save is rejected with an error telling you which tones are allowed. (This also protects you from anything other than a real, known tone ever reaching the post generator.)
+- **Seasonal triggers must be well-formed.** Each trigger needs at least one month, every month must be in the range 1-12, and the angle must be non-empty and 200 characters or fewer. A malformed trigger is rejected on save rather than stored - so you never think you saved a seasonal angle that posts then silently ignore.
+- **List entries are length-capped.** USP, certification, and conversion-goal entries are each capped at 200 characters. Blank entries are simply dropped.
+
+If a save is rejected, fix the flagged value and save again - nothing is changed until the save succeeds.
+
+## A good workflow
+
+1. Open **Local SEO \> Settings \> Setup**, finish your **Business Details** first (services, category, pain points). The richer that is, the better any preset or AI suggestion will be.
+2. Switch to the **Brand Voice** tab.
+3. If a built-in preset matches your industry, apply it and review the suggestions. Otherwise, click **Generate** for an AI-tailored starting point.
+4. Edit the merged result - add anything specific to you, remove anything that doesn't fit, pick your tone, and select your conversion goals.
+5. Add a few seasonal triggers for the times of year that matter to your business.
+6. Save. From here on, every Google Business Profile post draws on this context - see [Overview](/docs/local-seo/overview) for how posts are generated and published.
+
+## Related
+
+- [Locations & Business Details](/docs/local-seo/locations-business-details) - set up your business, services, hours, and customer pain points
+- [Local SEO Overview](/docs/local-seo/overview) - how posts, reviews, and rankings work together

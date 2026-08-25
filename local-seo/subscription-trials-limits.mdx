@@ -1,0 +1,86 @@
+---
+title: "Subscription, Trials & Limits"
+description: "Local SEO is one of theStacc's three modules."
+---
+
+Local SEO is one of theStacc's three modules. Like the others, it runs on a per-project subscription, so you can turn it on for one website without paying for it across every project. This page explains the free trial, what your trial and paid plans include, and the limits that apply as you add locations and publish posts.
+
+For how to add and edit the businesses themselves, see [Locations & Business Details](/docs/local-seo/locations-business-details). For changing plans, upgrading, or managing payment, see [Billing & Plans](/docs/account/billing).
+
+## The free trial
+
+The Local SEO trial lets you set up a single business, sync its Google Business Profile data, and generate a few local posts so you can see the quality before you commit.
+
+The trial includes:
+
+- **3 days** of full Local SEO access, starting the moment the trial begins.
+- **1 location** - you can add one business to the project during the trial.
+- **3 generated posts** for that location - enough to preview the AI's local content for your business.
+
+When the 3 days are up, the module moves to an **expired** state and generating new content is paused until you upgrade or restart.
+
+### Restarting an expired trial
+
+If your trial has already expired (or was cancelled), it can be restarted. Restarting gives you a fresh **3-day** window from the moment it restarts - it does not stack on top of the original 3 days. Restarting is a subscription change, so it follows the same permission rules as starting a trial in the first place (see **Who can start a trial** below).
+
+## Paid plans
+
+Upgrading to a paid Local SEO plan removes the trial's tight limits:
+
+- **5 locations per project** - add up to five businesses under the same project.
+- The **3-post content limit is lifted** - the trial-only cap on generated posts no longer applies once the module is active.
+
+Location limits are always counted **per project**. Each project you enable Local SEO on gets its own location allowance, so two projects on paid plans can each hold up to five locations.
+
+To upgrade from a trial to a paid plan, or to change plans later, go to **Settings \> Billing**. See [Billing & Plans](/docs/account/billing) for the full walkthrough.
+
+## Who can start a trial
+
+Starting (or restarting) a Local SEO trial is a subscription-state change, so it's restricted to **account owners and admins**. If you're a regular member or an invited collaborator on a shared project, you'll be able to use Local SEO once it's active, but you won't be able to start the trial yourself - ask the account owner or an admin to do it.
+
+### Project-level trials
+
+Local SEO trials are scoped to a **specific project**. When a trial starts on a project, only that project gets Local SEO access - your other projects are unaffected. This keeps each project's billing and limits independent, and it's why the location limit is counted per project rather than across your whole account.
+
+## Understanding your trial status
+
+Throughout the app, your Local SEO subscription state is described by a small set of fields. You'll see these reflected in the dashboard, and they're useful to know if you're checking why content generation is or isn't available:
+
+- **has\_trial** - whether the project has any Local SEO activation at all (trial or paid). If this is false, Local SEO has never been turned on for the project.
+- **is\_active** - whether the module is currently usable. This is true while a trial or paid plan is live, and false once it has expired or been cancelled.
+- **status** - the current state, one of: **none** (never activated), **trial**, **active** (paid), **expired**, or **cancelled**.
+- **trial\_ends\_at** - the date and time your current trial ends. After this moment, an unupgraded trial becomes expired.
+- **location\_limit** - how many locations you can add right now: **1** on a trial, **5** on a paid plan, and **0** when nothing is active.
+
+When you try to add a location beyond your limit, theStacc blocks the addition and tells you the current count against your limit (for example, "Location limit reached") so you know to upgrade or remove a location first.
+
+## Google Business Profile publishing limits
+
+There's a separate limit to be aware of, and it's easy to confuse with the plan limits above: **how many posts you can publish to a Google Business Profile each month**.
+
+This publishing quota is **30 posts per month, per location**, and it resets at the start of each calendar month. The posts page shows a small counter (for example, "12 of 30 used") so you can see how much of the month's allowance you've published for that location.
+
+A few important details:
+
+- The **30/month figure is per location**, counted independently for each business - not shared across all the locations in a project.
+- Only posts that were actually published to Google Business Profile this calendar month count toward it. Drafts and generated-but-unpublished posts don't.
+- This quota is **separate from your trial's 3-post content limit and your plan's location limit**. It's about publishing to Google, not about how many posts the AI will generate or how many businesses you can add.
+- The publishing limit is enforced by the publishing service (the GBP posting broker theStacc uses), not by an app-level cap inside theStacc. The counter in the app is there to show your progress; the broker is what ultimately accepts or rejects a publish if a tier ceiling is hit.
+
+In day-to-day use, 30 posts a month is one per day with room to spare, so most businesses never come close to the ceiling.
+
+## Quick reference
+
+|  | Trial | Paid plan |
+| --- | --- | --- |
+| Duration | 3 days | Ongoing while subscribed |
+| Locations per project | 1 | 5 |
+| Generated posts (content limit) | 3 | No trial cap |
+| GBP publishing | 30 posts/month per location | 30 posts/month per location |
+| Who can start it | Owner or admin | n/a (managed in Billing) |
+
+## Related
+
+- [Locations & Business Details](/docs/local-seo/locations-business-details) - add and edit the businesses in your project.
+- [Billing & Plans](/docs/account/billing) - upgrade from trial to paid, change plans, or manage payment.
+- [Google Business Profile](/docs/local-seo/google-business-profile) - connect your profile and publish local posts.

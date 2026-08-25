@@ -1,0 +1,85 @@
+---
+title: "The content engine"
+description: "theStacc is not a single \"write me a post\" button."
+---
+
+theStacc is not a single "write me a post" button. Behind every piece of content is a multi-stage engine that plans, researches, writes, illustrates, scores, and publishes - so the output reads like a strategist wrote it, not a chatbot.
+
+This page explains what actually happens each time content is created.
+
+<Frame caption="How the content engine turns your inputs into a published post, in six stages">
+
+![How the content engine turns your inputs into a published post, in six stages](/images/docs/content-engine-pipeline.svg)
+
+</Frame>
+
+## The blog pipeline
+
+When theStacc creates a blog post, it moves through six stages:
+
+1. **Content plan** - Before any single post is written, theStacc builds a rolling 30-day content calendar from your keywords, your business, and what you have already published. It rotates keywords so you never get two posts chasing the same term back-to-back, and spaces topics and angles out across the month.
+2. **Plan the post** - For each topic, the engine first designs the article: an SEO-focused title, a meta description, the full H2/H3 outline with the key points each section should cover, where images should go, the tone, and the tags. Planning first is what keeps posts well-structured instead of rambling.
+3. **Write the post** - The engine then writes the full article in clean HTML - proper heading hierarchy, your target keyword used naturally, a handful of supporting (secondary) keywords woven in, internal-link markers, and image placeholders. It writes grounded in your uploaded sources and in your brand voice (see [Quality & safety](/docs/how-it-works/quality-safety)).
+4. **Generate images** - Original hero and in-content visuals are generated to match the article and your brand, then dropped into the placeholders automatically. No stock photos, no hunting for images.
+5. **SEO scoring** - Every finished post gets a 0-100 score. The score blends a mechanical check (keyword placement, length and depth, heading structure, links, images, readability, and more) with a quality read of topical depth and search-intent match - so it measures both the structure and the substance.
+6. **Review and publish** - The draft is saved the moment the writing is done, so you can start reading immediately while images finish in the background. From there it follows your publishing mode - straight to your site, into a review queue, or held as a draft (see [Publishing](/docs/content-seo/publishing)).
+
+The result: a complete, on-brand, SEO-ready article with images and metadata - in one pass, on a schedule.
+
+### Plan first, then write
+
+The two middle stages above are not one big prompt. The engine works as a short, guided two-step loop: it **plans** the post (title, outline, image plan), and only then **writes** the full article against that plan. Designing the structure before drafting a single sentence is the difference between a focused, well-organised post and a wandering one.
+
+### Images run in parallel, after the text
+
+Text comes first. The instant the article is written, theStacc saves it as a draft and updates its status so it shows up in your editor right away - you can read and even start editing while the visuals are still rendering. Behind the scenes, all of the post's images (typically two to four) are generated in parallel, then slotted into their placeholders. If an image fails, the post still lands in your review queue with the text intact and a clear note about which visuals need a retry - the writing is never thrown away because of an image hiccup.
+
+## What feeds the engine
+
+The quality of the output comes from what the engine is given to work with. Every input below is optional - the engine quietly skips anything you haven't provided - but each one you add makes every post sharper:
+
+- **Your business profile** - what you do, who you serve, your locations, services, features, pain points, and competitors. This is the foundation every post is written against. See [Business Setup](/docs/content-seo/business-setup).
+- **Your keywords and topics** - the search terms you want to rank for. theStacc draws your post's main keyword from this pool and naturally works in related terms you're also targeting.
+- **Your sources (ground truth)** - documents you upload (PDF, Word, text) or text you paste. The engine treats these as the primary source of truth: it prefers your facts, figures, names, and terminology over its general knowledge, and won't contradict them. This is how you keep product details and claims accurate instead of invented.
+- **Your brand voice** - learned from writing samples you provide, so the output sounds like you (tone, vocabulary, sentence style, signature phrases, and words you never use). This voice takes priority over the generic writing style where they differ.
+- **Your excluded topics** - a per-project "do not write about" list. The engine steers clear of those subjects entirely - useful for competitors, sensitive themes, or anything off-brand.
+- **Your brand assets** - real images you've added to the project. Where one genuinely fits a section, the engine places your own image instead of a generated one (each used at most once).
+
+Garbage in, garbage out works in reverse here: the more context you give theStacc, the sharper every post becomes.
+
+## How the engine keeps content fresh
+
+Publishing on a schedule only works if the content doesn't start repeating itself. Three systems run on every blog to keep it varied:
+
+- **Keyword rotation with a cooldown** - your keywords live in one pool, and the engine fills each new calendar slot with the \*freshest\* eligible keyword. A keyword that was just used goes on a cooldown (60 days by default) before it can come up again, so topics cycle instead of clustering. Keywords you mark as "always-on" are exempt from the cooldown and lead the rotation, so your most important topics keep coming around. When two posts are scheduled at once, the engine claims keywords without collisions.
+- **Title and topic de-duplication** - before writing, the engine is shown the titles of your existing and already-planned posts and must attack a clearly different angle from all of them. If a suggested title overlaps with one you already have, it rewrites it (a different sub-topic, audience, stage of the journey, or framing) rather than producing a near-duplicate.
+- **Opening-hook diversity** - the engine is also shown the openings of your most recent posts and is told not to echo their structure, hook type, or anchoring statistic. That's what stops every post from starting with the same year-stamp ("In 2026..."), the same stat, or the same cliche framing. After writing, a lightweight check flags any post whose opening still slipped into a recycled hook, so you can choose to regenerate it.
+
+For more on grounding, brand voice, and the quality checks, see [Quality & safety](/docs/how-it-works/quality-safety).
+
+## The local SEO pipeline
+
+Local posts follow the same plan-first philosophy, tuned for Google Business Profile:
+
+- theStacc builds a plan of Google Business Profile posts and rotates the "hook" of each one - a result or number, a genuine question, a seasonal or local-event angle, a customer problem, a feature, or a trust signal - so two posts in a row never open the same way.
+- Posts are written to the length Google actually rewards, with the strongest concrete value placed in the opening lines that show before the "Read more" fold.
+- A mix of post types is spread across the schedule - regular updates plus offers and events, where offers and events get their own short, card-friendly titles.
+- Built-in guardrails strip anything that violates Google's rules before a post goes out - fabricated discount codes, invented percentages, and phone numbers stuffed into the body (Google wants users to tap the "Call" button instead).
+
+## The social pipeline
+
+Social content is generated as a coordinated monthly plan rather than one-off posts:
+
+- The engine selects a balanced mix of **content pillars** (education, authority, social proof, brand personality, community, and conversion) and post formats, so your feed has variety instead of the same template every day.
+- Each caption is written natively for its platform - the right length, hashtag count, and hook placement for Instagram, Facebook, LinkedIn, or X. A caption is never just copy-pasted across networks.
+- Matching visuals are generated for each post, including multi-slide carousels, sized correctly per platform.
+
+## What it costs to run (at a high level)
+
+A full post - planning, writing, several original images, and scoring - is more work than a single chatbot reply, but it isn't priced like one. The engine routes each task to a right-sized model: heavy reasoning for planning and writing, a faster model for lighter jobs, and a dedicated image model for visuals. You never choose or configure any of this - it's automatic, and it's what lets theStacc produce content at volume without the cost ballooning. For the full picture of which engine does what and why, see [How the AI works](/docs/how-it-works/how-the-ai-works).
+
+## Related reading
+
+- [Blog Generation](/docs/content-seo/blog-generation) - how to trigger, watch, and edit a generation run.
+- [Quality & safety](/docs/how-it-works/quality-safety) - brand voice, grounding, anti-repetition, SEO scoring, and compliance.
+- [How the AI works](/docs/how-it-works/how-the-ai-works) - the AI models and generation pipeline behind every stage above.

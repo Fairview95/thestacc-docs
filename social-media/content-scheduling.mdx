@@ -1,0 +1,135 @@
+---
+title: "Content & Scheduling"
+description: "Your social plan is built from three pieces that work together: the content pillars that decide what you talk about, the content plan that turns those…"
+---
+
+Your social plan is built from three pieces that work together: the **content pillars** that decide what you talk about, the **content plan** that turns those pillars into a calendar of ready-to-post drafts, and the **post editor** where you fine-tune each post before it goes out. This page walks through all three, plus how scheduling decides exactly when each post publishes.
+
+## Content pillars
+
+Content pillars are the themes theStacc rotates through so your feed stays varied instead of posting the same kind of update over and over. The current pillar set has six themes:
+
+- **Education** - tips, how-tos, frameworks, and "how it works" explainers that teach your audience something useful.
+- **Authority** - your point of view: hot takes, contrarian takes, and original-data posts that show you know your field.
+- **Social proof** - case studies, testimonial quotes, and concrete numeric results that show your work pays off.
+- **Brand personality** - founder stories and behind-the-scenes process reveals that put a human face on the business.
+- **Community** - questions and conversation starters that invite your audience to reply.
+- **Conversion** - lead-magnet drops and offers that move people to take a next step.
+
+theStacc aims for a healthy mix across these pillars and applies a few built-in guardrails so the feed stays balanced - for example, it keeps promotional (conversion) posts to roughly one per week and makes sure a minimum of educational, authority, and social-proof posts land each week. You can shift the weighting toward the pillars that matter most to you in **Settings \> Social \> Preferences**; set a pillar to zero to switch it off entirely (for example, set conversion to zero to stop promotional posts).
+
+### About the older pillar names
+
+If you set up Social a while ago, you may have used the earlier pillar labels - **Educational**, **Thought Leadership**, **Product Highlights**, **Industry News**, **Behind the Scenes**, and **Engagement**. Those older names still work: theStacc automatically maps them onto the current six themes (for example, \*Thought Leadership\* becomes \*Authority\*, \*Product Highlights\* becomes \*Conversion\*, \*Behind the Scenes\* becomes \*Brand personality\*, and \*Engagement\* becomes \*Community\*). Posts created under the old names keep working, and any preferences you saved with them are honored - you don't have to redo anything.
+
+## Content plans
+
+A content plan is a dated batch of posts generated from your pillars, audience, and connected platforms. Each plan covers a fixed window:
+
+- **On a trial, plans are 7 days.**
+- **On a paid plan, plans are 30 days.**
+
+The length is set automatically from your subscription - you don't pick it, and the server always uses the right length for your current tier.
+
+### Plan status
+
+Every plan moves through a simple lifecycle:
+
+1. **Generating** - theStacc is building the plan: choosing a pillar and post type for each day and drafting the topics. This usually takes from a few seconds up to a couple of minutes.
+2. **Active** - the plan is built and its posts are ready to view, edit, and publish.
+3. **Expired** - the plan's end date has passed. An expired plan's posts are still there to review; it just means it's time to start the next one.
+
+If a generation run gets interrupted, the plan can end up stuck. theStacc detects and cleans up a stalled or failed plan automatically the next time you generate, so you're never permanently blocked - just try **Generate Next Plan** again.
+
+### Creating the next plan
+
+When one plan is wrapping up, you create the next one with **Generate Next Plan** on the Social dashboard. The new plan starts the day after the current one ends (or today, if the current plan has already expired) so posts never collide or land in the past. Clicking the button twice, or while a plan is already generating, is safe - theStacc returns the in-progress plan instead of creating a duplicate.
+
+For a future-dated plan, posts are generated automatically as each one comes due, so you don't have to wait for the whole month to build before the window starts.
+
+For more on how plans are built and the post types behind them, see [Content Plans & Generation](/docs/social-media/content-plans-generation).
+
+### Expiry reminder
+
+When your current plan is close to running out - within about five days, or once it has already passed its end date - a banner appears on the Social dashboard reminding you to generate the next plan. It only shows when there's no next plan queued yet, so once you've generated the following month it disappears. If your subscription has lapsed and the plan has expired, the banner turns red to make clear you'll need an active plan to keep posting.
+
+## The post editor
+
+Click any post on the dashboard or calendar to open the full editor. The left side is your working area (caption, hashtags, images, preview); the right side holds the post's settings (pillar, schedule, platforms).
+
+### Captions
+
+Every post has one **default caption** plus an optional **per-platform override** for each connected platform. Use the tabs above the caption box to switch between the main caption and a platform-specific version:
+
+- The **main caption** is what gets used everywhere by default.
+- A **per-platform caption** overrides the main caption for just that platform - handy when LinkedIn wants something more formal than Instagram, or when a long caption needs trimming for X.
+
+If you don't write an override for a platform, that platform simply uses the default caption.
+
+### Live character counter
+
+As you type, the editor shows a live character count against each connected platform's limit and turns red when you go over. theStacc counts the same way each platform does - including X's rule where every link counts as 23 characters and emoji or non-Latin characters count double - so the number you see matches what the platform will enforce. If any selected platform is over its limit, the Publish and Schedule buttons stay disabled until you fix it, so you never waste a publish on content that would be rejected.
+
+For the full list of limits per platform (and the note on X Premium's higher ceiling), see [Platform Character Limits](/docs/social-media/platform-character-limits).
+
+### Hashtags
+
+Add or remove hashtags below the caption. When you save, theStacc tidies up the spacing automatically - if two tags get stuck together (like `#GreenEnergy#JaipurSolar`), it inserts a space so they read and wrap cleanly as `#GreenEnergy #JaipurSolar`. Single `#` references inside links or anchors are left untouched.
+
+### First comments
+
+For each platform you can write a **first comment** - the text theStacc posts as the first reply right after the post goes live. This is the standard place to park a call-to-action or a link on Instagram and LinkedIn, where stuffing links into the caption hurts reach. Each platform gets its own first comment, so you can pin a CTA on Instagram and LinkedIn while leaving it off elsewhere.
+
+### Images
+
+The editor includes a multi-image gallery. You can preview images full-size, delete or upload images, regenerate an image when one didn't come out right, and reorder images for carousel posts.
+
+### Preview
+
+Switch to the **Preview** tab to see exactly how the post will look on each platform - caption, images, and hashtags rendered the way that platform displays them. Filter the preview to a single platform or view them all, so you can sanity-check every channel before publishing.
+
+### Post settings
+
+The right-hand panel holds the post's metadata:
+
+- **Pillar** - the content theme this post belongs to.
+- **Scheduled date and time** - when the post publishes (see Scheduling below).
+- **Platforms** - which connected accounts this post goes to. Posts can publish to Instagram, Facebook, LinkedIn, and X.
+
+For a deeper walkthrough of every editor control, see [Post Customization](/docs/social-media/post-customization).
+
+### Adjusting before generation and regenerating
+
+On a post that hasn't been generated yet, you can change the post type and visual style before theStacc writes it. After generation, you can regenerate the captions with up to **500 characters of additional direction** - a short note telling the AI what to change ("make it punchier," "mention our spring sale," "less formal"). Keep it under 500 characters; longer notes are rejected.
+
+## Scheduling
+
+Posts publish automatically at their scheduled date and time, interpreted in your workspace timezone. You can edit the date and time on any post from the editor.
+
+### How posting times are chosen
+
+By default, theStacc spreads a plan one post per day and schedules each for **10:00 AM** in your timezone. (If you generate a plan late in the morning, day one bumps to the next hour so it isn't scheduled in the past.)
+
+You can replace this with your own **posting schedule** - a set of repeating weekly time slots you define on the Connections page. Each slot is a date and a time written in 12-hour format (for example, `10:30 AM`). When a posting schedule is set, theStacc fills the plan by matching **day N of the plan to the Nth upcoming slot**, in chronological order. So your first post takes your earliest slot, your second post takes the next slot, and so on.
+
+A few rules keep this predictable:
+
+- **Past slots are skipped.** Any slot whose date (or same-day time) has already gone by is dropped, so you never get a post scheduled in the past.
+- **If the plan has more days than you have slots,** the extra posts continue day by day after your last scheduled slot, defaulting back to 10:00 AM.
+- **If you don't set a schedule,** the standard one-post-per-day-at-10 AM spread is used.
+
+You can always override any individual post's time afterward in the editor without affecting the rest.
+
+### Managing scheduled posts
+
+From the dashboard and calendar you can:
+
+- Edit a post's scheduled date and time.
+- Filter posts by their state (for example, upcoming, published, or failed).
+- Review and retry posts that didn't publish.
+
+## Related articles
+
+- [Content Plans & Generation](/docs/social-media/content-plans-generation) - how plans are built and the post types behind them.
+- [Platform Character Limits](/docs/social-media/platform-character-limits) - the exact limit for each platform.
+- [Post Customization](/docs/social-media/post-customization) - a full tour of the post editor.

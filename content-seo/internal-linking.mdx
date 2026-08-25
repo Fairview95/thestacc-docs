@@ -1,0 +1,89 @@
+---
+title: "Internal Linking"
+description: "Internal links are links from one page on your website to another page on the same site."
+---
+
+Internal links are links from one page on your website to another page on the same site. They help readers find related content, and they help search engines understand how your pages connect - which is good for SEO. theStacc builds these links into your posts automatically, so your blog becomes a connected web of content instead of a pile of unrelated articles.
+
+This page explains how it works, what you control, and the safety net that makes sure a broken link never reaches your live site.
+
+## Your list of linkable pages
+
+theStacc keeps a list of pages on your website that the blog generator is allowed to link to. Each entry is just two things:
+
+- **Title** - a plain-language name for the page (for example, \*Pricing\* or \*About Us\*)
+- **URL** - the web address of that page
+
+When the AI writes a post, it can drop a link to any page on this list wherever it naturally fits the topic. Think of it as telling theStacc "here are the pages I'd like you to send readers to when it makes sense."
+
+### Where to manage the list
+
+You manage this list under **Content SEO \> Settings \> Preferences**, in the **Your Website Pages** section. This section only appears when **Include Internal Links** is turned on (more on that below).
+
+To add a page:
+
+1. Go to **Content SEO \> Settings \> Preferences**.
+2. Make sure **Include Internal Links** is on.
+3. Under **Your Website Pages**, click **Add Page**.
+4. Enter a **Page title** (for example, \*Pricing\*) and the **URL** (for example, `https://yoursite.com/pricing`).
+5. Click **Add Page** to save it.
+
+To remove a page, hover over it and click the remove (X) button. You need editor access to the project to add or remove pages.
+
+### Pages we add for you
+
+When theStacc analyzes your website's sitemap, it can automatically add your recent blog posts to this list so you don't have to enter them by hand. Auto-added pages get a title generated from their URL (so `/blog/best-solar-panels` becomes \*Best Solar Panels\*). Up to 20 pages are added this way, and anything already on your list is skipped so you never get duplicates.
+
+## How links get added to a post
+
+While the AI writes, it doesn't paste in finished URLs. Instead it marks each intended internal link with a placeholder that looks like this:
+
+`[INTERNAL:topic]`
+
+The "topic" is the page the AI wants to link to. These placeholders stay in the draft and are turned into real links later, at publish time. This two-step approach lets theStacc always point each link at the right, current URL - and lets it clean up any link it can't confidently resolve.
+
+When you have existing posts and the toggle is on, the AI aims to include at least three internal links per post (fewer only if you have fewer pages available), choosing the ones most relevant to the topic.
+
+## How links are resolved at publish
+
+When a post is published (and when you preview it), theStacc replaces every `[INTERNAL:topic]` placeholder with a real link. It does this by matching the placeholder against your list of linkable pages, in this order:
+
+1. **Exact match first.** theStacc normalizes the placeholder topic and your page titles - trimming spaces, lowercasing, and treating dashes the same as spaces - then looks for an exact match. If the topic matches a page title, the link points to that page's URL.
+2. **Close match next.** If there's no exact match, theStacc looks for the closest matching title using fuzzy matching (a similarity cutoff of 0.6, so the titles have to be reasonably close - not just loosely related). If it finds one, the link points to that page.
+3. **No match - strip the link.** If neither step finds a confident match, theStacc removes the link but keeps the words. The sentence reads normally; it just isn't a link anymore.
+
+That third step is the important safety net: **an unmatched placeholder never becomes a broken link on your live site.** The reader sees clean text instead of a dead link or a raw `[INTERNAL:...]` tag.
+
+If your list of linkable pages is empty, every placeholder is simply stripped (text kept) - again, no broken links.
+
+## Relative URLs become full web addresses
+
+Many people enter page paths as shorthand - like `/contact` or `/services` - instead of the full address. On their own site those work fine, but a partial path can break when the post is rendered somewhere else (such as the preview inside theStacc).
+
+To prevent that, theStacc automatically turns root-relative paths into full URLs using your website's address. So `/contact` becomes `https://yoursite.com/contact` at publish and preview time. This applies to any links in the post, not just internal-link placeholders, so your call-to-action buttons stay correct everywhere too.
+
+This only works when your website URL is set for the project. Links that are already full addresses, email links (`mailto:`), phone links (`tel:`), and same-page anchors (`#section`) are left exactly as they are.
+
+## Published posts feed back into the list
+
+Every time a post publishes successfully, theStacc adds that post - its title and its live URL - back into your list of linkable pages. That means each new post you publish becomes something \*future\* posts can link to, so your internal linking gets richer over time without any manual work.
+
+Duplicates are prevented: if a post's URL is already on the list, it isn't added again.
+
+## How the Include Internal Links toggle works
+
+The **Include Internal Links** toggle lives under **Content SEO \> Settings \> Preferences** and is **on by default**. It controls whether theStacc weaves internal links into new posts at all.
+
+- **On** - For each new post, theStacc tells the AI to link to other pages on your site where relevant, drawing on your existing posts and your list of linkable pages. The **Your Website Pages** section appears so you can manage that list.
+- **Off** - theStacc instructs the AI not to add any internal-link placeholders to new posts. The **Your Website Pages** section is hidden.
+
+A few things worth knowing:
+
+- The toggle affects **new** content. Posts that were already generated keep whatever links they were written with.
+- If you have a brand-new site with no existing posts yet, theStacc skips internal links automatically (there's nothing to link to) and focuses on links to trustworthy outside sources instead.
+- The publish-time safety net always runs. Even with the toggle on, any placeholder that can't be matched is stripped so no broken link goes live.
+
+## Related
+
+- [Preferences](/docs/content-seo/preferences) - where you turn Include Internal Links on or off and manage your list of linkable pages.
+- [Publishing](/docs/content-seo/publishing) - publishing modes and integrations; internal links are resolved at the moment a post publishes.

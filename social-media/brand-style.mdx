@@ -1,0 +1,212 @@
+---
+title: "Brand & Style"
+description: "Your Brand & Style settings teach theStacc what your brand looks like and sounds like, so every caption and every image it generates is on-brand from the…"
+---
+
+Your **Brand & Style** settings teach theStacc what your brand looks like and sounds like, so every caption and every image it generates is on-brand from the first post.
+
+You'll find these settings under **Social Media \> Settings \> Brand & Style**. They're saved per project, so each project (each brand you run) keeps its own colors, logo, voice, and rules. Changes save automatically a moment after you make them.
+
+The page is organized into four tabs:
+
+- **Brand** - brand colors, logo, and the optional QR code
+- **Image Style** - how your post images look, plus reference images and art direction
+- **Fonts** - the heading and body font pairing for text on your graphics
+- **Voice** - how your captions sound, content language, and words to avoid
+
+Most of these fields are filled in for you automatically the first time you connect your website. See [Connecting Platforms](/docs/social-media/connecting-platforms) and the social [Overview](/docs/social-media/overview) for how the brand kit gets auto-filled from your site. Everything below is editable afterward.
+
+## Brand tab
+
+### Brand colors
+
+Your brand colors are **auto-detected from your website** the first time you set up Social Media. theStacc reads your site and pulls the dominant colors; the most saturated one becomes your **Primary**, and the rest become **Accent 1**, **Accent 2**, and so on. These colors are used across your generated post graphics.
+
+By default you see a clean, read-only swatch preview - no jargon to decode. To change them, click **Customize**. In the editor you can:
+
+- Pick any color with the color picker, or type a hex code directly (for example, `#615fff`).
+- Add colors with **Add color** - you can have up to **5** brand colors total.
+- Remove any accent color (you always keep at least one).
+- Click **Done** when you're finished.
+
+If no colors were detected, you'll see a prompt to add at least one before generating posts.
+
+### Brand logo
+
+Upload your logo to include it in AI-generated images. Click **Click to upload** or drag and drop a file into the box.
+
+- Accepted formats: **PNG, JPG, SVG**
+- Maximum file size: **5 MB**
+
+Once uploaded, you can **Replace** the logo with a different file or **Remove** it. How often the logo actually appears on your images is controlled by your logo-frequency preference and your custom image rules (for example, you can require "always include logo" - see [Custom image rules](#custom-image-rules) below).
+
+### QR code (optional)
+
+You can embed a scannable QR code into every generated social-media image. This is great for driving scans to a link in print-friendly posts, a WhatsApp chat, a booking page, or a landing page.
+
+QR codes are **off by default**. When they're off, your image pipeline is completely unchanged.
+
+To turn it on:
+
+1. Flip the **QR Code (optional)** switch on.
+2. Enter a **Target URL** - the web address the QR code points to. It must be a valid `http://` or `https://` URL (for example, `https://wa.me/919999999999` or `https://example.com`). If you type a bare domain, theStacc adds `https://` for you when you click away from the field. The URL can be at most **500 characters** long.
+3. Choose a **QR Size**:
+
+- **Small** - about 14% of the image width
+
+- **Medium** - about 18% of the image width (default)
+
+- **Large** - about 22% of the image width
+
+1. A live preview of the QR code appears on the right as you type a valid URL.
+2. Click **Generate QR** (or **Update QR** if you've changed an existing one) to save it.
+
+A few things to know:
+
+- The **Target URL is required** when the QR code is enabled. If you turn the switch on but leave the URL empty or invalid, the page shows an inline error and won't save the QR settings - so theStacc never tries to generate a QR with no destination.
+- The size label below the buttons always tells you the exact percentage of image width the QR will take up.
+- An **Unsaved changes** note appears until you click **Generate QR** / **Update QR**; a green **Saved** check confirms once it's stored.
+
+## Image Style tab
+
+This tab controls how the AI-generated images for your social posts look. Pick one of the three presets, or define your own brand style with reference images.
+
+### Image styles
+
+Choose the visual style for your post images:
+
+- **Flat Illustration** - Clean vector art. People, objects, or abstract shapes rendered in your brand colors.
+- **Photography** - Professional photos. Portraits, environments, or products, with text overlaid on top.
+- **UI & Shapes** - Dashboards, device mockups, or geometric designs. A clean SaaS aesthetic.
+- **Your Brand Style** - Use your own uploaded reference images instead of a preset (see below).
+
+### Your reference images
+
+When you select **Your Brand Style**, you can upload your own images and theStacc will match their look across every post.
+
+1. Drop images onto the upload zone, or click to browse.
+2. Accepted formats: **PNG, JPG**, up to **5 MB each**.
+3. You can upload up to **10 reference images**.
+
+When you upload reference images, theStacc automatically analyzes them and **extracts the colors, typography feel, layout approach, and visual mood** so it can recreate that style in new images. This analysis runs once, right after upload.
+
+### Extracted style prompt
+
+After your reference images are analyzed, you'll see an **Extracted Style Prompt** - a short style directive theStacc wrote based on your images (for example, the palette, the mood, and the layout it detected). This directive is injected into every image-generation prompt. You can **edit it directly** to fine-tune the look, and you'll also see the detected mood words as small pills.
+
+### Custom image rules
+
+Below the styles, **Custom Image Rules** lets you add your own instructions that are appended to every image prompt. Use plain English. For example:
+
+- `No people in images.`
+- `Always include the logo.`
+- `Always use dark backgrounds.`
+- `Use minimalist composition. Keep the text area at the bottom.`
+
+These rules apply to every image you generate, on top of whichever style or art direction is active.
+
+### Preferred art direction
+
+Art direction sets the overall aesthetic "world" of your images - the lighting, the typography feel, the composition - on top of the image style you chose. You can pin one aesthetic for every post, or leave it on **Auto** and let the AI match each post's content and mood.
+
+Leave this on **Auto** (recommended) unless you want a consistent, deliberate look. The options are:
+
+- **Auto - let AI pick per post** - The AI adapts the aesthetic to each post's content and mood. Recommended.
+- **Editorial magazine** - Print-issue cover feel. Documentary 35mm look, natural directional light, subtle film grain, masthead-style typography.
+- **SaaS ad clean** - Stripe / Linear / Notion feel. Crisp geometric sans-serif, generous whitespace, one accent color on a neutral canvas. Product-marketing polish.
+- **Neon fintech dark** - Deep navy or near-black canvas with neon glows (cyan, violet, electric blue). Subtle data-viz grid. Premium dashboard feel.
+- **Grainy documentary** - Black-and-white, silver-gelatin print feel, high contrast, candid and unposed. The photo carries the weight.
+- **Brutalist minimal** - Massive typography, raw edges, lots of negative space, two colors. The layout is the design.
+- **Maximalist bold** - Saturated color blocks, oversized type, layered and playful. Skate-brand / streetwear energy.
+- **Zine / DIY print** - Paper texture, hand-cut collage feel, risograph color overlays. Indie and analog, not digital.
+- **Warm candid** - Golden-hour light, warm color grade, real unposed moments, 50mm shallow-depth-of-field feel.
+
+If you leave it on **Auto**, theStacc still picks a sensible look for each post - it matches the post's content pillar to a fitting aesthetic (for example, Education posts lean editorial, Conversion posts lean clean SaaS) unless the AI chooses something better for that specific post.
+
+## Fonts tab
+
+Choose the heading and body font pairing used for text on your social graphics. Each card shows a live preview of the heading and body fonts together, with a short category label. The available pairings are:
+
+- **Space Grotesk + Inter** - modern
+- **Raleway + Source Sans 3** - professional
+- **Playfair Display + Lato** - elegant
+- **Nunito + Quicksand** - friendly
+- **Oswald + Open Sans** - bold
+- **Poppins + Geist** - clean
+- **Sora + DM Sans** - startup
+- **Cormorant Garamond + Montserrat** - editorial
+- **Outfit + Plus Jakarta Sans** - contemporary
+
+Click a pairing to select it. The selected card shows a checkmark.
+
+## Voice tab
+
+This tab controls how your captions sound, what language they're written in, and which words to never use.
+
+### Brand voice
+
+Pick how your brand should sound on social media. Choose one of six presets:
+
+- **Professional** - Authoritative and polished.
+- **Casual** - Friendly, approachable, conversational.
+- **Witty** - Clever humor, playful but smart.
+- **Inspirational** - Motivating, uplifting, aspirational.
+- **Educational** - Informative, clear, teacher-like.
+- **Bold** - Direct, confident, provocative.
+
+These presets are overridden if you train a custom voice profile (below). When a custom voice is active, the preset cards are dimmed - reset the custom voice to go back to a preset.
+
+### Train your voice (custom voice profile)
+
+For a voice that's unmistakably yours, you can train theStacc on your own writing instead of using a preset. Paste in examples of your best posts and theStacc analyzes your style.
+
+1. In **Train Your Voice**, paste **3 to 30 of your best social posts**, separated by blank lines. Each post must be at least 20 characters. (A single post can be up to 5,000 characters, and the total across all posts up to 100,000 characters.)
+2. The page counts the posts it detects as you type and tells you when you have enough.
+3. Click **Analyze My Voice**.
+
+theStacc reads your samples and extracts a structured **Voice Profile**, including:
+
+- A short **summary** of your voice
+- **Tone** descriptors (for example, conversational, authoritative, warm)
+- **Vocabulary** level (simple, moderate, or sophisticated)
+- **Sentence style** - your typical structure and rhythm
+- **Personality** traits
+- **Signature patterns** - how you open, transition, and close posts
+- **Words you use often** and **words you avoid**
+
+Once extracted, this profile is marked **Active** and is used for all future captions, replacing the preset voice. You can **Reset to Preset** at any time to switch back.
+
+**Auto-extracted from your website:** If you used the **Auto-fill brand kit from this site** button when connecting your site, theStacc may have already extracted a starter voice profile in the background from writing samples it found on your pages (it needs a few usable samples to do this). You'll see a note about queued voice samples when that happens. You can always re-train it here with your own posts.
+
+### Content language
+
+Choose the primary language for your social content. theStacc generates captions, hashtags, and content plans in the language you pick. Supported languages:
+
+- English (US), English (UK), Spanish, French, German, Portuguese, Italian, Dutch
+- Japanese, Korean, Chinese (Simplified), Thai, Vietnamese, Indonesian, Malay, Filipino/Tagalog
+- Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu
+- Arabic, Turkish, Russian, Polish, Swedish, Danish, Norwegian, Finnish
+
+### Words & phrases to avoid
+
+Add a blocklist of words or phrases that should never appear in your generated captions. Type a word or phrase and press **Enter** (or click **Add**) to add it; click the × on any tag to remove it. This is useful for brand safety, banned terms, or competitor names you'd rather not mention.
+
+## Your brand kit (business details)
+
+The Brand & Style tabs control how your posts look and sound. Your **brand kit** - the facts about your business that theStacc writes about - lives under **Social Media \> Settings \> Business Details**. Keeping this accurate makes every caption more specific and on-message. It includes:
+
+- **Overview** - your **business name**, **category**, **business type** (B2C, B2B, B2B2C, D2C, or Marketplace), and **website URL**. The website field also has the **Auto-fill brand kit from this site** button, which pulls your logo, brand colors, tagline, business name, description, and voice samples in one click. Only empty fields are filled - your existing edits are never overwritten.
+- **Identity** - your **business description** (core identity): what your business does and who it serves. This grounds all generated content.
+- **Services** - your **features & services** and the **pain points** your product solves, each as a tag list.
+- **Competitors** - your key competitors, used to keep your content differentiated and avoid generic messaging.
+- **Customer segments** - your ideal customer profiles. Each segment has a **name**, a **pain point**, and an optional **percentage** of your audience. These tailor your content topics and messaging.
+
+## How it all comes together
+
+When theStacc generates a post, it combines everything here: your brand colors and logo, the chosen image style or your reference images, the active art direction, your custom image rules, your QR code (if enabled), your font pairing, your voice (preset or custom), your content language, and your words-to-avoid list. The more complete your brand kit, the more on-brand and specific every post will be.
+
+## Related
+
+- [Connecting Platforms](/docs/social-media/connecting-platforms) - connect your accounts and auto-fill your brand kit from your website.
+- [Content & Scheduling](/docs/social-media/content-scheduling) - set up content pillars, generate your content plan, and schedule posts.
+- [Social Media Overview](/docs/social-media/overview) - how the whole Social Media module fits together.

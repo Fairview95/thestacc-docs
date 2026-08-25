@@ -1,0 +1,154 @@
+---
+title: "Regenerating Content"
+description: "Sometimes the AI's first attempt isn't quite right."
+---
+
+Sometimes the AI's first attempt isn't quite right. Maybe the title feels generic, one paragraph is too stiff, or an image missed the mark. Instead of starting over, theStacc lets you regenerate content at the exact level you need - from the whole post down to a single image - so you keep everything that already works.
+
+This guide covers every regeneration option, what each one changes, and what it deliberately leaves untouched.
+
+## Before you start
+
+Every regeneration option calls the AI, and AI calls cost money - so they all require an **active subscription**. If your plan has lapsed, your existing posts and images stay fully viewable and editable by hand, but the regenerate buttons are disabled until you reactivate. You also need edit access to the project (you do automatically as the owner; share-link collaborators need editor permission).
+
+One more thing worth knowing up front: **regenerating overwrites the current version - theStacc does not keep a version history.** Whatever the AI produces replaces what was there. Always review a post before regenerating it from scratch so you don't lose copy you liked. (Regenerating a single section or image is safer, because the rest of the post is untouched.)
+
+## Regenerate the plan only
+
+Every scheduled post starts as a \*plan\* - a title, a blog type, a short excerpt, and an assigned keyword - before any full article is written. If the plan looks off, you can refresh it without generating the whole post.
+
+Regenerating the plan rewrites:
+
+- **Title**
+- **Blog type** (the format, such as how-to, listicle, or guide - see [Blog Types](/docs/content-seo/blog-types))
+- **Excerpt** (the short summary)
+- **Category**
+
+It deliberately keeps two things fixed:
+
+- **The keyword** - the post stays on the same target keyword. If you edited the keyword yourself in the plan, the AI uses your edited keyword **verbatim** and writes a fresh title around it. If the plan never had a keyword, the AI picks one based on your business info and saves it to the post.
+- **The scheduled date** - regenerating the plan never moves a post on your calendar.
+
+It also **de-dupes against your recent titles**. Before writing a new title, theStacc looks at the titles of your other posts across the whole project (not just the current content plan) so the regenerated title doesn't repeat something you already have.
+
+### When it's available
+
+Plan regeneration works on posts in one of these states:
+
+- **To be generated** - a scheduled plan that hasn't been written yet.
+- **Rejected** - a post you turned down. Regenerating the plan moves it back to **To be generated** so you can generate the full article against the fresh plan.
+- **Missed** - a post whose scheduled date passed without generating. The plan's title and keyword get rewritten, but the status stays **Missed** and the scheduled date stays as-is - regenerating the plan does not reschedule it.
+
+If a post has already been written, approved, or published, plan regeneration is not available - use a section, image, or full regeneration instead.
+
+## Regenerate a section
+
+When most of a post is good but one part needs work, regenerate just that section instead of the whole article. This is the safest way to refine a written post - everything outside the selected section stays exactly as it was.
+
+1. Open the post in the editor.
+2. Select or highlight the section you want to rework. theStacc shows how many text sections you've selected.
+3. Adjust the two sliders and, optionally, add an instruction.
+4. Click **Regenerate**.
+
+The AI rewrites only the text inside that section and preserves its HTML structure (headings, lists, and paragraph tags stay intact - just the wording changes). It also keeps the same overall topic and key points, so you're refining the section, not replacing its meaning.
+
+### The tone slider (Formal to Casual)
+
+A 0-100 slider that sets the voice of the rewrite:
+
+- **Toward Formal (0)** - polished and professional.
+- **Middle (50)** - the default; balanced and lightly conversational.
+- **Toward Casual (100)** - relaxed and friendly.
+
+### The length slider (Shorter to Longer)
+
+A 0-100 slider that sets how much the AI writes:
+
+- **Toward Shorter (0)** - tightens and condenses the section.
+- **Middle (50)** - the default; keeps it about the same length.
+- **Toward Longer (100)** - expands and elaborates with more detail.
+
+### Optional instruction (Re-Prompt)
+
+Use the **Re-Prompt** box to tell the AI anything specific - for example, "add a real-world example" or "mention our free consultation." It's optional, and you can write up to 1,000 characters. Leave it blank to let the sliders do the work.
+
+## Regenerate a single image
+
+Don't like one image? Regenerate just that image and leave the rest of the post alone.
+
+1. Open the post in the editor.
+2. Select the image you want to replace.
+3. Set the style slider and, optionally, add a prompt.
+4. Click **Regenerate**.
+
+The new image keeps the **same aspect ratio** as the one it replaces, so your layout stays intact.
+
+### The style slider (Modern to Realistic)
+
+A 0-100 slider with three zones:
+
+- **Modern / clean** (lower third) - modern, clean, minimalist design with sleek lines.
+- **Abstract / artistic** (middle) - abstract, artistic, creative interpretation with unique visual elements.
+- **Realistic / photographic** (upper third) - realistic, photographic, detailed and lifelike.
+
+### Optional custom prompt (Image Prompt)
+
+Use the **Image Prompt** box to describe exactly what you want - for example, "a cozy coffee shop interior with warm lighting." You can write up to 1,000 characters.
+
+The prompt also changes how regeneration works:
+
+- **With a custom prompt and an existing image**, theStacc \*edits\* the current image to match your request, preserving its overall context.
+- **With no prompt**, theStacc generates a fresh image using the image's alt text (or, if there's none, the post's keyword or title) as context.
+
+For more on how images are created and the styles available across your whole site, see [Image Generation](/docs/content-seo/image-generation).
+
+## Retry failed images only
+
+If a post's text generated fine but one or more images failed (for example, the image service hit a temporary limit), you don't need to rebuild the whole article. **Retry images** re-runs \*only\* the placeholders that failed last time.
+
+What it does:
+
+- Re-issues image generation for each failed image using its **original image plan** - the same prompt and the same aspect ratio the post was planned with.
+- Drops the new image into the post where the placeholder was.
+- Costs nothing for text - it never re-runs the AI writing step, so there's **no AI text cost**, just the image generation.
+- Leaves any image that succeeds in place. If an image fails again, it stays marked as failed so you can retry it or edit the prompt.
+
+### When it's available
+
+Retry images works from two states:
+
+- **Generation failed** - the post is stuck because images didn't generate.
+- **Generated, pending review** - the post wrote and made it to review, but with one or more failed images still showing placeholders.
+
+When at least one image succeeds, the post moves to **Generated, pending review** so you can finish reviewing it. If your post never got a featured image because all images failed, a successful retry promotes one of the new images to the featured slot automatically.
+
+Retry is intentionally blocked while a post is mid-generation, and on posts that are already approved or published, so a retry can't collide with an in-flight job or quietly rewrite live content. If you land on the "text content already exists" message after clicking the main generate button, that's theStacc steering you here - use **Retry images** instead so you don't pay to re-write text that's already done.
+
+For more on what to do when generation fails and how theStacc recovers automatically, see [AI Error Recovery & Retries](/docs/content-seo/ai-error-recovery).
+
+## Regenerate the entire blog from scratch
+
+If a post just isn't working - wrong angle, weak structure, tone that's off throughout - regenerate the whole thing. theStacc re-runs the full generation pipeline (research, outline, writing, and images) and produces a brand-new article.
+
+**Important:** a full regeneration **replaces the existing post in place, and previous versions are not kept.** Read the current version first and copy anything you want to keep, because once you regenerate, the old article is gone. For a small fix, prefer a section or image regeneration instead - they leave the rest of the post untouched.
+
+See [Blog Generation](/docs/content-seo/blog-generation) for a full walkthrough of how the pipeline writes a post.
+
+## A note on editing reviewed posts
+
+Regenerating isn't the only way to change a post - you can also edit by hand in the editor. If you edit the body of a post that's sitting in **Generated, pending review**, theStacc moves it to **Modified, pending review** so it's clear the version under review now includes your changes. From there you still approve or reject it as usual.
+
+## Which option should I use?
+
+- **The title or excerpt is off, and the post isn't written yet** - [regenerate the plan](#regenerate-the-plan-only).
+- **One paragraph reads badly** - regenerate that section with the tone and length sliders.
+- **One image is wrong** - regenerate just that image.
+- **Images failed but the writing is fine** - retry failed images (no text cost).
+- **The whole post is wrong** - regenerate from scratch (review first - no version history).
+
+## Related
+
+- [Blog Generation](/docs/content-seo/blog-generation) - how the AI writes a post end to end.
+- [Image Generation](/docs/content-seo/image-generation) - image styles, aspect ratios, and how images are created.
+- [AI Error Recovery & Retries](/docs/content-seo/ai-error-recovery) - what happens when generation fails and how theStacc retries.
+- [Blog Types](/docs/content-seo/blog-types) - the post formats the AI chooses from.

@@ -1,0 +1,144 @@
+---
+title: "SEO Scoring Explained"
+description: "Every blog post theStacc generates gets an SEO score from 0 to 100."
+---
+
+Every blog post theStacc generates gets an **SEO score** from 0 to 100. It is the single number at the top of the **Analysis** panel when you open a post, and it is a quick read on how well the article is set up to rank and to genuinely help the reader.
+
+This page explains exactly how that number is built, what each part measures, and how it changes when you edit a post. None of it is a black box - if you understand the score, you can read the suggestions next to it and know exactly what to fix.
+
+## Two scores blended into one
+
+The headline number you see is actually a blend of two separate scores that measure different things:
+
+- **Mechanical score** - a deterministic, rules-based check. It scans the finished HTML and counts concrete, measurable things: is the keyword in the title, how many words, how many headings, how many internal and external links, are images tagged with alt text, and so on. Run it twice on the same post and you get the same number every time. It catches the things a person on your team can actually go in and fix.
+- **Semantic score** - the AI's own honest self-assessment of the writing. When it finishes the post, the AI rates how deeply the topic is covered, whether the structure matches what a searcher wants, and how genuinely helpful the article is. These are judgment calls a rules-based check simply cannot make.
+
+The two are deliberately kept separate because they measure different dimensions of quality. They are then combined into the headline:
+
+**Overall = (0.4 x mechanical) + (0.6 x semantic)**
+
+The semantic score carries more weight (60%) because topic depth, search-intent fit, and helpfulness are the dimensions modern search engines actually reward most. The mechanical score (40%) catches the structural gaps the AI can miss - a missing keyword in the URL slug, an AI-cliche opening line.
+
+If a semantic score is not available for a post (older posts generated before this feature, or the rare case where the AI did not return one), the headline falls back to the **mechanical score alone** rather than guessing. So you always see a real number.
+
+In the **Analysis** panel, the headline shows the blended overall, and just below it a small line reads **Mechanics N - Semantic M** so you can see exactly what the blend is made of.
+
+## Rating bands
+
+Alongside the number, theStacc shows a plain-English rating so you do not have to memorize what counts as good:
+
+- **90 or above** - Excellent
+- **80 to 89** - Good
+- **70 to 79** - Needs Work
+- **60 to 69** - Poor
+- **Below 60** - Critical
+
+A strong, publishable post usually lands in the **Good to Excellent** range. Most well-written articles settle in the high 70s to high 80s, which is exactly where you want them. A 90+ is genuinely rare and should be - more on that below.
+
+## What the mechanical score checks
+
+The mechanical score is built from ten categories. Nine add points (up to 100 total), and one - the spam check - can only subtract. Here is each category, what it looks for, and how much it is worth.
+
+### Keyword placement (10 points)
+
+Checks that your target keyword appears in the three places that matter: the **title**, the **H1 heading**, and the **URL slug**. The match is order-tolerant, so "Skylight Installation Cost for Warehouse" counts the same as "Warehouse Skylight Installation Cost" - modern search engines treat both phrasings as equivalent, so you are never penalized for natural rephrasing.
+
+### Content length and depth (15 points)
+
+Rewards comprehensive articles. The sweet spot is roughly **1,000 to 4,000 words** - long enough to cover a topic properly, not so long it should have been split into separate posts. It also checks that you have enough subheadings (aim for five or more) and that paragraphs are a reasonable length.
+
+### Readability (5 points)
+
+Checks how easy the writing is to read using a standard reading-ease measure plus average sentence length (the ideal is roughly 10 to 25 words per sentence). These checks are **English-only** - see the note on non-English content below.
+
+### Heading structure (10 points)
+
+Looks for a clean heading hierarchy: a single H1, H2s for main sections with H3s nested under them (not the other way around), and a subheading roughly every couple hundred words so the page is easy to scan.
+
+### Links (10 points)
+
+Rewards **three or more internal links** to other content on your site, **two or more external links** to authoritative sources, and **descriptive anchor text** rather than generic "click here" or bare URLs. If your project has no other published blogs yet, the internal-link check is skipped so a brand-new site is not penalized for having nothing to link to.
+
+### Images and media (5 points)
+
+Looks for **two or more images** to break up the text, and checks that they have **alt text** (the description that helps accessibility and image search).
+
+### Technical meta (5 points)
+
+Checks two SERP-facing details: a **meta description of at least 50 characters**, and a **title between 30 and 65 characters** so it does not get cut off in search results.
+
+### Entity and topic coverage (25 points)
+
+The single largest category. This is a deterministic stand-in for topical depth - it measures vocabulary variety, whether the topics your headings promise are actually discussed in the body, and how broad your overall coverage is. Broad, focused coverage scores well; thin or repetitive content scores low.
+
+### Search-intent match (15 points)
+
+Checks that the article's structure delivers what its blog type promises. A how-to without numbered steps, or a comparison without a table or pros-and-cons, will lose points here. The exact expectations per blog type are listed in the next section.
+
+## The spam and AI-pattern penalty (up to -15)
+
+This is the one category that only ever subtracts. Search engines actively demote content that looks formulaic or machine-stamped, so theStacc checks for the same tells and docks points before they ever cost you a ranking. It can take off up to **15 points** total, across these checks:
+
+- **AI-tell phrases** - cliche openers like "In today's fast-paced world" or "When it comes to" in the opening of the post.
+- **Keyword stuffing** - repeating your keyword far past a natural rate (roughly 5% density or more is firmly in stuffing territory). Note that normal keyword density is not rewarded with points - it is only penalized when it gets excessive.
+- **Em-dash and en-dash abuse** - a heavy over-reliance on dashes, a common AI writing tell.
+- **Scaffolding repetition** - the same filler transitions ("Additionally," "Furthermore," "Moreover,") over and over, or several paragraphs in a row that all start with the same word.
+
+theStacc's own writing is tuned to avoid all of these, so on AI-generated posts this penalty is usually zero. It mostly matters if you paste in or heavily rewrite content yourself.
+
+## Search-intent expectations by blog type
+
+The **search-intent match** category grades the structure against the blog type you chose. Each type has a shape searchers expect:
+
+- **How-to / Tutorial** - numbered step headings ("1. Do this", "2. Do that"). Four or more numbered steps scores best.
+- **Listicle** - numbered list-item headings, ideally five or more.
+- **Ultimate guide** - broad coverage: six or more H2 sections and 1,500+ words.
+- **Comparison** - an explicit "X vs Y" structure: a comparison table, clear pros-and-cons sections, or "versus" headings.
+- **Case study** - concrete data points (numbers, percentages, dollar figures) alongside a clear problem-action-outcome structure.
+- **Beginner's guide** - a FAQ section plus a simple step-by-step layout.
+- **Problem-solution** - explicit problem headings and explicit solution headings.
+- **News and trends** - a recent date as a time anchor plus concrete data points.
+
+If a post has no blog type set, this category is scored neutrally rather than penalized - theStacc will not grade you against an expectation you never stated. To learn more about choosing a type, see [Blog Type Options](/docs/content-seo/blog-types).
+
+## Writing in other languages
+
+Readability scoring is built for English, so applying it to Hindi, Arabic, Chinese, Japanese, Korean, or other non-Latin-script writing would produce garbage results and unfairly drag the score down.
+
+theStacc detects this automatically. When a post is predominantly non-English, the **English-only readability checks are skipped and awarded full credit**. The rest of the score works the same. The net effect: writing in your actual language never costs you points. The same Unicode-aware handling applies to the topic-coverage checks, so non-English posts are measured against their real content.
+
+## How the AI rates itself (the semantic score)
+
+The semantic score is the AI's honest self-assessment, scored against an internal rubric where the dimensions that matter most to modern search carry the most weight:
+
+- **Topical depth** - did the post cover the topic at the breadth a knowledgeable reader expects, with real entities, numbers, and specifics?
+- **Search-intent match** - does the structure fit the query (a how-to gets steps, a comparison gets a table)?
+- **Helpfulness** - does the post actually answer the reader's question without sending them elsewhere?
+
+Together these three are the bulk of the semantic score. Notably, keyword placement is deliberately left out of this rubric - that is the mechanical score's job, so it is never double-counted.
+
+The AI is instructed to score honestly and aim for a calibrated **70 to 85**. A **90 or above is reserved for posts that genuinely cover the topic better than the current top results** - so a rare high score is a signal of real quality, not inflation.
+
+## Where the score shows up, and how it updates
+
+Open any blog post and look at the right-hand **Analysis** panel. You will see:
+
+1. The **headline score and rating** (for example, 84% - Good).
+2. The **Mechanics N - Semantic M** breakdown line.
+3. A click-to-expand **category breakdown**. Each category shows its points (for example, Links 6/10), with a colored bar, and you can expand any category to see the individual checks inside it and a specific suggestion for each one that is not yet passing.
+
+Those suggestions are the actionable part. Instead of just "your score is low", you get specific gaps - "Only 1 internal link. Add at least 3 internal links", "Title is 72 chars, may truncate in SERPs", "No images found. Add 2+ relevant images".
+
+### Recalculating after you edit
+
+When you make changes in the editor and recalculate the score, the **mechanical score re-runs from scratch** on your edited content, so the structural checks always reflect what is actually on the page now. The **semantic score stays as it was from the original generation** - it is the AI's judgment of the writing it produced, and theStacc does not run a fresh AI evaluation on every edit. The two are then re-blended into a fresh headline number. This means edits that improve structure (adding links, fixing headings, adding images) move the score immediately, while the semantic half holds steady from the original write.
+
+## Auto-regeneration of low-scoring posts
+
+During automated generation, posts that come in **below your quality threshold are automatically regenerated** rather than published. The accompanying suggestions list the specific gaps that pulled the score down, so even when a post is regenerated you can see why. This keeps weak drafts from reaching your site on autopilot. See [Blog Generation](/docs/content-seo/blog-generation) for how the full generation pipeline and regeneration controls work.
+
+## Related
+
+- [Blog Generation](/docs/content-seo/blog-generation) - the full pipeline that writes, scores, and regenerates each post.
+- [Blog Type Options](/docs/content-seo/blog-types) - choosing the right type so the search-intent check grades you correctly.

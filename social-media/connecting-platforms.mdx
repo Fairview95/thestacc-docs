@@ -1,0 +1,172 @@
+---
+title: "Connecting Platforms"
+description: "Connect your social accounts to theStacc once, and from then on it can publish and schedule your posts for you - no copy-pasting between tabs."
+---
+
+Connect your social accounts to theStacc once, and from then on it can publish and schedule your posts for you - no copy-pasting between tabs. You connect each platform with a secure sign-in, and theStacc never sees or stores your social passwords.
+
+You'll find everything below under **Social Media \> Settings \> Connections** (also labeled **Integrations** at the top of the page).
+
+## Before you start
+
+A few things to know:
+
+- **You need an active Social Media plan** to connect accounts. (One exception: if you've turned a blog post into a social post using your free Blog-to-Social repurpose, you can connect a single account to publish that one draft.)
+- **Only project admins** can connect or disconnect accounts. If you have view-only access, you'll see the platform cards but the buttons will be disabled, with a "View only" note explaining that connect and disconnect are limited to admins.
+- Connections are **per project**. Each project keeps its own set of connected accounts, so a post in one project only publishes to that project's accounts.
+
+## How connecting works (and where your accounts live)
+
+theStacc publishes to social platforms through a **secure publishing partner** (the broker that handles the actual posting to Instagram, Facebook, LinkedIn, and X). When you connect an account, here's what happens behind the scenes:
+
+1. You click **Connect** on a platform. theStacc asks the publishing partner for a sign-in link and gets back an **authorization URL** plus a one-time security token (called a \*state\* token) that protects against tampering.
+2. A small popup window opens that authorization URL. You sign in to the platform (or to Meta, for Instagram and Facebook) and approve the permissions.
+3. The platform sends you back to theStacc. theStacc checks that the security token matches the one it issued - if it doesn't match, or it's older than 15 minutes, the connection is rejected and you'll need to start again.
+4. theStacc then reads your newly connected account from the publishing partner and saves it - the account name, display name, and avatar - and marks the connection **Connected**.
+
+The popup closes itself automatically once it's done. Your password is only ever entered on the platform's own sign-in screen; theStacc and its publishing partner store a connection, not your credentials.
+
+This whole exchange is the **OAuth** flow - the same "Sign in with..." pattern you've used on other apps. It's why you never type your social password into theStacc.
+
+## Connect each platform
+
+Go to **Social Media \> Settings \> Connections** and click **Connect** on the platform you want. A note window opens first with that platform's specific requirements, then the sign-in popup. Here's what each one needs.
+
+### Instagram
+
+1. Click **Connect** on the Instagram card, then **Go to Facebook Business** in the popup.
+2. Authorize through Meta (Instagram connects via Facebook).
+3. theStacc saves the connection and marks it **Connected**.
+
+**Requirements:**
+
+- Your Instagram account must be a **Business or Creator** account (Personal accounts aren't supported).
+- It must be **linked to a Facebook Page**.
+- On Meta's permission screen, click **Edit access** and tick the Page checkbox - Meta hides Pages by default, and missing this is the most common reason a connection silently fails.
+- Media is required for every Instagram post. Text-only posts aren't supported on Instagram.
+
+**Supports:** Feed Posts, Carousels (up to 10 images), Stories, Reels.
+
+### Facebook
+
+1. Click **Connect** on the Facebook card, then **Go to Facebook Business**.
+2. Authorize and grant access to your Facebook **Page**.
+3. theStacc saves the connection and marks it **Connected**.
+
+**Requirements:**
+
+- You must be an **Admin or Editor** of a Facebook **Page** (not a personal profile - theStacc publishes to Pages).
+- The Page should be part of a **Business Portfolio**, and your personal account needs admin rights to that portfolio.
+- Facebook tokens expire fairly often, so you may need to reconnect periodically (see **Expired connections** below).
+- On the permission screen, remember to **Edit access** and tick the Page checkbox.
+
+**Supports:** Text posts, Images (up to 10), Videos, Stories, Reels.
+
+### LinkedIn
+
+1. Click **Connect** on the LinkedIn card, then **Go to Connect LinkedIn**.
+2. Authorize and choose your **Personal profile** or a **Company Page**.
+3. theStacc saves the connection and marks it **Connected**.
+
+**Requirements:**
+
+- Connect a **Personal profile** or a **Company Page**.
+- To publish to a Company Page, you must be a **Page Admin** or **Content Admin** on it.
+- On LinkedIn's permission screen, allow access to **both** your personal profile **and** your organization.
+- Note: posts with external links see a 40-50% reach reduction on LinkedIn. A common workaround is to put the link in the first comment instead.
+
+**Supports:** Text posts, Images, Documents/PDFs, Carousels.
+
+### X (Twitter)
+
+1. Click **Connect** on the X/Twitter card, then **Go to X/Twitter**.
+2. Authorize the connection.
+3. theStacc saves the connection and marks it **Connected**.
+
+**Requirements:**
+
+- An **active X account**.
+- Duplicate content is rejected by X - each post must be unique.
+
+**Supports:** Tweets, Threads, Images (up to 4), Polls, Videos, GIFs.
+
+**Character limit:** 280 characters on the free tier, or 25,000 on X Premium. See **Account tiers** below for how theStacc handles this.
+
+## Connection statuses
+
+Each platform card shows where the connection stands:
+
+- **Connected** - active and ready to publish. The card shows the connected account name and the date you connected it.
+- **Not Connected** - no account linked yet. Click **Connect** to start.
+- **Expired** - theStacc could no longer find a live account for this platform with the publishing partner. The token may have expired, or the connection was removed on the platform's side. The button changes to **Reconnect** (highlighted in amber) so you can re-authorize.
+
+Under the hood theStacc tracks a few states - **connected**, **expired**, **revoked**, and **error**. On the Connections page, anything that needs your attention (expired \*or\* revoked) is shown as **Expired** with a **Reconnect** button, so there's only ever one clear action to take.
+
+## Refreshing connection status
+
+Tokens can expire or be revoked on the platform's side without theStacc knowing right away. The **Refresh** button (top-right of the Connections page) re-checks every connection against the publishing partner in real time:
+
+1. Click **Refresh**.
+2. theStacc asks the publishing partner for your project's currently live accounts and re-syncs each connection.
+3. Any connection that still has a matching live account is confirmed **Connected** (and its account name/avatar are refreshed). Any connection with no matching live account is flagged **Expired**.
+4. You'll see a quick summary - how many connections were verified, or how many now need reconnecting.
+
+It's worth hitting **Refresh** if a publish unexpectedly fails or if you reconnected an account on the platform's own website - that's exactly what re-syncs theStacc's record.
+
+## Account tiers (X free vs. Premium)
+
+X (Twitter) has two character limits depending on your account: **280 characters** on the free tier and **25,000 characters** on X Premium. theStacc can't automatically detect which tier your X account is on, so it assumes **free (280)** by default and uses that for the live character counter and the over-limit warnings in the post editor.
+
+If you're on **X Premium**, you can switch your X connection's tier to **premium** so theStacc stops flagging longer posts as over the limit. (Tiers apply to the character-limit calculation; today this matters for X specifically.)
+
+## How many accounts you can connect
+
+You can connect **up to 10 social profiles** through the publishing partner. If you try to connect one more after reaching that limit, theStacc returns a clear message:
+
+> You've reached the maximum number of connected social profiles on the current plan. Contact support to raise the limit.
+
+If you see this, [contact support](https://thestacc.com) to raise the limit, or disconnect a profile you're no longer using to free up a slot.
+
+## Managing connections
+
+### Disconnecting an account
+
+On a **Connected** card, click **Disconnect** and confirm. theStacc removes the account from the publishing partner and deletes its own record of the connection. You can reconnect at any time. If the publishing partner can't be reached at that moment, theStacc still removes its local record so you're never stuck with a connection you can't clear - and you can reconnect cleanly afterward.
+
+Disconnecting stops theStacc from publishing to that account. Any posts already published stay live on the platform.
+
+### Expired tokens - reconnecting
+
+When a connection shows **Expired**, the platform has invalidated the sign-in (this is normal and happens most often with Facebook). Click **Reconnect** on the card and run through the sign-in popup again, exactly like the first time. Once it succeeds, the card returns to **Connected** and publishing resumes.
+
+## Troubleshooting
+
+### The connection popup closed but nothing connected
+
+This usually means the platform sent back an error during sign-in rather than a connected account. The most common causes:
+
+- **No Facebook Page** - your Facebook account doesn't have a Page. theStacc publishes to Pages, not personal profiles. Create a Page at [facebook.com/pages/create](https://www.facebook.com/pages/create), make sure you're an Admin, then try again.
+- **You closed the popup or denied permission** - no account is connected. Click **Try Again** and approve all the requested permissions on the next screen.
+- **Meta hid your Page** - on Meta's permission screen, click **Edit access** and tick the Page checkbox. This is the single most common silent failure for Instagram and Facebook.
+- **LinkedIn Company Page blocked** - make sure you're a Page Admin or Content Admin, and that you allowed access to **both** your personal profile and your organization.
+
+When theStacc can pinpoint the cause, the connect window switches to a tailored "Connection couldn't complete" panel with the exact fix and a **Try Again** button. If you ever see an error code, include it when contacting support.
+
+### "Browser blocked the popup"
+
+Your browser blocked the sign-in window. Allow popups for theStacc and click **Connect** again.
+
+### "Social publishing is temporarily unavailable" or "Couldn't reach the social publishing service"
+
+These point at the publishing partner, not your account:
+
+- A **"temporarily unavailable"** message (a sign-in or rate-limit issue on the partner's side) means it's a service hiccup you can't fix directly - wait a moment and try again, or contact support if it persists.
+- A **"couldn't reach the service"** / network message means the connection to the partner timed out. Check your internet connection and retry.
+
+In all of these cases, no account is connected and nothing is changed on your side - it's safe to retry.
+
+## Related
+
+- [Brand & Style](/docs/social-media/brand-style) - set your brand voice, colors, and image style so connected posts stay on-brand.
+- [Content & Scheduling](/docs/social-media/content-scheduling) - create, edit, and schedule the posts that go out to your connected accounts.
+- [Overview](/docs/social-media/overview) - how the Social Media module fits together, from generation to publishing.

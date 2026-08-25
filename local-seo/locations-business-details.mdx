@@ -1,0 +1,134 @@
+---
+title: "Locations & Business Details"
+description: "Every Local SEO project is built around one or more locations - a single business address with its Google Business Profile, reviews, rankings, and posts…"
+---
+
+Every Local SEO project is built around one or more **locations** - a single business address with its Google Business Profile, reviews, rankings, and posts attached to it. This page explains exactly what a location stores, which details you can edit yourself, what the system fills in for you, and the rules each field follows.
+
+You manage all of this under **Local SEO \> Settings \> Businesses**.
+
+## What a location is
+
+A location is created during Local SEO onboarding when you search for your business and confirm the correct Google listing. From that point on, the location holds two kinds of information:
+
+- **Core profile details** pulled from Google (name, address, rating, review count) that keep themselves up to date.
+- **Editable details** you fill in to tell theStacc how to write for your business (services, tone, USPs, and more).
+
+For how to create that first location, see [Onboarding & Business Setup](/docs/local-seo/onboarding-business-setup).
+
+## Core profile fields
+
+These describe the business itself. Most are populated from your Google Business Profile when you confirm the location and are refreshed when data syncs:
+
+- **Business name** - the name on your Google listing.
+- **Address** - street address.
+- **City**, **State**, **ZIP code**, **Country** - the rest of the postal address.
+- **Phone** - your business phone number.
+- **Website** - your business website URL.
+- **Primary category** - your main Google Business Profile category (for example, \*Solar energy company\* or \*Restaurant\*). This is the single most important field for both local ranking and for matching an industry preset.
+- **Current rating** - your average star rating, refreshed from Google.
+- **Review count** - the total number of reviews on your profile, refreshed from Google.
+- **Status** - the location's state in theStacc (see below).
+
+**Current rating** and **review count** are read-only inside theStacc - they reflect what is on Google and update when reviews sync. You change those by earning more reviews, not by editing the field. See [Data Sync & Status](/docs/local-seo/data-sync) for how and when these refresh.
+
+### Location status
+
+Every location has a status. The values you will see are:
+
+- **Active** - the normal, working state. New locations start here.
+- **Paused** - posting and automation are held for this location, but its data is kept.
+- **Pending** - the location is set up but not yet fully ready (for example, still finishing onboarding).
+- **Inactive** - the location is not currently in use.
+
+When you remove a location, it is soft-deleted (hidden, not permanently erased). If you delete the last active location on a project, theStacc automatically turns Local SEO off for that project and hides the Local SEO section in the sidebar until you add a location again.
+
+## Editable fields
+
+These are the details you control. Editing them changes what theStacc knows about your business and, in turn, how it writes your posts and review replies. You can edit them any time under **Local SEO \> Settings \> Businesses** across the **Location**, **Services**, **Pain Points**, and **Brand** tabs.
+
+### Address and contact
+
+- **Street address**, **city**, **state**, **ZIP code**, **country** - editable. Leaving a field blank clears it (it shows as \*Not set\*). Each single field is capped at 200 characters, which comfortably fits any real address line.
+- **Phone** - editable.
+- **Website** - editable, and validated (see Validation below).
+- **Primary category** - editable. Because the category drives industry-preset matching, keep it accurate.
+
+### Service areas
+
+The towns, neighborhoods, or zip codes you serve beyond your physical address. Add them one at a time on the **Location** tab using the **Add** button, and remove any with the X next to it. Service areas help theStacc write posts that name the places your customers search from.
+
+### Business hours
+
+Set your open hours day by day - **Monday** through **Sunday**. Each day takes a free-text value such as `9:00 AM - 5:00 PM` or `Closed`. Click the edit icon on the **Business Hours** card, fill in each day, and save.
+
+### Business description, services, and pain points
+
+- **Business description** - a short paragraph describing what your business does.
+- **Services** - the list of services you offer (for example, \*Roof inspection\*, \*Panel installation\*).
+- **Pain points** - the customer problems you solve. theStacc uses these to write posts that speak to what your customers actually worry about.
+
+### Brand intake (brand voice)
+
+The **Brand** tab holds the details that make your content sound like \*your\* business instead of generic boilerplate:
+
+- **USPs** - your unique selling points (what makes you different).
+- **Certifications** - licenses, accreditations, or credentials worth mentioning.
+- **Tone** - your brand voice (see the allowed values below).
+- **Conversion goals** - the action you want readers to take, chosen from: **Book a consultation**, **Request a quote**, **Phone call**, **Place an order**, **Shop online**, and **Sign up**.
+- **Seasonal triggers** - times of year that matter to your business, each made of a set of **months** and an **angle** (a short phrase the post writer can lean into, like a winter promotion or a summer rush).
+
+You do not have to fill these in by hand. theStacc can suggest a full set of brand-intake values from your industry, which you then review and save. That flow is covered in [Onboarding & Business Setup](/docs/local-seo/onboarding-business-setup).
+
+### Auto-publish
+
+- **Auto-publish** - a toggle that, when on, lets approved Google posts publish to your Google Business Profile automatically once your profile is connected. With it off, posts wait for you to publish them. This setting requires a connected Google Business Profile - see [Google Business Profile](/docs/local-seo/google-business-profile).
+
+## Tone (brand voice) values
+
+**Tone** must be one of these fixed values - you pick it from a dropdown rather than typing it:
+
+- **Friendly expert** - warm and competent. The default for most service businesses.
+- **Professional** - formal and precise. A good fit for legal, medical, or finance.
+- **Playful** - casual and light. Suits restaurants and salons.
+- **Authoritative** - confident and direct. Good for legal or security.
+- **Warm local** - community-rooted and neighborly. Ideal for independent businesses.
+
+Tone matters because it is woven into every post and review reply theStacc writes for the location, so only these approved values are accepted.
+
+## Validation rules
+
+theStacc checks a few fields when you save so bad data never makes it into your content:
+
+- **Website** - must be a valid web address. If you leave off `http://` or `https://`, theStacc adds `https://` for you. URLs that have no domain, or that contain unusual characters, are rejected.
+- **Phone** - validated when you save.
+- **Tone** - must be one of the five approved values above. Anything else is rejected.
+- **Seasonal trigger months** - each month must be a whole number from **1 to 12** (January through December), and a trigger must include at least one month. Duplicate months are removed automatically.
+- **Seasonal trigger angle** - required and limited to **200 characters**.
+- **USPs, certifications, and conversion goals** - each item is capped at **200 characters**; blank entries are dropped automatically.
+- **Address fields and primary category** - each capped at **200 characters**.
+
+If a value fails validation, the save is rejected with a message explaining what to fix, and nothing is changed.
+
+## Viewing one location vs. all locations on a project
+
+theStacc can show you a single location or every location on a project:
+
+- **One location** - opening a specific business shows that location's full detail, including its current sync status and any sync error.
+- **All locations on a project** - the **Businesses** list shows every active location for the project you have selected, newest first. This list also tells you how many locations you are using and whether you can add more.
+
+Which locations you see depends on the project selected in the project switcher. Switching projects switches the set of locations.
+
+## How many locations you can have
+
+Location limits are enforced **per project**. The **Businesses** list shows your current usage as a count against your limit, along with whether you can add another.
+
+When you try to add a location beyond your project's limit, theStacc blocks it with a message like \*"Location limit reached. Please upgrade to add more locations."\* Removing (soft-deleting) a location frees a slot, since deleted locations do not count toward the limit.
+
+If you are unsure of your project's current allowance, open **Local SEO \> Settings \> Businesses** - the usage count there always reflects the live limit for that project. If you need to raise it, see your plan under **Settings \> Billing** or contact support.
+
+## Where to go next
+
+- [Onboarding & Business Setup](/docs/local-seo/onboarding-business-setup) - create a location and apply an industry preset / brand intake.
+- [Data Sync & Status](/docs/local-seo/data-sync) - how rating, review count, and other Google data refresh, and what each sync status means.
+- [Google Business Profile](/docs/local-seo/google-business-profile) - connect your profile so posts and replies can publish.

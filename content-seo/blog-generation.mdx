@@ -1,0 +1,123 @@
+---
+title: "Blog Generation"
+description: "theStacc writes each blog post with a multi-step AI pipeline."
+---
+
+theStacc writes each blog post with a multi-step AI pipeline. Every article is planned, written, illustrated, and scored before it lands in your dashboard for review. This page walks through how generation works, when you can trigger it, and what to do when something needs a second pass.
+
+## What you need before you generate
+
+Generating a post makes real AI calls, so it requires an **active subscription** (a live plan or a valid trial) on the project. If the project's plan has lapsed or its trial has ended, the **Generate Content** button is disabled and a generation attempt is refused. Your existing posts stay fully viewable and editable either way - only the steps that spend AI credits are gated.
+
+If you collaborate on someone else's project through a share link or invite, you can still generate: the **project owner's** plan is what's checked, not yours.
+
+## When the Generate button is available
+
+On a blog's detail page, the primary **Generate Content** button appears when the post is in one of these states:
+
+- **To be generated** - a fresh slot that has never been written
+- **Generation failed** - a previous run did not finish
+- **Missed** - the scheduler did not fire on the planned day
+- **Generated (pending review)** - already written, but you want to redo it from scratch
+- **Modified (pending review)** - you have edited it, but you want a fresh full rewrite
+
+For a **rejected** post, the action is **Regenerate** instead, which refreshes the title and brief from your current business info and reopens the slot so you can try a different angle.
+
+See [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) for what every status means and how posts move between them.
+
+### If only the images failed
+
+There is one important guardrail. If a run wrote the article text successfully but the images failed (for example, the image service hit a billing limit mid-run), theStacc will **not** let a full Generate re-run the whole pipeline. Re-running would burn AI credits rewriting text that is already saved - and replace your article with a different version.
+
+Instead, you will see a **Retry images** action. It reuses the original image plan and only re-requests the images that failed, leaving your text untouched. Successful retries drop into place automatically; any that fail again stay flagged so you can try once more. Always reach for **Retry images** when your text is fine and only the pictures are missing.
+
+## The generation pipeline
+
+Once you click **Generate Content**, the work runs in the background and the page shows live progress (status messages, word count, and images completed as they finish). You can navigate away and come back - it keeps going.
+
+### Step 1 - Plan the post
+
+The AI first builds a structured plan for the article:
+
+- An **SEO-optimized title** that works in the target keyword naturally
+- A **meta description** for search engines (roughly 120-155 characters)
+- A **detailed outline** of H2 and H3 sections, each with the key points it should cover
+- An **image plan** of 2-4 images
+- A set of 3-6 **tags**
+
+### Step 2 - Write the article
+
+Using that plan, the AI writes the complete post as clean, semantic HTML. The target length is a comprehensive **2,500-4,000 words** - long enough to cover the topic in real depth, which is also what the SEO score rewards (see below).
+
+The HTML it produces follows a deliberate structure:
+
+- **No H1** - your CMS displays the title separately, so the body starts at H2
+- **H2** for main sections (numbered, like "1. First Step", for how-to and list posts) and **H3** for subsections
+- Standard **paragraphs**, **bulleted and numbered lists**, and **blockquotes** for highlights
+- **Bold** on key terms
+- **Internal links** to your other published posts and **external links** to authoritative sources, with descriptive anchor text
+- **Image placeholders** named `IMAGE_1`, `IMAGE_2`, and so on, dropped in at the spots where each planned image belongs
+
+The text is written to read naturally for a real audience: plain language, varied sentence structure, the keyword used only where it fits, and no keyword stuffing.
+
+### Step 3 - Generate the images
+
+As soon as the text is written, the images generate automatically in parallel - you do not have to do anything. For each entry in the image plan, theStacc creates the picture and swaps it into the matching `IMAGE_N` placeholder in your content. Placeholder replacement is exact, so an image for `IMAGE_1` can never overwrite part of `IMAGE_10`.
+
+Each image plan entry carries:
+
+- a **purpose** (such as `hero`, `section_illustration`, or `infographic`)
+- the **section heading** it belongs to
+- a **description** and a detailed prompt describing exactly what to draw
+- an **aspect ratio** - one of 16:9, 1:1, 4:3, 3:4, or 9:16 (16:9 by default, used for the hero image)
+
+Images match the image style you have chosen in your project preferences (Photorealistic, Flat Illustration, Cinematic, Watercolor, Sketch, or Brand & Text), and the AI is instructed never to bake text into images.
+
+The **featured image** for the post is chosen automatically: theStacc picks the image whose purpose is `hero`, and falls back to the first generated image if no hero is present.
+
+For a deeper look at image styles, aspect ratios, and replacing or regenerating individual images, see [Image Generation](/docs/content-seo/image-generation).
+
+### Steering the output
+
+You are not limited to the defaults. Anything you type into the per-post direction field before generating is injected straight into the AI's instructions under an "Additional Direction from User" heading - so you can ask for a specific angle, audience, tone, or detail and the writer will follow it. See [User Direction](/docs/content-seo/user-direction) for how to write direction that actually changes the output.
+
+Generation also automatically pulls in your project context: your business details, target audience, features and pain points, brand voice, keyword list, linking preferences, any uploaded source material, and recently published posts (so new articles do not repeat the same openings and angles).
+
+## SEO scoring
+
+Every finished post gets an SEO score so you can see, at a glance, how search-ready it is. The headline number blends two checks: a deterministic, rules-based score that measures structure and anti-spam patterns, and the AI's own assessment of topical depth, search intent, and helpfulness. The mechanical side rewards the things this pipeline is built to produce:
+
+- **Keyword placement** - keyword used naturally in the title, headings, and slug
+- **Content length and depth** - comprehensive coverage with enough subheadings
+- **Readability** - plain language and reasonable sentence length
+- **Heading structure** - a clean H2/H3 hierarchy
+- **Links** - internal and external links with good anchor text
+- **Images and media** - images present with alt text
+
+The score comes with a rating band (Excellent, Good, Needs Work, Poor, or Critical) and specific, plain-English suggestions for what to improve. For the full breakdown of how each category is weighted and how to lift a low score, see [SEO Scoring Explained](/docs/content-seo/seo-scoring).
+
+## Reviewing and editing in the blog editor
+
+Click any blog to open it in the built-in **Tiptap** WYSIWYG editor. From there you can:
+
+- Edit the body with a full formatting toolbar: bold, italic, strikethrough, headings, bulleted and numbered lists, blockquotes, code blocks, links, and images
+- Edit the **title**, **slug**, **meta title**, and **meta description**
+- Replace or regenerate the **featured image**
+- Regenerate an **individual section** or an **individual image** without touching the rest of the post
+- Use undo and redo as you go
+
+Manual edits and section/image regeneration are the gentle, surgical tools - reach for them first when a post is mostly right.
+
+## Regenerating content
+
+When a post needs more than a tweak, you can regenerate at three levels:
+
+- **A single section** - rewrite just one part while keeping everything else, with tone and length adjustments
+- **A single image** - redo one image without changing the text
+- **The whole post** - a full rewrite from scratch via **Generate Content** (available in the statuses listed above)
+
+Regenerating also requires an active subscription, since each level makes fresh AI calls.
+
+**No previous versions are kept.** A full regenerate replaces your current article with a brand-new one, and there is no built-in version history to roll back to. So review the post before you regenerate it - if there are parts worth keeping, copy them out first, or use the section-level and image-level tools instead of a full rewrite.
+
+For a step-by-step guide to each option and when to use which, see [Regenerating Content](/docs/content-seo/regenerating-content).

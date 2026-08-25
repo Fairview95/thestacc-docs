@@ -1,0 +1,85 @@
+---
+title: "Content Plan Management"
+description: "Your Google Business Profile (GBP) posts are organized into content plans."
+---
+
+Your Google Business Profile (GBP) posts are organized into **content plans**. A content plan is simply one month's worth of post titles for a location, grouped together with a start date, an end date, and a plan number so theStacc knows where you are in your posting schedule and when it's time to set up the next batch.
+
+This page explains how plans work, how to generate next month's plan, and how titles turn into finished posts.
+
+## One plan per month, per location
+
+GBP posts are tied to a specific business location, so content plans are too. Each location gets **one content plan per month**, and a location can have several plans stacked over time as the months go by.
+
+Every plan tracks:
+
+- **Plan number** - the order of the plan for that location. Plan \#1 is your first month, \#2 is the next month, and so on.
+- **Status** - where the plan is in its lifecycle: \*generating\* (titles are being created), \*active\* (titles are ready), or \*failed\* (something went wrong and you can retry).
+- **Start date and end date** - the window the plan covers. By default a plan spans 30 days.
+- **Expiry** - a plan is "expired" once today's date is past its end date.
+- **Days until expiry** - a simple countdown so you can see at a glance when the current plan runs out.
+
+The next plan always begins **the day after the current plan ends**, so your posting schedule stays continuous with no gaps. If your current content has already expired, the next plan starts **today** instead of backdating posts to the past.
+
+## Where you see your plan
+
+Your posts page **is** your plan view - there's no separate screen. When the current plan is close to expiring or has already ended, theStacc shows a banner at the top of your GBP posts with a button to generate the next one.
+
+The banner appears when your plan is **expiring within 5 days or has already expired**. Its tone adapts to your situation:
+
+- **Expiring soon (within 5 days)** - a friendly amber nudge: "Your GBP post plan ends in 3 days."
+- **Expired, subscription active** - an amber "next month is ready to generate" prompt naming the upcoming month, e.g. "July plan is ready to generate."
+- **Expired, no active subscription** - a red alert letting you know posting has stopped until you continue.
+
+If next month's plan has already been created, the banner hides itself - there's nothing left for you to do.
+
+## The synthetic plan (for older locations)
+
+Content plans are a newer feature. If your location already had GBP posts before plans existed, you won't have a formal plan record - but you still get the full experience.
+
+When there's no plan record but you do have scheduled posts, theStacc figures out your current window automatically from the dates on those posts. This is called a **synthetic plan**: it shows the same expiry countdown and the same "Generate Next Plan" button, derived from your existing posts rather than from a stored plan. You don't need to do anything to enable this - it just works, and your first generated plan picks up right where your existing posts leave off.
+
+If a location has no posts at all yet, no plan or banner is shown - that's a sign you should run your initial setup first, which happens automatically during Local SEO onboarding.
+
+## Creating next month's plan
+
+When you're ready for another month of posts:
+
+1. Open your GBP posts page under **Local SEO**.
+2. When the expiry banner appears, click **Generate Next Plan** (the button is labeled with the upcoming month's name once the current plan has expired, e.g. **Generate July Plan**).
+3. theStacc creates the new plan and starts generating its post titles in the background. The button shows **Generating...** while this runs.
+4. Once titles are ready, the new month's posts appear in your calendar and the banner clears.
+
+That's it. By default each plan covers **30 days** of posts.
+
+### It's safe to click more than once
+
+Generating the next plan is **idempotent** - clicking it twice (or having two browser tabs open) never creates duplicate plans or doubles up your posts. If a plan for the upcoming window already exists or is already being created, theStacc simply returns that existing plan instead of starting a new one.
+
+A few related safeguards:
+
+- If next month's plan is **already queued** (its start date is in the future), the button is disabled - there's nothing more to generate yet.
+- You can't start a new plan while the **current plan is still generating** titles. Wait for it to finish.
+- If a previous attempt **failed** or got stuck part-way, theStacc clears it out automatically the next time you click Generate, so you're never permanently blocked.
+
+## How titles become posts
+
+Generating a plan creates the **titles** for all of that month's posts in a single, quick step - it does not write the full post content up front.
+
+Here's what that means:
+
+- Every post in a new plan starts with status **pending\_content** - it has a title and a scheduled date, but no body text yet.
+- The full content for a post is **generated on demand**, when you open that post to view or edit it.
+- This keeps things fast and avoids writing weeks of content in advance for posts you might still want to adjust. It also means you only generate the content you actually use.
+
+To fill in a post, just open it from your calendar - theStacc writes the full GBP post content (typically 300-500 words) at that moment, then you can review, edit, and publish it. (During your very first onboarding setup, theStacc gives you a head start by auto-writing the content for the first few posts; from then on, content is generated as you open each post.)
+
+### The setup panel clears itself after 5 minutes
+
+While titles are being created during initial setup, theStacc shows a progress panel ("Generating Post Titles...") so you can watch the count climb toward 30. To make sure this panel never gets stuck on screen - for example if fewer than the expected number of titles come back - it **automatically dismisses itself after 5 minutes**. Your posts are unaffected; only the temporary progress panel goes away so you're returned to your normal dashboard.
+
+## Related
+
+- **[Google Business Profile](/docs/local-seo/google-business-profile)** - how GBP posts work, the monthly calendar view, and publishing posts to your profile.
+- **[Local SEO Overview](/docs/local-seo/overview)** - the full Local SEO dashboard, metrics, and module features.
+- **[Reviews](/docs/local-seo/reviews)** - monitor and respond to your Google reviews alongside your posts.

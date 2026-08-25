@@ -1,0 +1,111 @@
+---
+title: "Preferences"
+description: "Preferences control the look, voice, and rules that theStacc applies to every blog it writes for a project. Set them once and the AI follows them on every post."
+---
+
+Preferences control the look, voice, and rules that theStacc applies to every blog it writes for a project. Set them once and the AI follows them on every post.
+
+Find them under **Content SEO \> Settings \> Preferences**. The page has three tabs: **Writing**, **Images**, and **Content**. Changes save automatically the moment you pick an option or toggle a switch — there is no separate "Save" button on the style choices.
+
+> Preferences are per project. If you run more than one website, switch projects first (top-left project picker), then set preferences for the one you want. Only project editors can change these settings; viewers see them but can't edit.
+
+## Writing tab: writing style and tone
+
+Pick the voice the AI writes in. There are 12 styles, and the choice applies consistently across every blog in the project:
+
+- **Informative** — fact-driven, educational content
+- **Simple & Clear** — easy to read, jargon-free
+- **Formal** — polished, corporate tone
+- **Casual** — relaxed, everyday language
+- **Enthusiastic** — energetic and excited
+- **Persuasive** — convincing, action-oriented
+- **Professional** — business-appropriate, trustworthy \*(default)\*
+- **Friendly** — warm, approachable tone
+- **Entertaining** — fun, engaging to read
+- **Inspirational** — motivating and uplifting
+- **Analytical** — data-driven, logical approach
+- **Narrative** — story-driven, immersive
+
+New projects start on **Professional**. Click any tile to switch; the selected style shows a checkmark.
+
+If you'd rather not pick a label, theStacc can learn your voice from real examples instead. Add a few of your own published articles as **example articles** (under **Content SEO \> Settings \> Content Details**) and the AI matches their tone for more consistent branding. See [Sources & Brand Voice](/docs/content-seo/sources-brand-voice) for how that works.
+
+## Images tab: image style
+
+Choose the visual style for the AI-generated images in your posts. This style applies to every image in every article. There are 6 options:
+
+- **Photorealistic** — natural photography look \*(default)\*
+- **Flat Illustration** — clean 2D vector style
+- **Cinematic** — dramatic, movie-like feel
+- **Watercolor** — soft, painterly textures
+- **Sketch** — hand-drawn line art
+- **Brand & Text** — photo with a branded text overlay
+
+New projects start on **Photorealistic**. Each option shows a live preview thumbnail so you can see the look before you commit.
+
+## Content tab: what goes inside each post
+
+The **Content** tab is where you turn whole features on or off and add the links, videos, and rules the AI should follow.
+
+### Content options (toggles)
+
+Four switches decide what types of content the AI is allowed to add. Their defaults are:
+
+- **Include YouTube Videos** — embed relevant YouTube videos in posts. \*(On by default)\*
+- **Include CTAs** — add call-to-action sections in content. \*(On by default)\*
+- **Include Internal Links** — link to other pages on your website. \*(On by default)\*
+- **Include Competitor Links** — link to competitor sites when they're mentioned in content. \*(Off by default)\*
+
+Each toggle also acts as a show/hide control. When a toggle is **on**, its configuration section appears lower on the tab; when you turn it **off**, that section is hidden (and the AI stops using it). So if you don't see the CTA, internal-links, or YouTube section, check that the matching toggle is on.
+
+### YouTube channel
+
+Visible when **Include YouTube Videos** is on. Add your **YouTube channel URL** and the blog generator will find and embed relevant videos from your channel inside your posts.
+
+The URL must start with `http://` or `https://` (for example, `https://youtube.com/@yourchannel`). If you paste something without one of those, theStacc asks you to fix it before saving.
+
+### CTA Links
+
+Visible when **Include CTAs** is on. These are the links you want woven into your blog posts — the AI places them naturally in the content rather than dropping a generic button at the end. Add as many as you need. Each CTA link has:
+
+- **Label** \*(required)\* — the clickable text, e.g. "Get Started Free"
+- **URL** \*(required)\* — where the link points
+- **Type** — **Primary**, **Secondary**, **Social**, or **YouTube**. This is a tag that helps you organize links (for example, your main offer vs. a supporting one); it's shown as a colored badge on each link.
+- **Notes** \*(optional)\* — a hint for the AI, e.g. "Use in conclusion"
+
+**Allowed link addresses.** A CTA URL must start with one of these:
+
+- `http://` or `https://` — a full web address (`https://yoursite.com/signup`)
+- `mailto:` — an email link (`mailto:hello@yoursite.com`)
+
+Visible when **Include Internal Links** is on. Add pages from your own site — Pricing, About, key service pages — and the blog generator links to them naturally when they're relevant to the post. Each entry is a **page title** plus a **URL**. The URL should start with `http://`, `https://`, or `/`.
+
+Good internal links help readers (and search engines) move through your site, which supports your SEO.
+
+## Topics to avoid
+
+Lower on the **Content** tab is a **Topics to avoid** list — subjects you never want the AI to write about or mention. Use it for competitors' names, sensitive subjects, or anything off-limits for your brand.
+
+- Type a topic and press **Enter** or **Add** to include it; remove one with the × on its chip.
+- It's free text — add up to **50** topics, and each one can be up to about **120 characters**. If you try to add a 51st, theStacc tells you you've hit the cap and keeps your text so nothing is lost.
+- This list is **soft-steered**, not a hard block. The AI treats it as strong guidance to steer away from those subjects rather than a guaranteed filter, so it's best for tone and topic direction — not for legal or compliance-critical exclusions.
+
+## A note on article length
+
+There is no per-project "target word count" slider in Preferences. By default theStacc aims for substantial, in-depth posts — its built-in quality standard targets roughly **1,500–3,500 words** with strong heading structure — because longer, well-structured articles tend to rank better. The actual word count of each finished post is shown on that blog's detail page.
+
+## Advanced and stored brand settings
+
+A few brand fields are stored on your project and used by the AI even though not all of them have a dedicated control on the Preferences page yet:
+
+- **Brand tone** — an extra free-text description of your voice
+- **Brand colors** and **brand fonts** — used to keep branded visuals on-brand
+- **Thumbnail style** and **infographic style** — defaults that shape specific image types
+
+These are saved with your other preferences and will get more surfaced controls over time. For now, the **Writing** and **Images** tabs are the main levers, and example articles are the most reliable way to lock in a consistent brand voice.
+
+## Related
+
+- [Sources & Brand Voice](/docs/content-seo/sources-brand-voice) — sitemap, blog address, and example articles that teach the AI your voice
+- [Competitors & Audiences](/docs/content-seo/competitors-audiences) — who content targets and how it sets you apart
+- [Business Setup](/docs/content-seo/business-setup) — the core business details behind every post

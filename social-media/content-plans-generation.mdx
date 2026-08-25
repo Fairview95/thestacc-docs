@@ -1,0 +1,158 @@
+---
+title: "Content Plans & Generation"
+description: "Your Social Media module runs on a content plan — a ready-made schedule of posts spread across several days, with the topic and post type already chosen for…"
+---
+
+Your Social Media module runs on a **content plan** — a ready-made schedule of posts spread across several days, with the topic and post type already chosen for every slot. From there, each post is generated on its own: a caption is written first, then the image (or carousel slides) is created. This page explains how plans are built, how individual posts are generated, and every control you have along the way.
+
+For what happens \*after\* a post is generated — editing captions, refining images, fixing a failed post — see [Post Customization](/docs/social-media/post-customization), [Image Generation](/docs/content-seo/image-generation), and [Post States & Failures](/docs/social-media/post-states-failures).
+
+## How a content plan is built
+
+When you set up Social Media, theStacc creates your first content plan automatically. A plan is a window of consecutive days, and each day holds one post slot.
+
+### Plan length: 7 days on trial, 30 days when paid
+
+The length of a plan depends on your subscription, and the server decides it for you:
+
+- **On a free trial**, plans are **7 days** long.
+- **On a paid plan**, plans are **30 days** long.
+
+This is enforced on theStacc's side, so a plan always matches your current subscription tier.
+
+### Topics and post types are chosen for you
+
+You don't have to come up with ideas. For every slot in the plan, theStacc selects:
+
+- **A content pillar** — the strategic theme of the post (for example education, authority, social proof, brand personality, community, or conversion). Pillars are balanced across the plan so your feed isn't all promos or all listicles.
+- **A post type (archetype)** — the structure of the post, such as a Listicle Carousel, Hot Take, Framework Drop, Case Study Carousel, Testimonial Quote, Founder Story, or Lead Magnet Drop. Each archetype has its own hook, body, and call-to-action pattern.
+- **A visual style** — how the image should look, matched to the post type.
+- **A topic** — the actual subject for that post (for example "5 pricing mistakes B2B founders make"), written by AI to fit the chosen post type and your business.
+
+The plan also spreads variety on purpose: it avoids running the same post type back-to-back, limits how often a single post type repeats within a plan, and keeps your most opinionated post types (like Hot Takes) from over-firing in a single week.
+
+At this stage each post is just a **placeholder** — the topic and post type are set, but no caption or image has been written yet. Posts wait at the **To Be Generated** status until they're generated.
+
+### Plan status: generating, then active
+
+A plan moves through a short lifecycle:
+
+1. **Generating** — theStacc is filling in the plan's topics and creating the placeholder posts. This usually takes seconds.
+2. **Active** — the plan is built and its post slots are ready. This is the normal, working state.
+
+A plan stays active until its window ends. Once the plan's **end date** has passed, theStacc treats it as **expired** and shows you a reminder to set up the next one. (Expired is based on the date — the plan's stored status stays "active"; there's no separate stored "expired" state.)
+
+If plan generation ever fails to produce any posts, the plan is marked **failed** and is cleaned up automatically the next time you create a plan, so a dead plan never blocks you.
+
+### Replenishing with the next plan
+
+When your current plan is within a few days of ending — or has already expired — the dashboard shows a banner to generate the next plan.
+
+1. On the Social dashboard, look for the plan-expiry banner.
+2. Click **Generate Next Plan** (the button names the upcoming month when your plan has already expired).
+
+The next plan picks up the **day after** your current plan ends, so the two never overlap. If the current plan already expired, the next one simply starts today — you won't get a batch of past-due posts. The new plan gets the same treatment as your first: balanced pillars, varied post types, and AI-written topics for every slot.
+
+If you click **Generate Next Plan** twice, or two people click it at once, theStacc returns the plan that's already being created instead of stacking up duplicates.
+
+## Generating a single post
+
+A post in your plan is created in two ways:
+
+- **Manually** — open the post and click **Generate Now** (or **Generate** on a post that previously failed or was cancelled).
+- **Automatically** — when a plan day arrives, theStacc's scheduler generates that day's post for you, as long as automatic generation is turned on for the project and a social account is connected.
+
+Either way, the post moves from **To Be Generated** into generation.
+
+### Optional: add direction
+
+When you generate manually, you can optionally give the AI extra guidance for this specific post. In the generate popover, type into the **"Describe how you want the caption changed..."** box — for example, "mention our summer sale" or "keep it warmer and less salesy."
+
+This **additional direction** is optional and limited to **500 characters**. Leave it blank to let theStacc generate from the post's topic and your brand settings alone.
+
+## How generation runs (and how to follow along)
+
+Generation happens in the background so you're never stuck waiting on a frozen screen. It runs in two stages, and you can watch each one land:
+
+1. **Caption first.** theStacc writes the caption, per-platform variations, hashtags, and (where it applies) the first comment. This is the faster stage — typically around 25 seconds. As soon as it's done, the caption appears in the post.
+2. **Image(s) next.** theStacc then creates the visual. A single-image post produces one image; a carousel post produces its slides one at a time, so you see slide 1, then 1 + 2, then 1 + 2 + 3, and so on rather than waiting for all of them at once. Image generation typically takes around 30 to 60 seconds, and longer for a multi-slide carousel.
+
+While generation is running, theStacc reports progress so the page can update the moment something is ready. The status it tracks includes:
+
+- **caption ready** — the caption stage has finished.
+- **images ready** — the image stage has finished.
+- **preview count** — how many images (or carousel slides) have landed so far.
+
+The post page refreshes itself as new slides arrive, so you get a live preview instead of a spinner.
+
+## Captions and images
+
+### Captions are written per platform
+
+theStacc doesn't write one caption and paste it everywhere. It writes a caption tuned to each platform you're targeting — LinkedIn, Instagram, X, and Facebook — because what reads well on LinkedIn isn't what works on X. Hashtags and, where the platform expects it, a first comment are generated alongside the caption.
+
+If a generated caption comes out longer than a platform allows, theStacc flags it right after generation (instead of letting you discover it at publish time), so you can shorten it before you publish.
+
+### Images are matched to platform rules
+
+Images are generated to fit the platforms you publish to. theStacc automatically normalizes each image to the **aspect-ratio rules** of those platforms — Instagram is the strictest (between 4:5 portrait and 1.91:1 landscape), and an image that fits Instagram fits the others too. This keeps your visuals from being rejected or awkwardly cropped when they go live.
+
+Carousel post types (like Listicle Carousel or Case Study Carousel) produce a set of slides instead of a single image, with the number of slides set by the post type.
+
+## Post status flow
+
+During generation, a post moves through these states:
+
+- **To Be Generated** — the slot exists; no content yet.
+- **Generating** — the caption and image are being created.
+- **Generated** — content is ready for you to review, edit, approve, or publish.
+
+If the image stage can't produce a usable image for a post that needs one, the post ends at **Generation Failed** instead of looking ready but broken. From there you can simply regenerate it. For the full list of failure types and how to recover from each, see [Post States & Failures](/docs/social-media/post-states-failures).
+
+A post that gets stuck mid-generation (for example if a worker restarts) is automatically cleared after about 25 minutes and flipped to Generation Failed, so it never spins forever — you'll just see the Generate button again.
+
+## Regenerating content
+
+Once a post is generated, you have three separate ways to redo just part of it — so you never have to throw away work you're happy with.
+
+### Regenerate one platform's caption
+
+From the caption editor, use the **Regenerate** option on a specific platform to rewrite only that platform's caption. The images and the other platforms' captions are left untouched, which makes this much faster than a full regeneration. You can add optional direction here too (up to **500 characters**), for example "make the hook punchier."
+
+### Regenerate all images
+
+If the visuals aren't landing, you can re-run only the image stage. This reuses the caption and creative brief theStacc already produced, so it doesn't re-write your approved caption — it just creates fresh images (or carousel slides). It's the right choice when an image failed, or when you want a different take on the visual.
+
+### Edit a single image with a prompt
+
+To tweak one image rather than start over, use the image **Refine / Edit** control. Describe the change you want — for example "add a yellow hat" or "make the background lighter" — and theStacc edits that one image in place. Your instruction can be up to **4,000 characters**. You can also choose to replace the image from scratch or supply a reference image to guide the style. Image edits run in the background (they take around 90 seconds) and swap into place when finished.
+
+## Changing the post type before it's generated
+
+theStacc chooses the post type, visual style, and pillar for you, but you can override them — **as long as the post hasn't been generated yet.**
+
+On a **To Be Generated** post, you can change:
+
+- the **post type (archetype)**,
+- the **visual style**, and
+- the **content pillar**.
+
+Once a post has been generated, these are **locked**. That's deliberate: the caption is written specifically for the post type that was chosen, so changing the post type afterward would leave the caption out of sync with the post. If you want a different post type after generation, change it while resetting the post back to a pre-generation state, or start from a fresh slot.
+
+## After generation: why this post?
+
+Once a post is generated, open the **"Why this post?"** panel on the post detail page to see exactly how theStacc made its choices. It shows:
+
+- **Post Type** — the archetype that was selected (for example Listicle Carousel).
+- **Visual Style** — the style used for the image.
+- **Content Pillar** — the strategic theme, with a short reason where available.
+- **Selection Score** — a breakdown of how the post type was scored against four factors: **pillar fit**, **platform fit**, **recency** (how recently a similar post type was used, to keep things varied), and **tier fit** (how well the post type suits your business type). Each shows as a small bar so you can see what drove the pick.
+- **QA Score** — an overall quality score for the generated content, shown in green, amber, or red so you can tell at a glance whether the post landed well.
+
+This panel is purely informational — it's there so you understand the strategy behind each post, not something you need to act on.
+
+## Related articles
+
+- [Post Customization](/docs/social-media/post-customization) — edit captions, hashtags, schedule, and platforms after generation.
+- [Image Generation](/docs/content-seo/image-generation) — how visuals and carousels are created and refined.
+- [Post States & Failures](/docs/social-media/post-states-failures) — every post status and how to recover from failures.

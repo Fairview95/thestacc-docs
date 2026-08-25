@@ -1,0 +1,113 @@
+---
+title: "Post Deletion & Unpublishing"
+description: "Deleting a social post in theStacc isn't always as simple as \"make it go away.\" A post that's still a draft only lives in theStacc, so deleting it is…"
+---
+
+Deleting a social post in theStacc isn't always as simple as "make it go away." A post that's still a draft only lives in theStacc, so deleting it is instant and clean. But once a post is live on LinkedIn, Instagram, or anywhere else, you have a choice to make: do you just want to stop tracking it in theStacc, or do you also want it taken down from the platform itself? This page walks through both, plus what to do for the handful of platforms that don't allow automatic removal.
+
+## The two delete modes
+
+When you delete a post, theStacc asks **how** you want to delete it. There are two modes.
+
+### Delete from theStacc only (local)
+
+This removes the post from your theStacc dashboard and stops theStacc from tracking it. **The live post stays up on every platform** exactly as it is. Nothing is touched on Instagram, LinkedIn, X, Facebook, or anywhere else.
+
+Use this when:
+
+- You're tidying up your theStacc calendar but want to leave the published post live.
+- The post was published a while ago and you no longer need theStacc to manage it.
+
+After a local delete you'll see a simple **Removed from theStacc** confirmation.
+
+### Delete from platforms and theStacc (full)
+
+This is the default option. It wipes the post end to end:
+
+- For a post that's still a **draft, scheduled, or failed**, there's nothing live yet, so this simply cancels the scheduled publish (it will never go out) and removes the theStacc record. The button reads **Cancel and delete** in this case.
+- For a post that's already **published** (or partially published), theStacc first unpublishes it from each supported platform, then removes the record. The button reads **Unpublish & delete**.
+
+Use this when you want the post gone for good, not just hidden from your dashboard.
+
+## How to delete a post
+
+1. Open the post from your **Social Media** dashboard, or use the actions menu on the post list.
+2. Choose **Delete post**.
+3. Pick a delete mode: **Delete from theStacc only** or **Delete from platforms and theStacc**.
+4. If the post is already published, theStacc shows a per-platform preview so you know exactly what will happen to each one before you confirm (see below).
+5. Confirm. theStacc handles the unpublishing and cleanup, then takes you back to your post list.
+
+## Which platforms can be unpublished automatically
+
+Not every platform lets software take a post down after it's live. theStacc can automatically unpublish from:
+
+- **LinkedIn**
+- **X (Twitter)**
+- **Facebook**
+
+These three are removed for you when you choose the full delete on a published post.
+
+The following platforms **do not** support automatic unpublishing and require **manual deletion** in the platform's own app:
+
+- **Instagram**
+- **TikTok**
+- **Snapchat**
+
+This isn't a theStacc limitation — these platforms simply don't offer a way to remove a published post programmatically. So when your post is live on one of them, theStacc can delete its own record but it can't pull the post down for you. You'll need to open the app and remove it yourself.
+
+## What the delete preview and confirmation tell you
+
+When you choose the full delete on a published post, theStacc breaks the result down platform by platform so there's no guesswork.
+
+**Before you confirm**, the dialog shows each published platform with its outcome:
+
+- Supported platforms (LinkedIn, X, Facebook) are marked **"will be unpublished"** in green.
+- Platforms that need manual cleanup are marked **"delete manually — this platform doesn't allow API deletion"** in amber, with a heads-up reminder to open the app and remove the post yourself.
+
+**After the delete runs**, the confirmation message tells you exactly what happened:
+
+- If everything went cleanly and platforms were taken down, you'll see something like **"Deleted and unpublished from LinkedIn, Facebook."**
+- If a platform needs manual cleanup, you'll see **"Deleted. Remove manually from Instagram."** so you know which app to open.
+- If an unpublish attempt failed on one of the supported platforms (for example, a temporary connection problem), you'll get a clear error naming that platform — for example **"Unpublish failed on LinkedIn — clean up manually"** — so you can remove it by hand if needed.
+
+Important: even if an unpublish step fails on the platform side, theStacc still removes its own record of the post. You clicked delete, so the post disappears from your dashboard either way — the message just makes sure you know whether anything is left to clean up manually.
+
+## Marking a platform you deleted by hand
+
+Sometimes you'll delete a post directly on the platform — you tap **Delete** on X or LinkedIn in the app, without going through theStacc. When that happens, theStacc has no way of knowing the post is gone. It will keep showing the post as **Published** because, as far as its records are concerned, nothing changed.
+
+The fix is to tell theStacc yourself.
+
+1. Open the post in theStacc.
+2. Use the **mark as removed** action for the platform you deleted manually.
+3. theStacc flags that platform's copy as removed and clears the now-dead link to the post.
+
+This keeps theStacc's record matching reality so you don't see a stale **Published** badge for a post that no longer exists.
+
+What this does behind the scenes:
+
+- The platform you mark is updated to a **removed** state, and its link to the live post is cleared.
+- The post's overall status is recalculated. If you mark **all** the live platforms as removed and nothing else is still live or mid-publish, the post is treated as **cancelled**. If only some platforms are removed and others are still live, the post becomes **partially published**.
+- It's safe to run more than once — marking the same platform removed again won't cause any problems.
+- If you later republish that post to the same platform through theStacc, the new published record simply replaces the removed flag.
+
+### Mark-as-removed vs. the full delete
+
+These two are easy to mix up, so here's the difference:
+
+- **Full delete** asks theStacc to take the post down for you (where the platform allows it) and removes the theStacc record.
+- **Mark as removed** is for when \*you've already\* deleted the post on the platform yourself, and you just need theStacc's records to catch up. It doesn't touch the platform — it only updates theStacc.
+
+Reach for mark-as-removed any time the post is gone from the platform but theStacc still shows it as live.
+
+## A few things to keep in mind
+
+- The full delete is permanent. There's no undo for unpublishing or for removing the theStacc record.
+- Deleting a post also cleans up the images theStacc stored for it.
+- For scheduled posts that haven't gone out yet, the full delete is the clean way to cancel them — it stops the publish from ever firing.
+- Only project members with editor access (or higher) can delete posts or mark platforms as removed.
+
+## Related guides
+
+- [Publishing & Scheduling](/docs/social-media/publishing-scheduling) — how posts go live and how scheduling works.
+- [Connection Management & Sync](/docs/social-media/connection-management-sync) — reconnect accounts and pull the latest status from each platform.

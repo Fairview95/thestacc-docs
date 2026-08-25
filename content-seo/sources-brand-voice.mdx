@@ -1,0 +1,95 @@
+---
+title: "Sources & Brand Voice"
+description: "The more of your own material theStacc has, the more every blog sounds like you wrote it and stays true to your facts."
+---
+
+The more of your own material theStacc has, the more every blog sounds like you wrote it and stays true to your facts. The **Sources** page is where you hand the AI three things: your facts, your voice, and your visuals.
+
+Go to **Content SEO \> Settings \> Sources**. You'll find three tabs:
+
+- **Source material** - the documents and notes the AI treats as the truth
+- **Brand voice** - samples of your own writing, so blogs sound like you
+- **Brand images** - your real product screenshots and photos to drop into posts
+
+None of this is required. If you skip it, theStacc still writes from your [Business Setup](/docs/content-seo/business-setup) and keywords. But each tab you fill in makes the result noticeably more accurate and more on-brand.
+
+## Source material
+
+The **Source material** tab is your factual source of truth. Anything you add here, theStacc writes \*from\* - it prefers your facts, figures, names, and terminology over its own general knowledge, and it won't contradict what you provide or invent statistics your material doesn't support.
+
+You can add material two ways:
+
+1. **Upload files** - drop in (or click to browse) PDF, DOCX, DOC, TXT, or Markdown files. Up to **50 MB each**, and you can add several at once. theStacc reads the text out of each file and stores it.
+2. **Paste text** - paste notes, a brief, product details, or research straight into the box, with an optional title.
+
+Each source you add appears in the **Your sources** list. Click any one to see the exact text theStacc pulled out of it (the "transcript"), so you can confirm it read the file correctly. Use the **×** to remove a source you no longer want.
+
+### The first source is the most authoritative
+
+The order matters. The first source in the list is tagged **Primary** and is treated as the single most authoritative source of truth; everything after it is supporting material. So put your best, most accurate document first. Sources are ordered by when you added them, with the earliest first.
+
+### How grounding keeps facts accurate
+
+When theStacc writes a blog, it pulls your sources into the writing prompt under a clear instruction: ground the article in this material first, prefer these facts over general knowledge, and don't make up figures or quotes the material doesn't back up. It's still free to organize, summarize, and write engagingly around your material - but the substance comes from what you provided. This is what stops the AI from confidently stating something that isn't true about your business.
+
+### Good to know
+
+- **Scanned PDFs (images of text) won't work.** If theStacc can't pull any text out of a file, it tells you so - in that case, copy the text and use **Paste text** instead.
+- theStacc keeps a generous amount of each source and a generous total across all your sources for any single blog. If you load an unusually large amount of material, only the first part of it may be used to keep the AI focused, with the earliest (most authoritative) sources prioritized.
+
+## Brand voice
+
+The **Brand voice** tab teaches theStacc \*how you write\* - your tone, the words you favour, the words you avoid, and your rhythm - so new blogs sound like the same author wrote them.
+
+To set it up:
+
+1. Add a few **writing samples**: upload or paste some of your own existing articles or posts. We recommend **2-3 samples** so theStacc has enough to learn from (one solid article is the minimum). Each sample should be at least a paragraph or two of real writing - stray one-liners are ignored.
+2. Click **Analyze my writing**. theStacc reads your samples and builds a **voice profile**.
+3. Review the profile. It captures a short **summary** of your voice, your **tone**, your **vocabulary** level (simple, moderate, or sophisticated), recurring **signature patterns** (how you open, transition, and close), the **words you use**, and the **words you avoid**.
+
+When you publish more of your own work later, click **Re-analyze** to refresh the profile, or **Clear** to remove it. Clearing the profile keeps your writing samples - it just stops theStacc from applying the extracted voice.
+
+Once a voice profile exists, theStacc writes new blogs to match it closely. Where your voice and a generic writing style would conflict, your voice wins.
+
+**Writing samples are never treated as facts.** They only shape \*how\* the AI writes - they don't feed the factual grounding. Use the **Source material** tab for anything the AI should treat as true.
+
+## Brand images
+
+The **Brand images** tab is your visual asset library - your real product screenshots, photos, and diagrams. When a blog is written, theStacc can place one of \*your\* images wherever it fits a section, instead of generating a new one.
+
+To add images:
+
+- **Upload** PNG, JPG, WebP, or GIF files, **up to 15 MB each**. Drop them on the upload area or click to browse, and you can add several at once.
+- **Import from Shopify** (Beta) - if you've connected a Shopify store under **Content SEO \> Settings \> Publishing**, this pulls your product photos in automatically. The button stays disabled until a store is linked.
+
+Every image you add is **auto-described** by the AI - that description is what tells the writer when the image is a good fit for a section. For each image you can:
+
+- **Edit the description** if you want to refine it
+- **Regenerate the description** with the sparkle button
+- Toggle it **Active** or off - only Active images are eligible to appear in blogs
+- **Remove** it
+
+When theStacc writes a post, it considers your Active, described images and places one only where its description genuinely matches the section - otherwise it falls back to a generated image. Each image is used at most once per article. For how generated images work and how to set their style, see [Blog Generation](/docs/content-seo/blog-generation) and [Preferences](/docs/content-seo/preferences).
+
+## How sources, voice, and excluded topics feed every blog
+
+When you generate a blog, theStacc quietly pulls all of this together:
+
+- Your **source material** becomes the factual backbone (primary source first)
+- Your **brand voice profile** sets how the article is written
+- Your **brand images** are offered to the writer to place where they fit
+- Your **Topics to avoid** list (set in [Preferences](/docs/content-seo/preferences)) steers the AI away from subjects you don't want mentioned
+
+### Missing inputs never block generation
+
+This is by design: all of these inputs are optional and soft. If a tab is empty, theStacc simply skips it - a project with no sources, no voice profile, and no images still generates normally from your business details and keywords. And if something can't be loaded at the moment a blog runs, the AI carries on without it rather than failing the whole post. You're never stuck because one setting wasn't filled in.
+
+## Who can change these settings
+
+Everything on the **Sources** page can be **viewed** by anyone with access to the project. Only **project editors** can add, edit, or remove sources, writing samples, the voice profile, and brand images. If you see a **View only** banner at the top, you have viewer access - ask a project editor or owner to make changes. See [Workspace & Team](/docs/account/workspace-team) for roles.
+
+## Related
+
+- [Business Setup](/docs/content-seo/business-setup) - the website, audience, and competitor details that anchor every blog
+- [Preferences](/docs/content-seo/preferences) - writing style, image style, CTAs, and your Topics to avoid list
+- [Blog Generation](/docs/content-seo/blog-generation) - how the AI researches, writes, and generates images for each post

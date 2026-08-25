@@ -1,0 +1,102 @@
+---
+title: "Connection Management & Sync"
+description: "Once your social accounts are connected, theStacc keeps two things in step with the platforms: which accounts are still connected, and whether each post…"
+---
+
+Once your social accounts are connected, theStacc keeps two things in step with the platforms: which accounts are still connected, and whether each post actually went live. Most of this happens automatically. This page explains the tools you can use when something looks out of date, and what's working behind the scenes so you can trust what you see.
+
+If you haven't connected your accounts yet, start with [Connecting Platforms](/docs/social-media/connecting-platforms). For creating, scheduling, and publishing posts, see [Content & Scheduling](/docs/social-media/content-scheduling).
+
+## How statuses stay current
+
+There are two kinds of "status" in the Social Media module:
+
+- **Connection status** — whether each account (Instagram, Facebook, LinkedIn, X) is still authorized for publishing.
+- **Post status** — whether a specific post is scheduled, published, partially published, or failed, broken down per platform.
+
+Both are normally updated for you automatically: connection changes and publish results are pushed to theStacc the moment they happen. The **Refresh** and **Sync** buttons described below are there for the rare cases where an automatic update was missed or the platform changed something on its own side.
+
+## Refresh connections
+
+Use **Refresh** to re-check, on demand, which of your accounts are still connected.
+
+1. Go to **Social Media \> Settings \> Connections**.
+2. Click **Refresh** (top of the Connections page).
+
+When you do this, theStacc asks the publishing service for the live list of accounts attached to your project and compares it against what it has on record. Each connection is then set to one of these states:
+
+- **Connected** — the account is still live and ready to publish.
+- **Expired** — the account is no longer valid (the platform's authorization lapsed or the account was removed) and needs reconnecting.
+- **Revoked** — access was withdrawn for the account.
+- **Error** — the connection is in a problem state and needs attention.
+
+Refreshing also repairs accounts that you reconnected outside theStacc: if an account is still live but its underlying ID changed, the refresh re-links your connection to the current account so the next publish doesn't fail. Account name, display name, and avatar are pulled in at the same time, so the card shows the right handle and picture.
+
+After a refresh, any platform that's no longer valid shows a **Reconnect** button on its card. If one or more connections need attention, theStacc tells you exactly how many need reconnecting so you're not left guessing. Reconnecting is the same one-click OAuth flow described in [Connecting Platforms](/docs/social-media/connecting-platforms).
+
+### If your whole connection setup was reset
+
+If the publishing service no longer recognizes your project's profile at all (for example, after a major change on their side), Refresh clears out the old records and shows every platform as **Not connected**. Just click **Connect** on each platform to set things up again — theStacc provisions a fresh profile automatically as part of that flow. You never need to contact support or run anything yourself to recover from this.
+
+## Sync a post from the publishing service
+
+While **Refresh** is about \*accounts\*, **Sync** is about a single \*post\*. Use it when a post's status looks wrong or out of date — for example, it still says it's publishing even though you know it went out, or the live links to your published posts haven't appeared yet.
+
+1. Open the post from the post list or calendar.
+2. Click **Sync** (or **Sync now**) on the post.
+
+This re-pulls the post's authoritative state directly from the publishing service and reconciles it with what theStacc shows. It updates the **per-platform statuses** and the overall post status, and captures the **live post links** for each platform that succeeded so you can click straight through to your post on LinkedIn, X, Instagram, or Facebook.
+
+Sync is the manual backstop for the rare case where an automatic status update didn't arrive — a deploy happening at the exact moment a post published, a momentary network blip, and similar timing gaps. Running it produces the same result a normal automatic update would have, so you can use it any time a post's status doesn't match reality.
+
+**What Sync does to the status:**
+
+- Each platform is set to **Published**, **Failed**, or **Queued** based on the live result.
+- The overall post becomes **Published** when every platform succeeded, **Partially published** when some succeeded and some failed, **Scheduled** when platforms are still queued, or **Failed** when all attempts failed.
+- A fully **Published** post is never flipped backward by a sync — once everything is confirmed live, that's final. A **Partially published** post can still move forward (for example, up to fully published if a retried platform succeeds).
+
+**Edge cases:**
+
+- If the post was never published, there's nothing to sync and theStacc tells you so.
+- If the post was deleted on the publishing service's side (for example, by another tool or directly in their dashboard), Sync stops showing it as published and marks it cancelled, while keeping the original published date for your records.
+- If theStacc can't reach the publishing service, Sync leaves your data untouched and asks you to try again in a moment — it never overwrites good status on a temporary glitch.
+
+### When you deleted the post on the platform yourself
+
+If you delete a post directly on the platform (for example, tapping Delete on X or LinkedIn) without going through theStacc, the publishing service still reports it as published — so **Sync** can't detect that, because it reads from that same source. For this case, open the post and choose **I deleted this on \[platform\] myself**. theStacc marks that platform's copy as removed, clears the dead link, and re-checks the overall status so the post stops showing a stale **Published** badge. This is safe to run more than once, and publishing again later replaces the "removed" record with the new live post.
+
+## Detecting stale connections automatically
+
+You don't always have to click Refresh. theStacc also catches stale connections at the moment they matter most — when you publish.
+
+If a publish fails because an account is no longer valid (the platform reports that one or more accounts no longer belong to you), theStacc checks the live account list, figures out exactly which of the platforms in that publish are affected, and marks just those connections as **Expired**. Healthy connections are left alone. You get a clear message naming the platforms that need reconnecting and a **Reconnect** action, instead of a vague "try again later."
+
+The Connections page then reflects reality on its next load: the affected platforms show as **Expired** with a **Reconnect** button. If theStacc can't reach the publishing service to check at that moment, it errs on the side of caution — it asks you to reconnect rather than wrongly marking any good connection as expired, and makes no changes to your records.
+
+## What happens automatically (behind the scenes)
+
+For the curious, here's why you rarely need the manual buttons. The publishing service notifies theStacc whenever something changes, and theStacc updates your data from those notifications:
+
+- **Publish succeeded** — the post and each platform are marked published, and the live post links are saved.
+- **Publish failed** — the affected platforms are marked failed; if some platforms still succeeded, the post becomes partially published.
+- **Partially published** — mixed results are recorded per platform exactly as they happened.
+- **Scheduled** — the post is confirmed as scheduled.
+- **Cancelled** — if a scheduled post is cancelled on the publishing service's side, the post is updated so it doesn't sit "scheduled" forever.
+- **Account connected** — a new connection is recorded (this is the authoritative confirmation that an account finished connecting).
+- **Account disconnected or expired** — the matching connection is marked **Expired** so the Connections page prompts you to reconnect.
+
+These updates are protected and reliable in a few important ways:
+
+- **Verified sender.** Every notification is signature-checked, so only genuine messages from the publishing service can change your data.
+- **No duplicates.** Repeated deliveries of the same event are recognized and ignored, so a status can't be double-counted or flip back and forth.
+- **Status only moves forward.** A late or stale notification can't undo a more advanced state — for example, a delayed message can't knock a published post back to "publishing." Published, cancelled, and removed are treated as settled.
+
+When one of these updates is missed (a rare timing gap), that's exactly what **Sync** is for — it re-pulls the same authoritative state on demand and produces the identical result.
+
+## Quick reference
+
+- **A connection looks wrong or you reconnected elsewhere** → **Social Media \> Settings \> Connections \> Refresh**.
+- **A connection shows Expired, Revoked, or Error** → click **Reconnect** on its card (see [Connecting Platforms](/docs/social-media/connecting-platforms)).
+- **A post's status or live links look out of date** → open the post and click **Sync**.
+- **You deleted a post on the platform yourself** → open the post and choose **I deleted this on \[platform\] myself**.
+- **Publishing tells you a connection is no longer valid** → reconnect the named platforms, then publish again. See [Content & Scheduling](/docs/social-media/content-scheduling).

@@ -1,0 +1,105 @@
+---
+title: "Platform Character Limits"
+description: "Every social network caps how long a post caption can be, and the caps are very different from one platform to the next."
+---
+
+Every social network caps how long a post caption can be, and the caps are very different from one platform to the next. theStacc knows each platform's limit and checks your caption against it before anything goes live, so you never get a half-published post where one network accepted it and another rejected it.
+
+This page lists the exact limits, explains the quirky way X (Twitter) counts characters, and shows how the editor keeps you informed while you write.
+
+## The hard limits
+
+These are the maximum caption lengths theStacc enforces per platform:
+
+| Platform | Character limit |
+| --- | --- |
+| **X (Twitter)** | 280 (free) / 25,000 (Premium) |
+| **Bluesky** | 300 |
+| **Threads** | 500 |
+| **Instagram** | 2,200 |
+| **LinkedIn** | 3,000 |
+| **Facebook** | 63,206 |
+
+Facebook's limit is so high (around 63,000 characters) that you'll effectively never hit it with a normal caption. The tight ones to watch are **X**, **Bluesky**, and **Threads** - those are where most over-limit warnings show up.
+
+theStacc also tracks limits for a few other platforms it can publish to: **TikTok** (2,200), **Pinterest** (500), and **YouTube** (5,000).
+
+### X Premium raises the limit to 25,000
+
+The 280-character limit is X's free tier. If you pay for X Premium, your per-post ceiling jumps to 25,000 characters.
+
+theStacc can't automatically tell whether your connected X account is on Premium, so by default it assumes the 280 limit. If you're a Premium subscriber, mark your X account as Premium under **Social Media \> Settings \> Connections** so the character counter uses the 25,000 limit instead of warning you at 280.
+
+If you don't set this, a Premium user will see a false over-limit warning past 280 characters - the post would still publish fine on X, but the editor and pre-flight check play it safe with the lower number until you tell them otherwise.
+
+## How X counts characters differently
+
+X doesn't simply count the letters in your caption. It uses its own rules, and theStacc mirrors them exactly so the count you see matches what X will actually measure. Two rules matter:
+
+### Links always count as 23 characters
+
+X automatically shortens every link through its `t.co` wrapper, so it charges the same 23 characters for every URL no matter how long the actual link is. theStacc counts the same way:
+
+- A full link like `https://example.com/a/very/long/path?with=params` counts as **23 characters**, not its real length.
+- A bare domain with no `https://` or `www.` - like `yourbusiness.com` or `example.io/page` - also counts as **23 characters**, because X detects and wraps these too.
+
+This bare-domain rule prevents a real trap: a caption that looks like it's exactly at 280 in a plain character count can actually be measured by X as over the limit, because a short bare domain like `yourbusiness.com` (16 characters) is weighed as 23. theStacc accounts for this so its count agrees with X's.
+
+### Emoji and non-Latin characters count as 2
+
+X counts any character outside the basic Latin set as **2 characters**. That includes:
+
+- Emoji
+- Chinese, Japanese, and Korean (CJK) text
+- Indic scripts like Devanagari and Tamil
+- Accented Latin letters
+
+So an emoji-heavy or non-English caption fills the 280 budget about twice as fast as plain English text. theStacc applies this same doubling, which is why the editor's counter for X can climb faster than the number of characters you typed.
+
+These X-specific rules apply **only to X**. For every other platform, theStacc counts the caption's plain length - links and emoji are counted normally, character for character.
+
+## The pre-flight check blocks an over-limit publish
+
+When you publish or schedule a post, theStacc runs a pre-flight check before sending anything to the social networks. It looks at the exact caption that will go to each selected platform - including any per-platform caption override - and measures it against that platform's limit.
+
+If any caption is too long, the publish is stopped with a **caption too long** error that names the offending platform and shows how far over you are (for example, `x (286/280)`). Nothing is sent to any platform.
+
+This matters because of how social publishing works: without the check, X might reject an over-limit caption \*after\* theStacc had already published the same post to LinkedIn and Facebook. You'd be left with a post that's live on some networks and failed on others, which you'd then have to reconcile by hand. The pre-flight check catches the problem up front so this never happens.
+
+When the check stops a publish, the fix is simple: shorten the caption for the platform that's over the limit, then publish again.
+
+## The live counter in the editor
+
+You don't have to wait until publish time to find out a caption is too long. The post editor shows a live character counter that uses the **same** limits and the same X-specific counting rules as the pre-flight check.
+
+To see it:
+
+1. Open any post to bring up the editor.
+2. Click into the caption to start editing.
+3. The counter sits above the caption, showing your current count over the platform's limit - for example `258 / 280`.
+
+The counter follows whichever platform tab you're on. If you've written a per-platform caption override for X, switching to the X tab shows that caption measured against X's rules; the **main** caption tab is measured against the platform you're previewing. As you type past the limit, the counter turns **red** so you can see at a glance that you've gone over.
+
+### The editor warns but still lets you save
+
+Going over the limit does **not** stop you from saving. theStacc treats an over-limit caption as a publish-time problem, not a save-time problem - people routinely write a long draft, save it, and trim it down later.
+
+So when your caption is over the limit:
+
+- The counter turns red.
+- The **Save** button stays enabled, but its label changes to **Save (over limit)** as a reminder that you'll need to trim before this can publish.
+- Your work is saved exactly as written.
+
+You fix the length on your own time, locally in the editor. Publishing is gated separately - the post simply won't publish until every selected platform's caption fits. If you try to publish anyway, the pre-flight check drops you straight into edit mode on the platform tab that's over, so you land right where you need to make the cut.
+
+## Tips for staying within limits
+
+- **Write per-platform captions for the short networks.** A single caption that fits LinkedIn's 3,000 characters won't fit X's 280. Use a tighter override for X, Bluesky, and Threads. See [Content & Scheduling](/docs/social-media/content-scheduling) for how to set per-platform captions.
+- **Remember links and emoji cost more on X.** Every link is 23 characters and every emoji is 2 - budget for them.
+- **Watch the counter's color.** Black means you're fine; red means trim before you publish.
+- **Mark your X account as Premium** if you have it, so you get the full 25,000-character budget instead of the 280 default. You set this under [Connecting Platforms](/docs/social-media/connecting-platforms).
+
+## Related articles
+
+- [Content & Scheduling](/docs/social-media/content-scheduling) - edit captions, add per-platform overrides, and schedule your posts.
+- [Connecting Platforms](/docs/social-media/connecting-platforms) - connect X, Instagram, Facebook, and LinkedIn, and set your X account tier.

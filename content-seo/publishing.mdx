@@ -1,0 +1,122 @@
+---
+title: "Publishing"
+description: "Once content is generated, theStacc handles publishing to your website."
+---
+
+Once content is generated, theStacc handles publishing to your website. Configure your publishing mode and connections under **Content SEO \> Settings \> Publishing**.
+
+<Frame caption="How a generated post reaches your site: your publishing mode decides whether it auto-publishes, waits for approval, or stays a draft">
+
+![How a generated post reaches your site: your publishing mode decides whether it auto-publishes, waits for approval, or stays a draft](/images/docs/publishing-flow.svg)
+
+</Frame>
+
+## Publishing modes
+
+Every project has a publishing mode that decides what happens to a blog after it is generated and SEO-scored. Change it any time under **Content SEO \> Settings \> Publishing**.
+
+### No auto publish
+
+Blogs are saved as drafts. You manually review, edit, and publish each one when you are ready. Best for maximum control over every piece of content.
+
+### Requires approval
+
+Blogs enter a "Pending Review" state. You get a notification, review the post, make edits if needed, then approve or reject. Rejected posts can be regenerated. This is the best balance of control and convenience.
+
+### Auto publish
+
+Blogs publish automatically after generation and SEO scoring, with no review step. You can still unpublish or edit after a post goes live. Auto publish requires an active publishing destination. Best for hands-off operation.
+
+For a deeper walkthrough of autopilot, daily auto-generation, and how the cron pipeline schedules and spaces out publishes, see [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes).
+
+## Supported platforms
+
+theStacc publishes to all of these. Connect one as your active destination under **Content SEO \> Settings \> Publishing**:
+
+- **WordPress.com** - hosted WordPress sites, connected with a secure OAuth sign-in.
+- **WordPress.org (self-hosted)** - your own WordPress install, connected with a WordPress Application Password.
+- **Ghost** - connected with your Ghost site URL and an Admin API key.
+- **Webflow** - publishes blog posts as items in a Webflow CMS collection, connected with a Webflow API token.
+- **Zepio** - connected with a Zepio Developer API key.
+- **Custom Webhook** - sends each publish as JSON to any HTTP endpoint you control, for sites and CMSes not directly supported.
+- **Shopify (beta)** - publishes to your Shopify store's built-in blog, connected with a secure OAuth sign-in.
+
+For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/docs/content-seo/connect-platforms).
+
+### One active destination at a time
+
+A project publishes to exactly **one** destination at a time. Connecting a new platform automatically makes it the active one and deactivates whatever was active before, so a blog is never pushed to two places at once.
+
+You can keep several connections saved on a project, including more than one of the same type (for example, two different webhook endpoints). Only the one marked active receives publishes. To switch destinations, activate a different connection from the list and the previously active one is turned off automatically.
+
+Autopilot is strict about this: the auto-publish pipeline only ever uses the active connection. If you deactivate every connection, autopilot has nowhere to publish and the blog is held with a clear message asking you to re-enable a destination.
+
+### Who can change connections
+
+Changing publishing connections (connecting, editing, activating, deactivating, testing, or disconnecting) requires **editor or admin** access to the project. On a project you own, any member of your workspace can make these changes; on a shared project, members with view-only access cannot.
+
+### Credentials are tested before they are saved
+
+When you save a connection, theStacc tests the credentials against the platform first. If the test fails, nothing is saved and you get the exact reason (wrong URL, bad API key, a user role that cannot publish, and so on). There are no partial saves: a connection is only stored once it has proven it can reach your site.
+
+The same test runs whenever you change a credential later, so a typo or a revoked token is caught at save time rather than at the next publish. You can also re-run the test any time from the connection's **Test** button.
+
+## How content is prepared before it is sent
+
+The blog you see in the editor is cleaned up at publish time so it renders correctly on your site no matter which platform you use:
+
+- **The hero image is removed from the body.** Your featured image is sent as a separate structured field that every platform renders at the top of the post. theStacc strips that same image out of the article body so it does not appear twice on the page.
+- **The excerpt is trimmed.** A short, clean excerpt (capped at 256 characters and trimmed at a word boundary) is sent alongside the post, so platforms with excerpt length limits accept it without error.
+- **Internal link placeholders are resolved.** While writing, the AI marks internal links as placeholders. At publish time these are matched to your configured internal links and turned into real URLs. Any placeholder with no match is removed and the visible link text is kept, so a broken link is never published. See [Internal Linking](/docs/content-seo/internal-linking) for how to set up the link targets.
+- **Relative links are made absolute.** Call-to-action links entered as a path (like `/contact`) are rewritten to your full site URL (like `https://yoursite.com/contact`) so they work everywhere the post is shown, including the in-app preview.
+
+The duplicate H1 is also removed, since platforms render your title as the page heading.
+
+## When a publish fails
+
+Not every publish succeeds on the first try, so theStacc tells the difference between a hiccup and a real problem.
+
+### Temporary problems are retried
+
+If a publish fails for a reason that is likely to clear up on its own (the platform returns a server error or a rate-limit, or the request times out), theStacc retries automatically with increasing delays: roughly 1, 2, 4, 8, then 16 minutes apart. It tries up to **5** times in total. If all 5 attempts fail, the blog is marked **publish failed** and you are shown the last error.
+
+On a retry, theStacc first checks your site to see whether the earlier attempt actually landed (the response can be lost in transit even when the post was created). If it finds the matching post, it counts that as success instead of creating a duplicate.
+
+### Problems you need to fix are not retried
+
+Some failures will never fix themselves, the most common being an expired token or an invalid credential (a 401 or 403 from your platform, or a URL theStacc cannot reach). These point at something only you can change, so theStacc does not waste retries on them. The blog is marked publish failed immediately with a message telling you exactly what to fix, such as reconnecting your account or generating a fresh Application Password.
+
+Because these are expected user-configuration issues rather than bugs, they do not page the engineering on-call team. Once you have updated the connection, click **Re-Publish** on the blog to try again. For the full list of error messages and how to clear each one, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+
+## Custom webhook events
+
+If you publish through a custom webhook, your receiver gets a JSON request for each event. Branch on the `event` field:
+
+| Event | When it fires |
+| --- | --- |
+| `test.ping` | The **Test Connection** button. A liveness check only, with no blog fields. |
+| `blog.published` | The first successful publish of a blog (and the **Sample Payload** button, with a `preview-` prefixed `blog_id`). Carries the full blog payload. |
+| `blog.updated` | A re-publish of a blog that was already published. Same payload shape as `blog.published`. |
+| `blog.unpublished` | You unpublish a blog from theStacc. |
+| `blog.deleted` | You delete a published blog from theStacc. |
+
+Respond to publish events with a `2xx` status and a JSON body like `{"ok": true, "url": "<live-post-url>", "id": "<your-cms-id>"}` so theStacc can store the live URL and show a clickable **View live post** link. The `id` you return is remembered so later updates, unpublishes, and deletes can target the right record.
+
+For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/docs/content-seo/connect-platforms) and the [Webhook Reference](/docs/developers/webhook-reference).
+
+## Managing connections
+
+Each saved connection shows:
+
+- **Status** - active, inactive, or disconnected
+- **Last test result** - whether the most recent connection test passed
+- **Test** - re-run the credential check at any time
+- **Active toggle** - make this the publishing destination (which deactivates the others)
+- **Disconnect** - remove the connection entirely
+
+## Related articles
+
+- [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes) - control whether blogs publish automatically, wait for approval, or stay drafts.
+- [Connect Platforms](/docs/content-seo/connect-platforms) - step-by-step setup for every supported platform and the custom webhook.
+- [Publishing Errors & Retries](/docs/content-seo/publishing-errors) - what each publish error means and how to fix it.
+- [Internal Linking](/docs/content-seo/internal-linking) - set up the internal links that placeholders resolve to at publish time.
