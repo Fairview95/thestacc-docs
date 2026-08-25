@@ -1,0 +1,95 @@
+---
+title: "Astro"
+description: "Astro is the most straightforward integration since it supports static and server-rendered pages natively."
+---
+
+Astro is the most straightforward integration since it supports static and server-rendered pages natively.
+
+## Create the API helper
+
+Create `src/lib/thestacc.ts`:
+
+```typescript
+const API_KEY = import.meta.env.THESTACC_API_KEY;
+const API_URL = import.meta.env.THESTACC_API_URL;
+
+export async function getAllBlogs() {
+  const res = await fetch(`${API_URL}?api_key=${API_KEY}`);
+  if (!res.ok) throw new Error(`Failed to fetch blogs: ${res.status}`);
+  const data = await res.json();
+  return data.blogs;
+}
+
+export async function getBlogBySlug(slug: string) {
+  const res = await fetch(`${API_URL}/${slug}?api_key=${API_KEY}`);
+  if (!res.ok) return null;
+  return await res.json();
+}
+```
+
+## Create the blog listing page
+
+Create `src/pages/blog/index.astro`:
+
+```astro
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogs } from '../../lib/thestacc';
+
+const blogs = await getAllBlogs();
+---
+
+<BaseLayout title="Blog">
+  <h1>Blog</h1>
+  <div class="blog-grid">
+    {blogs.map((blog) => (
+      <a href={`/blog/${blog.slug}`}>
+        <img src={blog.featured_image_url} alt={blog.title} />
+        <h2>{blog.title}</h2>
+        <p>{blog.excerpt}</p>
+        <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+```
+
+The list endpoint returns metadata only by default (no `content`), which is exactly what a listing page needs.
+
+## Create the blog detail page
+
+Create `src/pages/blog/[slug].astro`:
+
+```astro
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogs, getBlogBySlug } from '../../lib/thestacc';
+
+export async function getStaticPaths() {
+  const blogs = await getAllBlogs();
+  return blogs.map((blog) => ({
+    params: { slug: blog.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const blog = await getBlogBySlug(slug);
+
+if (!blog) return Astro.redirect('/404');
+---
+
+<BaseLayout title={blog.meta_title} description={blog.meta_description}>
+  <article>
+    <img src={blog.featured_image_url} alt={blog.title} />
+    <h1>{blog.title}</h1>
+    <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+    <div class="blog-content" set:html={blog.content} />
+  </article>
+</BaseLayout>
+```
+
+The single-blog endpoint always includes the full HTML in `content`. `set:html` renders it directly. Style the `.blog-content` class in your CSS to match your site's design.
+
+## Generate the sitemap
+
+If you use `@astrojs/sitemap`, the blog pages are automatically included since they're generated as static routes. For a hand-built sitemap, use the [sitemap endpoint](/docs/developers/public-blog-api#get-blog-sitemap-data) described later in this guide.

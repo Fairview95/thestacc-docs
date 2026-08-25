@@ -1,0 +1,105 @@
+---
+title: "Webflow"
+description: "Publish blog content to your Webflow CMS collections via a Webflow API token."
+---
+
+Publish blog content to your Webflow CMS collections via a Webflow API token.
+
+## Before you start
+
+- Your Webflow workspace must be on a plan that includes the CMS API (Workspace plans with CMS hosting). Free workspaces can read but cannot create CMS items.
+- The Webflow site must have been **published at least once from the Designer**. Webflow rejects live CMS publishes if the site has never been published.
+- A CMS Collection for blog posts must exist on the site. If you don't have one, create it in Webflow Designer → CMS → New Collection (recommended fields below).
+
+## Step 1 — Generate a Webflow API token
+
+1. In Webflow, open the site you want to connect.
+2. Go to **Site Settings → Apps & Integrations → API Access**. You'll see this:
+
+<Frame caption="Webflow Site Settings → Apps &amp; Integrations → API access section">
+
+![Webflow Site Settings → Apps & Integrations → API access section](/images/integrations/webflow/api-access-page.webp)
+
+</Frame>
+
+1. **Click the blue "Generate API token" button on the right — NOT "Generate V1 token".** V1 tokens use Webflow's legacy API which theStacc doesn't support.
+2. On the next screen, name the token `theStacc` and set permissions exactly like this — Webflow shows a dropdown for each scope. The two scopes that need access are CMS and Sites; everything else stays on None.
+
+| Scope | Permission | Underlying API scope | Why |
+| --- | --- | --- | --- |
+| **CMS** | Read and write | `cms:read` + `cms:write` | Create and update blog items in your collection |
+| **Sites** | Read and write | `sites:read` + `sites:write` | Read site info (for the live URL) and re-publish the site so new posts appear live |
+| **Custom code** | None | — | Not used |
+| **Pages** | None | — | Not used |
+| **Users** | None | — | Not used |
+| **Forms** | None | — | Not used |
+| **Components** | None | — | Not used |
+| **Ecommerce** | None | — | Not used |
+| **Authorized user** | Read only | `authorized_user:read` | Default — leave as-is |
+
+> Webflow's UI labels (e.g. "Read and publish") are friendlier names for the underlying scopes. The token Stacc actually receives carries the API scopes shown in the right column. Source: [Webflow Data API scopes reference](https://developers.webflow.com/data/reference/scopes).
+
+1. Click **Generate token** and **copy it immediately** — Webflow won't show it again. The token must be **10 to 500 characters** (real Webflow tokens fall well within that range).
+
+## Step 2 — Connect in theStacc
+
+1. In theStacc, open **Content SEO → Settings → Publishing** and toggle Webflow on.
+2. Paste the token, give the integration a friendly name, and click Continue.
+3. Select your Webflow site from the dropdown.
+4. Select the CMS collection where blog posts should land.
+5. Map theStacc fields to your Webflow collection fields:
+
+- **Required:** Title, Content, Slug
+
+- **Optional:** Featured Image, Meta Description, Excerpt, Tags, Author, Category, Published Date, Is Featured
+
+- Auto-mapping fills most of these based on field-name matches — review and adjust.
+
+1. Choose a publishing behavior:
+
+- **Publish Immediately** — items go live the moment theStacc publishes them; theStacc also re-publishes the site so they appear on the live URL. This is the default for a new Webflow connection.
+
+- **Save as Draft** — items appear in Webflow as drafts; you publish manually.
+
+- **Stage for Review** — items are created and ready to publish; you press Publish in Webflow Designer.
+
+1. Click **Create Integration**.
+
+## Changing Webflow settings later (no token re-entry)
+
+Open the connected Webflow integration's **Edit settings** to change the publishing behavior, the selected site or collection, or your field mappings — without re-pasting the API token. For security, theStacc masks the saved token and never shows it back to you, so the edit form simply leaves it untouched unless you deliberately paste a new one.
+
+If you do paste a new token, theStacc validates it against Webflow before saving. A typo or a revoked token is rejected with a clear message (\*"Webflow API token is invalid or expired…"\* or \*"…lacks required scopes (sites:read, cms:read, cms:write)"\*) so a bad token can never silently replace your working one.
+
+## Recommended CMS collection fields
+
+| Field | Webflow type |
+| --- | --- |
+| Name | Plain text (auto-created — title goes here) |
+| Slug | URL slug (auto-created) |
+| Post Content | Rich text |
+| Featured Image | Image |
+| Excerpt | Plain text |
+| Meta Title | Plain text |
+| Meta Description | Plain text |
+| Tags | Plain text (comma-separated) |
+| Author | Plain text |
+
+> Webflow blog templates often use **Reference / Multi-reference** fields for Categories, Tags, and Authors. theStacc cannot yet auto-create the referenced items, so use **Plain text** fields for these for now.
+
+## Verify
+
+After saving the integration, click **Test Connection**. A green check confirms the token works and the collection is reachable.
+
+## Troubleshooting
+
+- **"Invalid API token"** — token wrong, expired, or revoked. Generate a new one and update the integration.
+- **"No CMS collections found"** — the site has no CMS collections. Create one in Designer first.
+- **"Item with this slug already exists"** — a post with that slug was already published. Edit the slug or delete the existing item in Webflow.
+- **Post published but URL returns 404** — most often the site has never been published from the Designer, or you're using a custom domain whose DNS hasn't propagated. Open Webflow Designer and click Publish at least once.
+- **"409 Site not published" on first publish** — Webflow rejects live CMS publishes on un-published sites. theStacc automatically falls back to staged item creation. Publish your site once in Designer; future live publishes work directly.
+- **403 Forbidden when creating items** — the workspace plan doesn't include CMS API access. Upgrade to a Workspace plan with CMS hosting.
+
+## What gets sent to Webflow
+
+theStacc sends `POST https://api.webflow.com/v2/collections/{id}/items/live` (or `/items` for staged) with your mapped fields plus the required `name` and `slug`. No source code, design changes, or custom integrations are needed on the Webflow side.

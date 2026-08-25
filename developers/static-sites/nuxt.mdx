@@ -1,0 +1,107 @@
+---
+title: "Nuxt 3"
+description: "Create the API composable, runtime config, and blog pages for Nuxt 3."
+---
+
+Create the API composable, runtime config, and blog pages for Nuxt 3.
+
+## Create the API composable
+
+Create `composables/useThestacc.ts`:
+
+```typescript
+export async function getAllBlogs() {
+  const config = useRuntimeConfig()
+  const data = await $fetch(config.public.thestaccApiUrl, {
+    query: { api_key: config.thestaccApiKey },
+  })
+  return data.blogs
+}
+
+export async function getBlogBySlug(slug: string) {
+  const config = useRuntimeConfig()
+  return await $fetch(`${config.public.thestaccApiUrl}/${slug}`, {
+    query: { api_key: config.thestaccApiKey },
+  })
+}
+```
+
+## Add runtime config
+
+In your `nuxt.config.ts`:
+
+```typescript
+export default defineNuxtConfig({
+  runtimeConfig: {
+    thestaccApiKey: process.env.THESTACC_API_KEY,
+    public: {
+      thestaccApiUrl: process.env.THESTACC_API_URL,
+    },
+  },
+})
+```
+
+Keeping `thestaccApiKey` outside the `public` block means it stays server-side and never ships to the browser.
+
+## Create the blog listing page
+
+Create `pages/blog/index.vue`:
+
+```vue
+<script setup>
+const blogs = await getAllBlogs()
+</script>
+
+<template>
+  <div>
+    <h1>Blog</h1>
+    <div class="blog-grid">
+      <NuxtLink v-for="blog in blogs" :key="blog.id" :to="`/blog/${blog.slug}`">
+        <img :src="blog.featured_image_url" :alt="blog.title" />
+        <h2>{{ blog.title }}</h2>
+        <p>{{ blog.excerpt }}</p>
+        <time>{{ new Date(blog.published_at).toLocaleDateString() }}</time>
+      </NuxtLink>
+    </div>
+  </div>
+</template>
+```
+
+## Create the blog detail page
+
+Create `pages/blog/[slug].vue`:
+
+```vue
+<script setup>
+const route = useRoute()
+const blog = await getBlogBySlug(route.params.slug as string)
+
+useHead({
+  title: blog?.meta_title,
+  meta: [
+    { name: 'description', content: blog?.meta_description },
+  ],
+})
+</script>
+
+<template>
+  <article v-if="blog">
+    <img :src="blog.featured_image_url" :alt="blog.title" />
+    <h1>{{ blog.title }}</h1>
+    <time>{{ new Date(blog.published_at).toLocaleDateString() }}</time>
+    <div class="blog-content" v-html="blog.content" />
+  </article>
+</template>
+```
+
+`v-html` renders the HTML content directly. Style the `.blog-content` class in your CSS to match your site's design.
+
+## Static generation
+
+For static export on Cloudflare Pages, Vercel, or Netlify, run:
+
+```
+npx nuxi generate
+```
+
+Nuxt pre-renders all pages at build time — the output is pure static HTML with the same SEO as any other static site generator.

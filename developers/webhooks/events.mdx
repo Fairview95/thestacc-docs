@@ -1,0 +1,69 @@
+---
+title: "Event catalog"
+description: "Five event types."
+---
+
+Five event types. **Branch on the `event` field at the top of your handler.**
+
+| Event | When it fires | Body shape |
+| --- | --- | --- |
+| `test.ping` | User clicks Test Connection | `{ event, message, timestamp }` |
+| `blog.published` | First successful publish of a blog | Full blog payload (see below) |
+| `blog.updated` | Re-publish or content sync of an existing blog | Full blog payload — same shape as `blog.published` |
+| `blog.unpublished` | User unpublishes from theStacc | `{ event, blog_id, title }` |
+| `blog.deleted` | User deletes a published blog | `{ event, blog_id, title }` |
+
+Whether theStacc sends `blog.published` or `blog.updated` is decided by whether your receiver has published this blog before: the first successful publish fires `blog.published`; any subsequent re-publish or content sync of the same blog fires `blog.updated`. **Treat both the same way** — upsert on `blog_id`.
+
+A note on `preview-` prefixed `blog_id`s: when the user clicks **Sample Payload** in the dashboard, theStacc fires a real-shaped `blog.published` event but with `blog_id: "preview-00000000-0000-0000-0000-000000000000"`. Your handler should detect the prefix and skip the actual database write so test runs don't pollute production data.
+
+## `test.ping` payload
+
+```json
+{
+  "event": "test.ping",
+  "message": "This is a test from theStacc",
+  "timestamp": "2026-04-30T12:00:00Z"
+}
+```
+
+Respond `200 {"ok": true}`. **Do not** require `title`, `slug`, or `content` for this event — there are none.
+
+## `blog.published` / `blog.updated` payload
+
+```json
+{
+  "event": "blog.published",
+  "blog_id": "8f3e1d2c-49ab-4d10-9e7f-7c0bf298faa4",
+  "title": "10 SEO mistakes to avoid in 2026",
+  "slug": "10-seo-mistakes-to-avoid-in-2026",
+  "content": "<h2>Introduction</h2><p>If you've been running SEO...</p>",
+  "excerpt": "A short summary of the blog post.",
+  "excerpt_short": "A short summary of the blog post.",
+  "meta_title": "10 SEO mistakes to avoid in 2026",
+  "meta_description": "Avoid these 10 common SEO pitfalls...",
+  "featured_image_url": "https://cdn.thestacc.com/blogs/abc123.jpg",
+  "categories": ["SEO"],
+  "tags": ["seo", "2026", "marketing"],
+  "keyword": "seo mistakes 2026",
+  "published_at": "2026-04-30T12:00:00Z",
+  "images": [
+    { "url": "https://cdn.thestacc.com/blog_images/proj-x/blog-y/illustration-1.png", "alt": "How keyword cannibalization happens" },
+    { "url": "https://cdn.thestacc.com/blog_images/proj-x/blog-y/illustration-2.png", "alt": "Site audit checklist diagram" }
+  ]
+}
+```
+
+On **autopilot (scheduled) publishes**, the same payload additionally carries two retry-related fields — `idempotency_key` and `publish_attempt`. See [Idempotency & retries](/docs/developers/webhooks/idempotency) below for exactly when they appear and how to use them.
+
+## `blog.unpublished` / `blog.deleted` payload
+
+```json
+{
+  "event": "blog.unpublished",
+  "blog_id": "8f3e1d2c-49ab-4d10-9e7f-7c0bf298faa4",
+  "title": "10 SEO mistakes to avoid in 2026"
+}
+```
+
+For these events, look up the post in your CMS using the `blog_id` (which you should have stored when handling the original `blog.published`) and delete or hide it.

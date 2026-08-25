@@ -1,0 +1,25 @@
+---
+title: "Zepio"
+description: "Publish blog posts directly to your Zepio website using Zepio's Developer API."
+---
+
+Publish blog posts directly to your [Zepio](https://zepio.io) website using Zepio's Developer API.
+
+**What you'll need:**
+
+- Your Zepio website URL
+- A Zepio **Developer API key** with the **"Create blog posts"** permission
+
+**Steps:**
+
+1. In Zepio, go to **Zepio Admin → Settings → Developer API** and create an API key with the **"Create blog posts"** permission.
+2. In theStacc, click **Connect Zepio**.
+3. Enter your **Zepio Website URL** (for example `https://mybusiness.com`).
+4. Paste your **Developer API key**.
+5. Click **Save Integration**. theStacc verifies the key with Zepio before saving — if the key is wrong or lacks permission, it tells you immediately rather than failing silently at publish time.
+
+The key is **10 to 500 characters**. Posts are created with title, content, featured image, excerpt, and SEO meta data.
+
+**Editing later — rotate the key or change the URL.** Once Zepio is connected, an **Edit** button (tooltip: \*"Update site URL or rotate the API key"\*) lets you change the site URL or paste a new Developer API key without disconnecting and reconnecting from scratch. For security theStacc never shows the saved key back to you, so re-enter it (or paste a fresh one) when you save changes.
+
+**Note on editing published posts.** Zepio's Developer API can create a post but has no "update" endpoint, so once a post is published to Zepio you edit it from your **Zepio dashboard**, not from theStacc. Re-publishing the same post from theStacc isn't supported for Zepio for the same reason.

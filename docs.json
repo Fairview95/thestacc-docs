@@ -7,206 +7,270 @@
     "light": "#9897ff",
     "dark": "#4b49d9"
   },
+  "logo": {
+    "light": "/logo/logo.webp",
+    "dark": "/logo/logo.webp"
+  },
+  "favicon": "/favicon.svg",
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "getting-started/introduction",
-          "getting-started/quick-start",
-          "getting-started/key-concepts",
-          "getting-started/accounts-workspaces",
-          "getting-started/onboarding-first-steps",
-          "getting-started/troubleshooting-setup"
-        ]
-      },
-      {
-        "group": "How It Works",
-        "pages": [
-          "how-it-works/content-engine",
-          "how-it-works/how-the-ai-works",
-          "how-it-works/ai-models-and-pipeline",
-          "how-it-works/quality-safety"
-        ]
-      },
-      {
-        "group": "Content SEO",
-        "pages": [
+        "tab": "Guides",
+        "groups": [
           {
-            "group": "Set up",
+            "group": "Getting Started",
             "pages": [
-              "content-seo/overview",
-              "content-seo/business-setup",
-              "content-seo/sources-brand-voice",
-              "content-seo/competitors-audiences",
-              "content-seo/preferences",
-              "content-seo/compliance-profiles"
+              "index",
+              "getting-started/introduction",
+              "getting-started/quick-start",
+              "getting-started/key-concepts",
+              "getting-started/accounts-workspaces",
+              "getting-started/onboarding-first-steps",
+              "getting-started/troubleshooting-setup"
             ]
           },
           {
-            "group": "Plan what to write",
+            "group": "How It Works",
             "pages": [
-              "content-seo/content-plans",
-              "content-seo/keyword-strategy-rotation",
-              "content-seo/promotions-calendar",
-              "content-seo/blog-types",
-              "content-seo/word-count-targets"
+              "how-it-works/content-engine",
+              "how-it-works/how-the-ai-works",
+              "how-it-works/ai-models-and-pipeline",
+              "how-it-works/quality-safety"
             ]
           },
           {
-            "group": "Generate",
+            "group": "Content SEO",
             "pages": [
-              "content-seo/blog-generation",
-              "content-seo/image-generation",
-              "content-seo/internal-linking",
-              "content-seo/seo-scoring",
-              "content-seo/content-safety-guardrails",
-              "content-seo/user-direction",
-              "content-seo/regenerating-content",
-              "content-seo/generate-more-bonus-blogs"
+              {
+                "group": "Set up",
+                "pages": [
+                  "content-seo/overview",
+                  "content-seo/business-setup",
+                  "content-seo/sources-brand-voice",
+                  "content-seo/competitors-audiences",
+                  "content-seo/preferences",
+                  "content-seo/compliance-profiles"
+                ]
+              },
+              {
+                "group": "Plan what to write",
+                "pages": [
+                  "content-seo/content-plans",
+                  "content-seo/keyword-strategy-rotation",
+                  "content-seo/promotions-calendar",
+                  "content-seo/blog-types",
+                  "content-seo/word-count-targets"
+                ]
+              },
+              {
+                "group": "Generate",
+                "pages": [
+                  "content-seo/blog-generation",
+                  "content-seo/image-generation",
+                  "content-seo/internal-linking",
+                  "content-seo/seo-scoring",
+                  "content-seo/content-safety-guardrails",
+                  "content-seo/user-direction",
+                  "content-seo/regenerating-content",
+                  "content-seo/generate-more-bonus-blogs"
+                ]
+              },
+              {
+                "group": "Automate & schedule",
+                "pages": [
+                  "content-seo/automated-generation",
+                  "content-seo/scheduling-missed-posts",
+                  "content-seo/blog-status-lifecycle"
+                ]
+              },
+              {
+                "group": "Review & publish",
+                "pages": [
+                  "content-seo/publishing-modes",
+                  "content-seo/draft-approval-workflow",
+                  "content-seo/publishing"
+                ]
+              },
+              {
+                "group": "Troubleshooting & limits",
+                "pages": [
+                  "content-seo/publishing-errors",
+                  "content-seo/ai-error-recovery",
+                  "content-seo/quota-and-limits"
+                ]
+              }
             ]
           },
           {
-            "group": "Automate & schedule",
+            "group": "Local SEO",
             "pages": [
-              "content-seo/automated-generation",
-              "content-seo/scheduling-missed-posts",
-              "content-seo/blog-status-lifecycle"
+              {
+                "group": "Set up",
+                "pages": [
+                  "local-seo/overview",
+                  "local-seo/onboarding-business-setup",
+                  "local-seo/locations-business-details",
+                  "local-seo/industry-presets-brand-intake"
+                ]
+              },
+              {
+                "group": "Google Business Profile",
+                "pages": [
+                  "local-seo/google-business-profile",
+                  "local-seo/data-sync",
+                  "local-seo/gbp-posts-calendar",
+                  "local-seo/content-plan-management"
+                ]
+              },
+              {
+                "group": "Reviews & rankings",
+                "pages": [
+                  "local-seo/reviews",
+                  "local-seo/keywords-local-rankings"
+                ]
+              },
+              {
+                "group": "Compliance & access",
+                "pages": [
+                  "local-seo/advertising-compliance",
+                  "local-seo/local-seo-shared-access"
+                ]
+              },
+              {
+                "group": "Troubleshooting & limits",
+                "pages": [
+                  "local-seo/error-handling-sync-failures",
+                  "local-seo/subscription-trials-limits"
+                ]
+              }
             ]
           },
           {
-            "group": "Review & publish",
+            "group": "Social Media",
             "pages": [
-              "content-seo/publishing-modes",
-              "content-seo/draft-approval-workflow",
-              "content-seo/connect-platforms",
-              "content-seo/publishing"
+              {
+                "group": "Set up",
+                "pages": [
+                  "social-media/overview",
+                  "social-media/connecting-platforms",
+                  "social-media/website-extraction-assets",
+                  "social-media/brand-style"
+                ]
+              },
+              {
+                "group": "Plan content",
+                "pages": [
+                  "social-media/content-preferences-pillars",
+                  "social-media/content-plans-generation",
+                  "social-media/content-scheduling"
+                ]
+              },
+              {
+                "group": "Create posts",
+                "pages": [
+                  "social-media/post-customization",
+                  "social-media/repurpose-from-blog",
+                  "social-media/platform-character-limits"
+                ]
+              },
+              {
+                "group": "Review & publish",
+                "pages": [
+                  "social-media/approval-review-workflow",
+                  "social-media/publishing-scheduling",
+                  "social-media/post-deletion"
+                ]
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  "social-media/post-states-failures",
+                  "social-media/connection-management-sync",
+                  "social-media/post-quota-limits"
+                ]
+              }
             ]
           },
           {
-            "group": "Troubleshooting & limits",
+            "group": "Account",
             "pages": [
-              "content-seo/publishing-errors",
-              "content-seo/ai-error-recovery",
-              "content-seo/quota-and-limits"
+              "account/plans-pricing",
+              "account/billing",
+              "account/trials-explained",
+              "account/subscription-status-access",
+              "account/payments-invoices",
+              "account/addons-managed-services",
+              "account/workspace-team"
             ]
           }
         ]
       },
       {
-        "group": "Local SEO",
+        "tab": "Integrations",
         "pages": [
-          {
-            "group": "Set up",
-            "pages": [
-              "local-seo/overview",
-              "local-seo/onboarding-business-setup",
-              "local-seo/locations-business-details",
-              "local-seo/industry-presets-brand-intake"
-            ]
-          },
-          {
-            "group": "Google Business Profile",
-            "pages": [
-              "local-seo/google-business-profile",
-              "local-seo/data-sync",
-              "local-seo/gbp-posts-calendar",
-              "local-seo/content-plan-management"
-            ]
-          },
-          {
-            "group": "Reviews & rankings",
-            "pages": [
-              "local-seo/reviews",
-              "local-seo/keywords-local-rankings"
-            ]
-          },
-          {
-            "group": "Compliance & access",
-            "pages": [
-              "local-seo/advertising-compliance",
-              "local-seo/local-seo-shared-access"
-            ]
-          },
-          {
-            "group": "Troubleshooting & limits",
-            "pages": [
-              "local-seo/error-handling-sync-failures",
-              "local-seo/subscription-trials-limits"
-            ]
-          }
+          "integrations/overview",
+          "integrations/wordpress-com",
+          "integrations/wordpress-org",
+          "integrations/ghost",
+          "integrations/webflow",
+          "integrations/shopify",
+          "integrations/zepio",
+          "integrations/custom-webhook",
+          "integrations/managing-connections"
         ]
       },
       {
-        "group": "Social Media",
-        "pages": [
-          {
-            "group": "Set up",
-            "pages": [
-              "social-media/overview",
-              "social-media/connecting-platforms",
-              "social-media/website-extraction-assets",
-              "social-media/brand-style"
-            ]
-          },
-          {
-            "group": "Plan content",
-            "pages": [
-              "social-media/content-preferences-pillars",
-              "social-media/content-plans-generation",
-              "social-media/content-scheduling"
-            ]
-          },
-          {
-            "group": "Create posts",
-            "pages": [
-              "social-media/post-customization",
-              "social-media/repurpose-from-blog",
-              "social-media/platform-character-limits"
-            ]
-          },
-          {
-            "group": "Review & publish",
-            "pages": [
-              "social-media/approval-review-workflow",
-              "social-media/publishing-scheduling",
-              "social-media/post-deletion"
-            ]
-          },
-          {
-            "group": "Operations",
-            "pages": [
-              "social-media/post-states-failures",
-              "social-media/connection-management-sync",
-              "social-media/post-quota-limits"
-            ]
-          }
-        ]
-      },
-      {
-        "group": "Account",
-        "pages": [
-          "account/plans-pricing",
-          "account/billing",
-          "account/trials-explained",
-          "account/subscription-status-access",
-          "account/payments-invoices",
-          "account/addons-managed-services",
-          "account/workspace-team"
-        ]
-      },
-      {
-        "group": "Developers",
+        "tab": "Developers",
         "pages": [
           "developers/public-blog-api",
-          "developers/static-site-integration",
+          {
+            "group": "Static sites",
+            "pages": [
+              "developers/static-sites/overview",
+              "developers/static-sites/astro",
+              "developers/static-sites/nextjs",
+              "developers/static-sites/hugo",
+              "developers/static-sites/nuxt",
+              "developers/static-sites/styling",
+              "developers/static-sites/error-handling",
+              "developers/static-sites/production"
+            ]
+          },
           "developers/deploy-hooks",
-          "developers/webhook-reference",
+          {
+            "group": "Webhooks",
+            "pages": [
+              "developers/webhooks/overview",
+              "developers/webhooks/quickstart",
+              "developers/webhooks/authentication",
+              "developers/webhooks/events",
+              "developers/webhooks/field-reference",
+              "developers/webhooks/response-contract",
+              "developers/webhooks/idempotency",
+              "developers/webhooks/self-hosting-images",
+              "developers/webhooks/database-schemas",
+              "developers/webhooks/receiver-examples",
+              "developers/webhooks/limits-troubleshooting"
+            ]
+          },
           "developers/agent-keys-mcp",
           "developers/mcp-tools-reference"
         ]
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/developers/webhook-reference",
+      "destination": "/developers/webhooks/overview"
+    },
+    {
+      "source": "/developers/static-site-integration",
+      "destination": "/developers/static-sites/overview"
+    },
+    {
+      "source": "/content-seo/connect-platforms",
+      "destination": "/integrations/overview"
+    }
+  ]
 }

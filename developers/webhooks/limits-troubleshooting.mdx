@@ -1,0 +1,116 @@
+---
+title: "Limits & troubleshooting"
+description: "Webhook limits, troubleshooting steps, security best practices, FAQs, and next steps for production receivers."
+---
+
+## Custom headers
+
+Each Custom Webhook integration can carry **custom request headers** — key/value pairs sent with every request. Use them for a bearer token, a static API key, or a routing header your gateway expects:
+
+```
+Authorization: Bearer your-token
+X-Tenant: acme-prod
+```
+
+Practical guidance:
+
+- Keep the set small — roughly **up to 20 pairs** is plenty for any real use (auth + a couple of routing headers). theStacc does not enforce a count, but a sprawling header set usually signals something that belongs in the URL or body instead.
+- **`Content-Type` cannot be overridden.** theStacc always sends `application/json`. A custom `Content-Type` is ignored so your receiver's JSON parser never breaks.
+- **The signature headers cannot be overridden.** Custom headers named `X-Webhook-Signature` or `X-Fairview-Signature` are ignored — theStacc always sets the real HMAC. This prevents a misconfigured (or malicious) custom header from spoofing the signature.
+
+Everything else you set is passed through verbatim.
+
+## Limits and operational rules
+
+| Rule | Value | Why |
+| --- | --- | --- |
+| **Response timeout** | ~30 seconds | Slow CMS writes will fail. Return `2xx` fast and queue heavy work. |
+| **HTTP status accepted** | `200`, `201`, `202`, `204` | Any other status (including `3xx`, `4xx`, `5xx`) fails the publish. |
+| **Redirects** | Rejected (not followed) | Anti-SSRF: a public receiver could `302` to an internal address. Configure the final URL. |
+| **HTTPS required** | Yes | `http://` URLs and private / internal IP ranges are rejected at save time. |
+| **Custom headers** | Pass-through key/value pairs (keep it to roughly 20) | For bearer tokens / API keys. `Content-Type` and the signature headers can't be overridden. |
+| **Webhook secret length** | 16+ characters (enforced) | Shorter secrets are brute-forceable. |
+| **Auto-retries** | Autopilot: up to 5 (backoff ~60s..960s, ~30 min). Manual: none. | A transient autopilot failure retries; a manual publish stays failed until the user clicks Republish. |
+| **Concurrent publishes** | Possible | A bulk-publish can hit your endpoint in parallel. Use UPSERT, not INSERT. |
+
+## Troubleshooting
+
+Concrete error, then cause, then fix. For the user-facing side of these — where the error shows up in theStacc and how to recover — see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+
+| What you see in theStacc | Cause | Fix |
+| --- | --- | --- |
+| "Could not reach the URL" on Test Connection | Receiver not deployed, wrong URL, or blocked by a firewall | curl your URL from outside your network. Check hosting platform logs. |
+| "Webhook returned redirect 301/302" | Your route redirects (HTTP to HTTPS, or a trailing-slash redirect) | Configure theStacc with the FINAL URL. Receivers must respond directly with `2xx`. |
+| "Webhook returned 401" on Test Connection | Signature verification failing on your side | Almost always a re-serialization bug. Hash the **raw body bytes**, not parsed JSON. |
+| "Webhook returned 4xx" on a real publish but `2xx` on Test | Your handler errors on `blog.published` but not on `test.ping` | Run **Sample Payload** in theStacc — it sends the real shape with a `preview-` prefix so your full handler runs without writing real data. |
+| "Sent to webhook — your receiver didn't return a public URL" | You returned `2xx` but no `url` field | Add `url` to your response JSON. theStacc displays it in the dashboard. |
+| Publish "succeeds" but the post never appears | You returned `2xx` without actually writing to your DB | Check your server logs — your handler probably threw after the response was sent. |
+| "Webhook URL must be HTTPS" at save time | URL starts with `http://` or points to localhost / a private IP | Deploy publicly with HTTPS. For local dev, use a tunnel like ngrok. |
+| A blog publishes twice | Receiver isn't idempotent across autopilot retries | UPSERT on `blog_id`, or dedup on `idempotency_key`. See [Idempotency & retries](/docs/developers/webhooks/idempotency). |
+
+## Security best practices
+
+1. **Always set a webhook secret.** Without one, anyone who guesses your URL can post fake blogs.
+2. **Use `crypto.timingSafeEqual` / `hmac.compare_digest`** when comparing signatures — plain `===` is timing-attack vulnerable.
+3. **Hash the raw body, not the parsed JSON.** Re-serialization changes whitespace and breaks signatures.
+4. **Store the secret in env vars only.** Never commit it to git, never include it in client-side code.
+5. **Rotate the secret on suspected leak.** Generate a new one, update both your env var and theStacc's integration settings, then redeploy. theStacc starts signing with the new secret on the next request.
+6. **Run your receiver behind HTTPS-only.** Add HSTS if you control the domain.
+7. **Rate-limit the receiver.** Even with HMAC, a flood of unauthenticated requests can pressure your endpoint while you reject them. Cloudflare or your hosting platform usually handles this.
+
+## FAQ
+
+**How does the handshake work?**
+
+There's no traditional handshake — it's stateless per-request authentication. The "handshake" is just storing a shared secret on both sides, once, during setup. Every subsequent request is independently authenticated via HMAC.
+
+**What identifies a request as coming from theStacc?**
+
+The `X-Webhook-Signature` header verified against your secret. Nothing else is reliable — anyone can fake the body, the User-Agent, or the source IP.
+
+**What's the `X-Fairview-Signature` header for?**
+
+It's a legacy compatibility header sent on autopilot publishes, carrying the same HMAC as `X-Webhook-Signature` but `sha256=`-prefixed. New receivers should use `X-Webhook-Signature`. See [Legacy `X-Fairview-Signature` compatibility header](/docs/developers/webhooks/authentication#legacy-x-fairview-signature-compatibility-header).
+
+**Why did the same blog arrive twice?**
+
+Autopilot publishes retry automatically on transient failures, so a lost response packet can cause a re-delivery. Dedup on `idempotency_key` (autopilot payloads include it) or UPSERT on `blog_id`. See [Idempotency & retries](/docs/developers/webhooks/idempotency).
+
+**Can I override the `Content-Type` or signature headers with a custom header?**
+
+No. `Content-Type` is always `application/json`, and the signature headers are always set by theStacc. Custom headers with those names are ignored.
+
+**What's the maximum title / slug / content length?**
+
+theStacc doesn't enforce hard length limits at the API level — generated content stays well within reasonable bounds. If your CMS or DB needs hard caps, the [Field reference](/docs/developers/webhooks/field-reference) table lists safe defaults.
+
+**What if my receiver is slow or down when a publish happens?**
+
+On a manual publish, that publish fails and the user clicks Republish. On an autopilot publish, theStacc retries automatically (up to 5 attempts over ~30 minutes) before marking it failed. See [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+
+**Can I get historical blogs through the webhook?**
+
+No — webhooks are forward-only. For backfills, use the [Public Blog API](/docs/developers/public-blog-api), which lets you fetch all your published blogs.
+
+**Do I need to handle `test.ping` separately?**
+
+Yes — it has no blog fields. If your handler tries to read `title` or `content` from a `test.ping` event, it'll error and Test Connection will fail. Branch on `event` first.
+
+**Can theStacc post to multiple webhook URLs?**
+
+Yes — set up multiple Custom Webhook integrations on the same project. Each gets its own URL, secret, and headers, and theStacc fires every published blog at every active integration.
+
+**Does an agent or the MCP server publishing my blog use a different webhook?**
+
+No. Whether a teammate clicks Publish or an automation publishes through the MCP server, the publish flows through the same path and fires the same webhook events at the same URL. See [Agent Keys & MCP](/docs/developers/agent-keys-mcp).
+
+**What happens if I delete a blog in theStacc?**
+
+We send `event: "blog.deleted"` with the `blog_id` and `title`. Your handler should remove or hide the post. If your receiver fails, the blog stays deleted in theStacc but lingers on your site — periodic reconciliation via the [Public Blog API](/docs/developers/public-blog-api) is a defensive option.
+
+## Next steps
+
+- Set up the integration in [Connect Platforms](/docs/integrations/overview)
+- Understand failure handling in [Publishing Errors & Retries](/docs/content-seo/publishing-errors)
+- Automate publishing with [Agent Keys & MCP](/docs/developers/agent-keys-mcp)
+- Backfill historical content with the [Public Blog API](/docs/developers/public-blog-api)

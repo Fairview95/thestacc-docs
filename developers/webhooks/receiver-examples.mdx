@@ -1,0 +1,256 @@
+---
+title: "Receiver examples"
+description: "Each example is production-ready: it handles every event, verifies HMAC, dedupes by blog_id, and returns the expected response shape."
+---
+
+Each example is **production-ready** — it handles every event type, verifies the HMAC signature, dedupes via `blog_id`, and returns the response shape theStacc expects.
+
+<CodeGroup>
+
+```typescript Next.js (App Router)
+// app/api/stacc-webhook/route.ts
+import crypto from 'crypto';
+
+const SECRET = process.env.STACC_WEBHOOK_SECRET!;
+
+export async function POST(request: Request) {
+  // CRITICAL: read raw bytes BEFORE parsing JSON.
+  // request.json() consumes the stream and re-serializing
+  // would change byte order/whitespace -> signature mismatch.
+  const rawBody = await request.text();
+
+  const sig = request.headers.get('x-webhook-signature') || '';
+  const expected = crypto.createHmac('sha256', SECRET).update(rawBody).digest('hex');
+
+  // Decode both before comparing. Buffer.from with invalid hex returns
+  // a shorter buffer (Node stops at the first non-hex char) which would
+  // make timingSafeEqual throw RangeError instead of returning false.
+  const sigBuf = Buffer.from(sig, 'hex');
+  const expBuf = Buffer.from(expected, 'hex');
+  const valid =
+    sigBuf.length === expBuf.length
+    && crypto.timingSafeEqual(sigBuf, expBuf);
+
+  if (!valid) {
+    return new Response('Invalid signature', { status: 401 });
+  }
+
+  const body = JSON.parse(rawBody);
+
+  if (body.event === 'test.ping') {
+    return Response.json({ ok: true });
+  }
+
+  if (body.event === 'blog.published' || body.event === 'blog.updated') {
+    if (body.blog_id?.startsWith('preview-')) {
+      return Response.json({ ok: true, skipped: true });
+    }
+    const post = await db.thestaccBlog.upsert({
+      where: { blogId: body.blog_id },
+      create: {
+        blogId: body.blog_id,
+        title: body.title,
+        slug: body.slug,
+        content: body.content,
+        excerpt: body.excerpt || null,
+        metaTitle: body.meta_title || null,
+        metaDescription: body.meta_description || null,
+        featuredImageUrl: body.featured_image_url || null,
+        keyword: body.keyword || null,
+        categories: body.categories || [],
+        tags: body.tags || [],
+        publishedAt: new Date(body.published_at),
+        lastEvent: body.event,
+      },
+      update: {
+        title: body.title,
+        slug: body.slug,
+        content: body.content,
+        excerpt: body.excerpt || null,
+        metaTitle: body.meta_title || null,
+        metaDescription: body.meta_description || null,
+        featuredImageUrl: body.featured_image_url || null,
+        keyword: body.keyword || null,
+        categories: body.categories || [],
+        tags: body.tags || [],
+        publishedAt: new Date(body.published_at),
+        lastEvent: body.event,
+        isUnpublished: false,
+      },
+    });
+    return Response.json({
+      ok: true,
+      url: `https://example.com/blog/${post.slug}`,
+      id: post.blogId,
+    });
+  }
+
+  if (body.event === 'blog.unpublished' || body.event === 'blog.deleted') {
+    await db.thestaccBlog.update({
+      where: { blogId: body.blog_id },
+      data: { isUnpublished: true, lastEvent: body.event },
+    });
+    return Response.json({ ok: true });
+  }
+
+  return Response.json({ error: 'Unknown event' }, { status: 400 });
+}
+```
+
+```javascript Express
+import express from 'express';
+import crypto from 'crypto';
+
+const app = express();
+const SECRET = process.env.STACC_WEBHOOK_SECRET;
+
+// CRITICAL: capture raw body BEFORE express.json() parses it.
+app.post('/api/stacc-webhook',
+  express.raw({ type: 'application/json' }),
+  async (req, res) => {
+    const raw = req.body; // Buffer
+    const sig = req.get('x-webhook-signature') || '';
+    const expected = crypto.createHmac('sha256', SECRET).update(raw).digest('hex');
+
+    const sigBuf = Buffer.from(sig, 'hex');
+    const expBuf = Buffer.from(expected, 'hex');
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      return res.status(401).send('Invalid signature');
+    }
+
+    const body = JSON.parse(raw.toString('utf8'));
+    // ... handle body.event as in the Next.js example
+    res.json({ ok: true });
+  }
+);
+```
+
+```typescript Astro (server endpoint)
+// src/pages/api/stacc-webhook.ts
+import type { APIRoute } from 'astro';
+import crypto from 'crypto';
+
+export const prerender = false; // server-rendered, not static
+
+const SECRET = import.meta.env.STACC_WEBHOOK_SECRET;
+
+export const POST: APIRoute = async ({ request }) => {
+  const raw = await request.text();
+  const sig = request.headers.get('x-webhook-signature') || '';
+  const expected = crypto.createHmac('sha256', SECRET).update(raw).digest('hex');
+
+  const sigBuf = Buffer.from(sig, 'hex');
+  const expBuf = Buffer.from(expected, 'hex');
+  if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+    return new Response('Invalid signature', { status: 401 });
+  }
+
+  const body = JSON.parse(raw);
+  // ... handle events as in the Next.js example
+  return new Response(JSON.stringify({ ok: true }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+```
+
+```python Python / FastAPI
+import hmac, hashlib, os, json
+from fastapi import FastAPI, Request, HTTPException
+
+app = FastAPI()
+SECRET = os.environ["STACC_WEBHOOK_SECRET"].encode()
+
+@app.post("/api/stacc-webhook")
+async def receive(request: Request):
+    raw = await request.body()  # bytes — DON'T re-serialize
+    sig = request.headers.get("x-webhook-signature", "")
+    expected = hmac.new(SECRET, raw, hashlib.sha256).hexdigest()
+
+    if not hmac.compare_digest(expected, sig):
+        raise HTTPException(401, "Invalid signature")
+
+    body = json.loads(raw)
+
+    if body["event"] == "test.ping":
+        return {"ok": True}
+
+    if body["event"] in ("blog.published", "blog.updated"):
+        if body.get("blog_id", "").startswith("preview-"):
+            return {"ok": True, "skipped": True}
+        # ... upsert into your DB on blog_id
+        return {
+            "ok": True,
+            "url": f"https://example.com/blog/{body['slug']}",
+            "id": body["blog_id"],
+        }
+
+    if body["event"] in ("blog.unpublished", "blog.deleted"):
+        # ... soft-delete by blog_id
+        return {"ok": True}
+
+    raise HTTPException(400, "Unknown event")
+```
+
+```python Python / Flask
+import hmac, hashlib, os
+from flask import Flask, request, abort, jsonify
+
+app = Flask(__name__)
+SECRET = os.environ["STACC_WEBHOOK_SECRET"].encode()
+
+@app.post("/api/stacc-webhook")
+def receive():
+    raw = request.get_data()
+    sig = request.headers.get("X-Webhook-Signature", "")
+    expected = hmac.new(SECRET, raw, hashlib.sha256).hexdigest()
+
+    if not hmac.compare_digest(expected, sig):
+        abort(401)
+
+    body = request.get_json(force=True)
+    # ... same event branching as the FastAPI example
+    return jsonify({"ok": True})
+```
+
+```php PHP
+<?php
+$raw = file_get_contents('php://input');
+$sig = $_SERVER['HTTP_X_WEBHOOK_SIGNATURE'] ?? '';
+$expected = hash_hmac('sha256', $raw, getenv('STACC_WEBHOOK_SECRET'));
+
+if (!hash_equals($expected, $sig)) {
+    http_response_code(401);
+    exit('Invalid signature');
+}
+
+$body = json_decode($raw, true);
+
+switch ($body['event']) {
+    case 'test.ping':
+        echo json_encode(['ok' => true]);
+        break;
+    case 'blog.published':
+    case 'blog.updated':
+        if (str_starts_with($body['blog_id'] ?? '', 'preview-')) {
+            echo json_encode(['ok' => true, 'skipped' => true]);
+            break;
+        }
+        // ... upsert into DB on blog_id
+        echo json_encode([
+            'ok'  => true,
+            'url' => "https://example.com/blog/{$body['slug']}",
+            'id'  => $body['blog_id'],
+        ]);
+        break;
+    case 'blog.unpublished':
+    case 'blog.deleted':
+        // ... soft-delete
+        echo json_encode(['ok' => true]);
+        break;
+    default:
+        http_response_code(400);
+        echo json_encode(['error' => 'Unknown event']);
+}
+```
+
+</CodeGroup>

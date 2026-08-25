@@ -41,7 +41,7 @@ theStacc publishes to all of these. Connect one as your active destination under
 - **Custom Webhook** - sends each publish as JSON to any HTTP endpoint you control, for sites and CMSes not directly supported.
 - **Shopify (beta)** - publishes to your Shopify store's built-in blog, connected with a secure OAuth sign-in.
 
-For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/docs/content-seo/connect-platforms).
+For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/docs/integrations/overview).
 
 ### One active destination at a time
 
@@ -102,7 +102,7 @@ If you publish through a custom webhook, your receiver gets a JSON request for e
 
 Respond to publish events with a `2xx` status and a JSON body like `{"ok": true, "url": "<live-post-url>", "id": "<your-cms-id>"}` so theStacc can store the live URL and show a clickable **View live post** link. The `id` you return is remembered so later updates, unpublishes, and deletes can target the right record.
 
-For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/docs/content-seo/connect-platforms) and the [Webhook Reference](/docs/developers/webhook-reference).
+For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/docs/integrations/overview) and the [Webhook Reference](/docs/developers/webhooks/overview).
 
 ## Managing connections
 
@@ -117,6 +117,6 @@ Each saved connection shows:
 ## Related articles
 
 - [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes) - control whether blogs publish automatically, wait for approval, or stay drafts.
-- [Connect Platforms](/docs/content-seo/connect-platforms) - step-by-step setup for every supported platform and the custom webhook.
+- [Connect Platforms](/docs/integrations/overview) - step-by-step setup for every supported platform and the custom webhook.
 - [Publishing Errors & Retries](/docs/content-seo/publishing-errors) - what each publish error means and how to fix it.
 - [Internal Linking](/docs/content-seo/internal-linking) - set up the internal links that placeholders resolve to at publish time.

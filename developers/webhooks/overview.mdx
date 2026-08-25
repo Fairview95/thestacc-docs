@@ -1,0 +1,46 @@
+---
+title: "Webhooks overview"
+description: "This is the end-to-end reference for theStacc's Custom Webhook integration."
+---
+
+This is the **end-to-end reference** for theStacc's Custom Webhook integration. It covers everything a developer needs to ship a production receiver: how authentication works, every event we send, every field we put in the payload, what to return, how retries and idempotency behave, and ready-to-paste receiver and database-schema examples.
+
+> **Quick orientation:** if you're configuring this from theStacc's dashboard, start at [Connect Platforms](/docs/integrations/overview) and choose Custom Webhook. This page is for the developer who needs to build (or audit) the receiving endpoint. For what happens when a publish fails and how to recover, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+
+## When to use a webhook
+
+Choose the Custom Webhook integration when:
+
+- Your site is built on a **custom stack** — Next.js, Astro, Remix, SvelteKit, Rails, Django, Laravel, etc. (anything that isn't one of our direct integrations).
+- You want **full control** over what happens when a blog publishes — write to your own database, trigger a rebuild, push to a CDN, fan out to other systems.
+- You already have a CMS but want **theStacc to write into it via your own API**, not theStacc's direct integrations.
+
+If you use WordPress, Webflow, Ghost, Shopify, or Zepio, use those integrations instead — they handle authentication, image uploads, and field mapping for you. See [Connect Platforms](/docs/integrations/overview) for the full list.
+
+## How the handshake works
+
+theStacc uses **stateless per-request authentication** via a shared secret — the same model as Stripe, GitHub, and Slack webhooks. There is **no OAuth dance, no token exchange, no TLS-mutual-auth**. The "handshake" happens once during setup: both sides record the same secret, then every subsequent request is independently signed and verified.
+
+### Step 1 — One-time setup
+
+The developer pastes a Webhook URL and Secret Key into the **Content SEO \> Settings \> Publishing** dialog when adding a Custom Webhook. theStacc stores the secret; the developer keeps a copy in an env var on their server. After this, both sides hold the same secret.
+
+<Frame caption="Webhook one-time setup — developer pastes URL + Secret Key into theStacc dashboard, theStacc stores it">
+
+![Webhook one-time setup — developer pastes URL + Secret Key into theStacc dashboard, theStacc stores it](/images/docs/webhook-setup.webp)
+
+</Frame>
+
+### Step 2 — Per request (every blog publish, sync, unpublish, delete)
+
+theStacc serializes the payload to JSON, computes `sig = HMAC-SHA256(secret, body)`, and POSTs the body to your webhook URL with the signature in the `X-Webhook-Signature` header. Your receiver reads the **raw body bytes** (not the parsed JSON), recomputes the same HMAC with its own copy of the secret, and compares. If the two signatures match, the request is authentic — process it and respond `200` with the live URL and your CMS id. If they don't, return `401`.
+
+<Frame caption="Webhook per-request signing flow — theStacc signs body with HMAC-SHA256 and sends X-Webhook-Signature header; receiver verifies and returns 200 OK with url and id">
+
+![Webhook per-request signing flow — theStacc signs body with HMAC-SHA256 and sends X-Webhook-Signature header; receiver verifies and returns 200 OK with url and id](/images/docs/webhook-signing.webp)
+
+</Frame>
+
+Both sides compute the same signature independently. If they match, the receiver knows the request **really came from theStacc** and **wasn't modified in transit**. That's the entire authentication mechanism.
+
+> **The shared secret is the entire defense.** Anyone who guesses your webhook URL but doesn't know the secret cannot forge a request. Treat it like a database password — store it in env vars, rotate it if leaked, and never commit it to git.

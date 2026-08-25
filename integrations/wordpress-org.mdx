@@ -1,0 +1,18 @@
+---
+title: "WordPress.org"
+description: "Self-hosted WordPress sites."
+---
+
+Self-hosted WordPress sites. Connect with an **Application Password** — a WordPress feature made specifically for apps like theStacc, so you never share your real login password.
+
+1. In your WordPress admin, go to **Users \> Profile \> Application Passwords**.
+2. Create a new password and name it `theStacc`.
+3. Copy the generated password.
+4. In theStacc, click **Connect WordPress.org (self-hosted)**, then enter your **site URL**, your **WordPress username** (your login username, not your display name), and the **application password**.
+5. theStacc tests the connection as you save. If it succeeds, you're connected; if not, you'll get a specific reason (see the error table below).
+
+Requires WordPress 5.6+ with the REST API enabled (on by default). HTTPS is recommended.
+
+**About the application password field.** WordPress shows application passwords as groups separated by spaces (for example `abcd 1234 efgh 5678 ijkl 9012`). You can paste it with or without the spaces — theStacc strips them for you. After stripping spaces it must be **8 to 200 characters** and contain **only letters and numbers**. If it contains special characters, theStacc rejects it on the spot, because that almost always means you pasted your normal WordPress login password by mistake. Generate a real Application Password from **Users \> Profile \> Application Passwords** instead.
+
+**Publishing permission.** The WordPress user must be an **Administrator, Editor, or Author** — those are the roles that can create posts. If the user can sign in but can't publish, theStacc tells you the exact role it found and which roles are allowed.

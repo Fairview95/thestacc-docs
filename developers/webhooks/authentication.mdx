@@ -1,0 +1,60 @@
+---
+title: "Authentication"
+description: "When you configure a webhook secret, every request includes a signature in the X-Webhook-Signature header."
+---
+
+When you configure a webhook secret, every request includes a signature in the `X-Webhook-Signature` header.
+
+## How theStacc generates the signature
+
+```python
+# What runs in production
+import hmac, hashlib
+
+signature = hmac.new(
+    secret.encode(),
+    payload_bytes,   # the EXACT bytes POSTed in the body
+    hashlib.sha256,
+).hexdigest()
+
+headers = {
+    "Content-Type": "application/json",
+    "X-Webhook-Signature": signature,  # 64-char lowercase hex string
+}
+```
+
+**Critical detail:** the signature is always computed over the **exact bytes theStacc puts on the wire**, and theStacc POSTs those same bytes as the body. Your receiver MUST hash the **raw body bytes it received**, not parse-and-re-serialize the JSON. If you re-serialize, whitespace and key order can shift and the signature won't match. This is the single most common integration mistake.
+
+> **Why "hash the raw bytes" matters even more than it looks.** theStacc has two internal publish paths — a manual path (you click Publish) and an autopilot path (theStacc publishes on a schedule). The two paths serialize the JSON slightly differently internally (one compact, one with spacing), but **each path always signs the exact bytes it sends**. A receiver that hashes the raw body works identically on both paths. A receiver that re-serializes the parsed JSON can pass on one path and fail on the other. Hash the raw bytes and you never have to think about this.
+
+## Properties of the signature
+
+| Property | Behavior |
+| --- | --- |
+| Deterministic | Same secret + same body bytes always produce the same signature |
+| Body-bound | Even one byte different in the body produces a completely different signature |
+| Length | Always 64 hex characters (256 bits) |
+| Format | Lowercase hex, no `sha256=` prefix on the `X-Webhook-Signature` header |
+
+## Legacy `X-Fairview-Signature` compatibility header
+
+On autopilot (scheduled) publishes, theStacc sends a **second** signature header alongside `X-Webhook-Signature`:
+
+```
+X-Webhook-Signature: 9f86d08...            (64-char hex, no prefix)
+X-Fairview-Signature: sha256=9f86d08...    (same hex, with a sha256= prefix)
+```
+
+`X-Fairview-Signature` is a **legacy compatibility header** retained for receivers built before the standard `X-Webhook-Signature` header existed. Both headers carry the **same** HMAC-SHA256 of the same body bytes, so you can verify against either one. New receivers should read `X-Webhook-Signature` and ignore `X-Fairview-Signature`. Note that `X-Fairview-Signature` is `sha256=`-prefixed, so strip the `sha256=` prefix before comparing if you choose to use it.
+
+## Replay-attack note
+
+HMAC alone doesn't prevent replay — if an attacker captures a signed request, the signature still validates if they replay the exact same bytes. theStacc embeds a fresh `published_at` UTC timestamp in every blog event, so receivers can defend by rejecting requests older than a few minutes:
+
+```javascript
+const sentAt = new Date(body.published_at);
+const ageSec = (Date.now() - sentAt.getTime()) / 1000;
+if (ageSec > 300) return new Response('Too old, possible replay', { status: 401 });
+```
+
+For most receivers this isn't necessary — the dominant threat is "someone guessed our webhook URL" and HMAC fully defends against that.

@@ -1,0 +1,224 @@
+---
+title: "Custom webhook"
+description: "Send blog posts to any platform via HTTP."
+---
+
+Send blog posts to any platform via HTTP. Works with any system that accepts HTTP POST requests — a custom CMS, a static-site build pipeline, an internal tool, or a no-code automation.
+
+> **Building the receiver?** See the [Webhook Reference](/docs/developers/webhooks/overview) for the full developer guide — handshake, signing, every event, every field, response contract, database schemas, and ready-to-paste receiver examples in 6 languages.
+
+1. Click **Add Webhook**.
+2. Enter your **Webhook URL**.
+3. Add an optional **Secret Key** — when set, theStacc signs every request so your receiver can verify it really came from theStacc. The secret must be **at least 16 characters** (and at most 256).
+4. Add **custom headers** (optional) — for authentication tokens, API keys, or routing.
+5. Click **Test Connection** to verify the URL is reachable.
+6. Click **Sample Payload** to send the real publish-shape JSON and validate your parser.
+
+## Two events your receiver must handle
+
+theStacc sends a different payload shape for each button. Branch on the `event` field — your receiver should handle both, or it will fail Test Connection even when the publish path works.
+
+**`event: "test.ping"`** — fired by **Test Connection**. Liveness probe only. No blog fields.
+
+```json
+{
+  "event": "test.ping",
+  "message": "This is a test from theStacc",
+  "timestamp": "2026-04-30T12:00:00Z"
+}
+```
+
+Respond `200 {"ok": true}`. Do **not** require `title`, `slug`, or `content` for this event — there are none.
+
+**`event: "blog.published"`** — fired on every real publish (and by **Sample Payload** with a `preview-` prefixed `blog_id` for receiver validation).
+
+```json
+{
+  "event": "blog.published",
+  "blog_id": "8f3e...",
+  "title": "10 SEO mistakes to avoid in 2026",
+  "slug": "10-seo-mistakes-to-avoid-in-2026",
+  "content": "<h2>Introduction</h2><p>...</p>",
+  "excerpt": "Short description...",
+  "excerpt_short": "Short description... (≤256 chars, word-boundary trimmed)",
+  "meta_title": "10 SEO mistakes to avoid in 2026",
+  "meta_description": "...",
+  "featured_image_url": "https://cdn.thestacc.com/blogs/...jpg",
+  "categories": ["SEO"],
+  "tags": ["seo", "2026"],
+  "keyword": "seo mistakes 2026",
+  "published_at": "2026-04-30T12:00:00Z"
+}
+```
+
+If `blog_id` starts with `preview-`, it's a sample call — accept it but skip your CMS write so test runs don't pollute your database.
+
+## What to return so the live URL appears in theStacc
+
+Respond with `200` (or `201`) and a JSON body containing the live post URL. theStacc reads the response and stores both fields against the blog so the dashboard shows a clickable **View live post** link.
+
+```json
+{
+  "ok": true,
+  "url": "https://your-cms.com/blog/10-seo-mistakes-to-avoid-in-2026",
+  "id": "internal-cms-post-id"
+}
+```
+
+- **`url`** (or `published_url`) — the public URL of the blog on your site. If omitted, theStacc shows a \*"Sent to webhook — your receiver didn't return a public URL"\* warning.
+- **`id`** — your internal CMS post id. Stored as `external_post_id` so future updates / unpublishes can target the right record.
+
+For preview calls (`blog_id` starts with `preview-`), it's fine to skip both fields and return `{"ok": true, "skipped": true}`.
+
+## Minimal receiver example (Next.js / Vercel)
+
+```javascript
+export async function POST(request) {
+  const body = await request.json();
+
+  if (body.event === "test.ping") {
+    return Response.json({ ok: true });
+  }
+
+  if (body.event === "blog.published") {
+    if (body.blog_id?.startsWith("preview-")) {
+      return Response.json({ ok: true, skipped: true });
+    }
+    const post = await cms.posts.create({
+      title: body.title,
+      slug: body.slug,
+      content: body.content,
+      // ...
+    });
+    return Response.json({
+      ok: true,
+      url: `https://your-cms.com/blog/${post.slug}`,
+      id: post.id,
+    });
+  }
+
+  return Response.json({ error: "Unknown event" }, { status: 400 });
+}
+```
+
+## Verify webhook signatures (recommended)
+
+When you configure a webhook secret, theStacc signs every request with HMAC-SHA256 and sends the hex digest in the `X-Webhook-Signature` header. Verify it on every request — without verification, anyone who guesses your endpoint URL can post fake blogs to your CMS.
+
+**Critical:** the signature is computed over the **raw request body** that theStacc sent, which is JSON serialized in compact form (`json.dumps(payload, separators=(',', ':'))` — no whitespace between keys and values). If you re-serialize the parsed JSON before hashing, the byte-for-byte representation will differ and the hashes won't match. **Always hash the raw bytes you receive over the wire.**
+
+**Node.js / Next.js:**
+
+```javascript
+import crypto from 'crypto';
+
+export async function POST(request) {
+  const rawBody = await request.text();           // raw bytes — do NOT parse first
+  const sigHeader = request.headers.get('x-webhook-signature') || '';
+  const expected = crypto
+    .createHmac('sha256', process.env.STACC_WEBHOOK_SECRET)
+    .update(rawBody)
+    .digest('hex');
+
+  // Length-check before timingSafeEqual — Node throws RangeError on
+  // mismatched buffer lengths (e.g. when a probe sends a short or
+  // empty X-Webhook-Signature). Crashing the receiver on every
+  // garbage probe is a worse failure mode than 401-rejecting.
+  const sigBuf = Buffer.from(sigHeader, 'utf8');
+  const expBuf = Buffer.from(expected, 'utf8');
+  if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+    return new Response('Invalid signature', { status: 401 });
+  }
+
+  const body = JSON.parse(rawBody);
+  // ... handle event
+}
+```
+
+**Python / FastAPI:**
+
+```python
+import hmac, hashlib, os
+from fastapi import FastAPI, Request, HTTPException
+
+app = FastAPI()
+SECRET = os.environ["STACC_WEBHOOK_SECRET"].encode()
+
+@app.post("/stacc-webhook")
+async def receive(request: Request):
+    raw = await request.body()
+    sig = request.headers.get("x-webhook-signature", "")
+    expected = hmac.new(SECRET, raw, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, sig):
+        raise HTTPException(401, "Invalid signature")
+    body = await request.json()
+    # ... handle event
+```
+
+**Python / Flask:**
+
+```python
+import hmac, hashlib, os
+from flask import Flask, request, abort
+
+app = Flask(__name__)
+SECRET = os.environ["STACC_WEBHOOK_SECRET"].encode()
+
+@app.post("/stacc-webhook")
+def receive():
+    raw = request.get_data()
+    sig = request.headers.get("X-Webhook-Signature", "")
+    expected = hmac.new(SECRET, raw, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, sig):
+        abort(401)
+    body = request.get_json()
+    # ... handle event
+```
+
+**PHP:**
+
+```php
+<?php
+$raw = file_get_contents('php://input');
+$sig = $_SERVER['HTTP_X_WEBHOOK_SIGNATURE'] ?? '';
+$expected = hash_hmac('sha256', $raw, getenv('STACC_WEBHOOK_SECRET'));
+if (!hash_equals($expected, $sig)) {
+    http_response_code(401);
+    exit('Invalid signature');
+}
+$body = json_decode($raw, true);
+// ... handle event
+```
+
+If no webhook secret is configured, the `X-Webhook-Signature` header is omitted and your receiver must trust the URL alone — fine for development, **not** recommended in production.
+
+## All event types
+
+theStacc emits five different events on the same webhook URL. Branch on `event`.
+
+| Event | When fired | Payload |
+| --- | --- | --- |
+| `test.ping` | Test Connection button | `{event, message, timestamp}` |
+| `blog.published` | First successful publish | full blog payload (see above) |
+| `blog.updated` | Re-publish of an existing blog | full blog payload — same shape as `blog.published` |
+| `blog.unpublished` | User unpublishes from theStacc | `{event, blog_id, title}` |
+| `blog.deleted` | User deletes a published blog | `{event, blog_id, title}` |
+
+For `blog.updated` / `blog.unpublished` / `blog.deleted`, look up the post in your CMS using the `external_post_id` you returned from `blog.published` (theStacc stores it and sends `blog_id` so you can map back).
+
+## Operational details
+
+- **Timeout:** theStacc waits up to **15 seconds** for a 2xx response. Slow CMS writes (image uploads, search indexing) will time out — return 2xx fast and do heavy work async.
+- **No automatic retries.** A 5xx or timeout fails the publish in theStacc and the user sees a "Failed to publish" toast. If your endpoint is occasionally slow, queue the actual CMS write internally and return 2xx immediately.
+- **Redirects rejected.** A 3xx response is treated as failure (anti-SSRF guardrail; a public webhook receiver that 302s to an internal address would otherwise bypass URL safety checks).
+- **HTTPS only.** `http://` URLs and internal/private IP ranges are rejected at save time.
+- **Idempotency.** Use `blog_id` as a dedupe key. If theStacc ever resends (manual user retry), you'll see the same `blog_id`.
+- **Test before writing receiver code.** Point your webhook at [webhook.site](https://webhook.site) or [requestbin.com](https://requestbin.com) first to inspect the actual request body and headers, then build your receiver against the real shape.
+
+## Best practices
+
+- Use HTTPS — theStacc rejects `http://` and internal addresses.
+- Return a 2xx status code. Redirects (3xx) are rejected.
+- Verify the `X-Webhook-Signature` header on every request when a secret is set.
+- Idempotency — use `blog_id` as a dedupe key in case of retries.
+- Set up error alerting on your endpoint so silent 4xx/5xx responses don't go unnoticed.

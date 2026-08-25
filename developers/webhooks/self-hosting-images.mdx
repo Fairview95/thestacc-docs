@@ -1,0 +1,97 @@
+---
+title: "Self-hosting images"
+description: "By default, every img inside content and the featured_image_url point at theStacc's CDN (cdn.thestacc.com), served to your visitors directly."
+---
+
+By default, every `<img>` inside `content` and the `featured_image_url` point at theStacc's CDN (`cdn.thestacc.com`), served to your visitors directly. That's the simplest setup and works out of the box.
+
+For deeper CMS integration, many sites prefer to host blog images on their own storage alongside the rest of their media library. The `images` array makes that a one-pass mirror with no HTML parsing required.
+
+## How it works
+
+The `images` field is a list of `{url, alt}` objects — one per `<img>` in the `content` body, in document order, with duplicates collapsed. Each `url` is byte-for-byte identical to what's in the corresponding `src=` attribute inside `content`, so a plain string find/replace handles the swap reliably.
+
+```javascript
+let content = body.content;
+
+// 1. Mirror every body image.
+for (const img of body.images || []) {
+  const bytes = await fetch(img.url).then(r => r.arrayBuffer());
+  const newUrl = await uploadToMyStorage(bytes, suggestFilename(img.url));
+  // The URL string IS the stable identifier — find/replace by full src=.
+  content = content.replaceAll(`src="${img.url}"`, `src="${newUrl}"`);
+}
+
+// 2. Mirror the featured image separately. It's a top-level field, not
+//    in images[] — most CMSes have a dedicated featured-image slot.
+let featuredUrl = body.featured_image_url;
+if (featuredUrl) {
+  const bytes = await fetch(featuredUrl).then(r => r.arrayBuffer());
+  featuredUrl = await uploadToMyStorage(bytes, suggestFilename(featuredUrl));
+}
+
+// 3. Store `content` (with rewritten src=) and `featuredUrl` in your CMS.
+```
+
+That's the entire pattern. No HTML parser, no DOM library, no positional tracking — the URL is the identifier.
+
+## Python receiver
+
+```python
+content = body["content"]
+
+# 1. Mirror body images.
+for img in body.get("images", []):
+    blob = httpx.get(img["url"]).content
+    new_url = upload_to_my_storage(blob, suggest_filename(img["url"]))
+    content = content.replace(f'src="{img["url"]}"', f'src="{new_url}"')
+
+# 2. Mirror the featured image separately.
+featured_url = body.get("featured_image_url")
+if featured_url:
+    blob = httpx.get(featured_url).content
+    featured_url = upload_to_my_storage(blob, suggest_filename(featured_url))
+
+# 3. Persist content + featured_url to your CMS.
+```
+
+## Security: allowlist your fetch host
+
+Whenever a server-side handler downloads URLs from any external source, allowlist trusted hosts before issuing the request. For theStacc images, the trusted host is `cdn.thestacc.com`:
+
+```javascript
+const ALLOWED_HOSTS = new Set(['cdn.thestacc.com']);
+
+async function safeFetch(url) {
+  const parsed = new URL(url);
+  if (parsed.protocol !== 'https:') throw new Error(`Refusing non-HTTPS URL: ${url}`);
+  if (!ALLOWED_HOSTS.has(parsed.hostname)) throw new Error(`Untrusted host: ${parsed.hostname}`);
+  return fetch(url);
+}
+
+for (const img of body.images || []) {
+  const bytes = await safeFetch(img.url).then(r => r.arrayBuffer());
+  // ...then upload + find/replace as before.
+}
+```
+
+Apply the same allowlist to `featured_image_url`. With it in place, every body and featured image fetches through a single auditable choke point.
+
+## Notes
+
+- **Featured image is NOT in `images[]`.** It's a separate top-level field (`featured_image_url`). theStacc strips the inline hero from `content` before sending so the page doesn't render the same image twice.
+- **Duplicate URLs are deduped.** If the same body image appears twice, the array lists it once. Your `content.replaceAll(...)` swaps every occurrence in one pass anyway.
+- **`alt` may be empty.** Decorative images and images the generator didn't caption ship with `alt: ""`. Pass it through verbatim to preserve accessibility on your re-hosted copy.
+- **Backward compatible.** Receivers that ignore `images` continue working unchanged — every other field is identical to before this field was added.
+- **The URL is the stable identifier.** theStacc does not inject any per-image marker attribute into the `<img>` tags. URLs in `images[]` mirror `content` verbatim, so a one-to-one find/replace works without any normalization step.
+
+## Migrating blogs already published with theStacc's URLs
+
+If you have blogs already in your CMS with theStacc CDN URLs and you want to switch them to self-hosted images:
+
+1. Open each blog in theStacc and click **Publish** to re-publish.
+2. The webhook fires as `blog.updated` with the `images` array.
+3. Your receiver runs the mirror loop above and updates the post (same `blog_id` means the same CMS record).
+4. The CMS post now stores your URLs instead of theStacc's.
+
+There's no bulk-republish API — for most accounts this is a one-shot migration of a handful of posts.

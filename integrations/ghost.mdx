@@ -1,0 +1,15 @@
+---
+title: "Ghost"
+description: "Publish directly to your Ghost blog via the Ghost Admin API."
+---
+
+Publish directly to your Ghost blog via the Ghost Admin API.
+
+1. Click **Connect Ghost**.
+2. Enter your **Ghost site URL** (for example `https://myblog.com`).
+3. Enter your **Ghost Admin API key**. Create one in **Ghost Admin \> Settings \> Integrations \> Add custom integration** — the Admin API key looks like `{id}:{secret}`.
+4. theStacc tests the connection as you save.
+
+Posts are created with full content, featured images, tags, and meta data.
+
+**Key format.** The Admin API key must be in `{id}:{secret}` form and **20 to 200 characters** long. The `{secret}` half must be valid hexadecimal — that's how Ghost keys are issued — and theStacc uses it to sign a short-lived token when it talks to your site. If the format is off, you'll see \*"Invalid API key format. Expected format: &#123;id&#125;:&#123;secret&#125;"\* or \*"Invalid API key secret — must be a valid hex string."\*

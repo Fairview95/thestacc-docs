@@ -1,0 +1,68 @@
+---
+title: "Static site integration"
+description: "This guide walks you through connecting theStacc to your static site."
+---
+
+This guide walks you through connecting theStacc to your static site. By the end, your site will automatically display AI-generated blog posts — fully rendered as static HTML for perfect SEO.
+
+It uses the [Public Blog API](/docs/developers/public-blog-api), which exposes your published posts as JSON. Your site fetches that JSON at build time and turns it into static HTML pages, so Google sees ordinary, fully rendered pages — it has no idea the content came from an API.
+
+## Prerequisites
+
+Before starting, make sure you have:
+
+1. A theStacc project with **Content SEO** enabled and at least one published blog
+2. Your **Public API Key** (more on where to find it below)
+3. A static site built with Astro, Next.js, Hugo, Nuxt, or any other static site generator
+4. Your site deployed on Cloudflare Pages, Vercel, Netlify, or similar
+
+## Overview
+
+The integration has three parts:
+
+1. **Fetch** — Your site calls the theStacc API at build time to get blog data
+2. **Render** — Your generator turns the API response into static HTML pages
+3. **Rebuild** — A deploy hook triggers a new build whenever you publish or unpublish a post
+
+This guide covers the first two parts. See [Deploy Hooks](/docs/developers/deploy-hooks) for automatic rebuilds.
+
+## Get your API key
+
+Every project has its own **Public API Key**. To find it, open your project and go to **Content \> Settings \> Publishing**, then scroll to the **API Access** section.
+
+In that section you'll see:
+
+- **Public API Key** — your key, starting with `pk_live_`. Use **Reveal** to show it and **Copy** to copy it to your clipboard.
+- **Rotate Key** — generates a brand-new key and immediately invalidates the old one. Use this if the key was ever exposed. After rotating, update the key everywhere you've stored it, or your builds will start failing.
+- **Revoke** — removes the key entirely. Any site using it will stop fetching content until you generate a new one.
+
+If you don't see a key yet, click **Generate API Key** to create one.
+
+Keep your API key private. Store it as an environment variable in your build process — never commit it to your repository.
+
+## Environment setup
+
+Store your API key as an environment variable. **Never hardcode it in your source files.**
+
+Create or update your `.env` file:
+
+```
+THESTACC_API_KEY=pk_live_your_key_here
+THESTACC_API_URL=https://api.thestacc.com/blog/api/v1/public/blogs
+```
+
+Add `.env` to your `.gitignore` if it's not already there.
+
+For your hosting platform, add the same variables in the dashboard so they're available during the build:
+
+- **Cloudflare Pages** — **Settings \> Environment variables**
+- **Vercel** — **Settings \> Environment Variables**
+- **Netlify** — **Site configuration \> Environment variables**
+
+The API base path is `https://api.thestacc.com/blog/api/v1/public/blogs`. The three endpoints you'll use are:
+
+- `GET /` — list published blogs (metadata only by default; add `include_content=true` for full HTML)
+- `GET /{slug}` — one published blog by slug (always includes full HTML content)
+- `GET /sitemap` — a lightweight list of slugs and dates for building your sitemap
+
+Full parameters, defaults, and response shapes are in the [Public Blog API reference](/docs/developers/public-blog-api).

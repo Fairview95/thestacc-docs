@@ -1,0 +1,42 @@
+---
+title: "Idempotency & retries"
+description: "How retries behave depends on which path published the blog."
+---
+
+How retries behave depends on which path published the blog. Both paths fire the same events at the same URL — the difference is whether theStacc retries automatically.
+
+## Manual publish (you click Publish)
+
+A manual publish is **single-shot**. If your endpoint times out (the request budget is ~30 seconds) or returns a non-2xx status, the publish fails immediately and the user sees a "Failed to publish" notice. The user clicks **Republish** to try again. theStacc does not auto-retry a manual publish.
+
+## Autopilot publish (theStacc publishes on a schedule)
+
+Autopilot publishes **retry automatically** on transient failures (a timeout, a network error, or a `5xx` from your receiver). theStacc makes up to **5 attempts** with exponential backoff — roughly **60s, then 120s, 240s, 480s, and 960s**, a full retry window of about **30 minutes**. After 5 failed attempts the publish is marked failed. A `4xx` from your receiver is treated as permanent and is **not** retried (fix your receiver and re-publish). For the full failure-and-recovery story, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+
+## Why your receiver must be idempotent
+
+Because autopilot retries, the same blog can arrive at your endpoint **more than once**. The classic case: theStacc POSTs, your CMS creates the post, but the response packet is lost in transit (a network blip), so theStacc sees a timeout and retries — and a naive receiver creates a **duplicate post**.
+
+Two fields on autopilot payloads exist specifically to defend against this:
+
+- **`idempotency_key`** — a string of the form `"{blog_id}:{lifecycle}"` that is **stable across every retry of a single publish** but **different across separate publish intents** (a fresh publish months later gets a different key). Persist the keys you've already processed and **short-circuit on a repeat** — that makes your receiver safe even if the same publish is delivered twice.
+- **`publish_attempt`** — an integer that is `1` on the first attempt and increments (`2`, `3`, ...) on each retry. It's primarily for your logs and observability: `publish_attempt > 1` tells you theStacc is retrying after a transient hiccup.
+
+Even without those fields, the simplest and most robust defense is to **UPSERT on `blog_id`** so duplicate deliveries (or a user clicking Republish twice) converge on the same row instead of creating two posts.
+
+## How theStacc itself avoids duplicates (direct CMS integrations)
+
+For theStacc's own direct integrations (WordPress, Webflow, Ghost, Shopify), before re-POSTing on a retry theStacc looks up the target CMS **by slug** and treats an existing post as "already published by us" only if it matches a **fingerprint**: the same title **and** a creation timestamp **within a ~35-minute window** (which comfortably covers the ~30-minute retry sequence plus headroom). If that fingerprint matches, theStacc reuses the existing post instead of creating a duplicate. You don't need to implement this for a webhook receiver — `idempotency_key` plus an UPSERT on `blog_id` is simpler and just as safe — but the `slug` field plus the ~35-minute window is the same idea you can mirror if your CMS lacks a stable id.
+
+## Respond fast, do heavy work async
+
+If your CMS write involves image processing, search re-indexing, or CDN purging, run those in a background job **after** responding `2xx`. A slow synchronous write risks timing out theStacc's request.
+
+```typescript
+export async function POST(request: Request) {
+  // ... verify signature, parse body ...
+  await db.thestaccBlog.upsert({ /* ... */ }); // fast — just writes the row
+  enqueueBackgroundJob('process-blog', body.blog_id); // image upload, ISR revalidate, search index
+  return Response.json({ ok: true, url, id });
+}
+```

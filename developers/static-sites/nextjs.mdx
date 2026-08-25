@@ -1,0 +1,104 @@
+---
+title: "Next.js"
+description: "Create the API helper, blog listing, and blog detail pages for Next.js App Router."
+---
+
+Create the API helper, blog listing, and blog detail pages for Next.js App Router.
+
+## Create the API helper
+
+Create `lib/thestacc.ts`:
+
+```typescript
+const API_KEY = process.env.THESTACC_API_KEY;
+const API_URL = process.env.THESTACC_API_URL;
+
+export async function getAllBlogs() {
+  const res = await fetch(`${API_URL}?api_key=${API_KEY}`, {
+    next: { revalidate: false },
+  });
+  if (!res.ok) throw new Error('Failed to fetch blogs');
+  const data = await res.json();
+  return data.blogs;
+}
+
+export async function getBlogBySlug(slug: string) {
+  const res = await fetch(`${API_URL}/${slug}?api_key=${API_KEY}`, {
+    next: { revalidate: false },
+  });
+  if (!res.ok) return null;
+  return await res.json();
+}
+```
+
+## Create the blog listing page
+
+Create `app/blog/page.tsx`:
+
+```tsx
+import { getAllBlogs } from '@/lib/thestacc';
+import Link from 'next/link';
+import Image from 'next/image';
+
+export default async function BlogPage() {
+  const blogs = await getAllBlogs();
+
+  return (
+    <main>
+      <h1>Blog</h1>
+      <div className="blog-grid">
+        {blogs.map((blog) => (
+          <Link key={blog.id} href={`/blog/${blog.slug}`}>
+            <Image src={blog.featured_image_url} alt={blog.title} width={800} height={400} />
+            <h2>{blog.title}</h2>
+            <p>{blog.excerpt}</p>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
+}
+```
+
+## Create the blog detail page
+
+Create `app/blog/[slug]/page.tsx`:
+
+```tsx
+import { getAllBlogs, getBlogBySlug } from '@/lib/thestacc';
+import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+  const blogs = await getAllBlogs();
+  return blogs.map((blog) => ({ slug: blog.slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const blog = await getBlogBySlug(params.slug);
+  if (!blog) return {};
+  return {
+    title: blog.meta_title,
+    description: blog.meta_description,
+    openGraph: { images: [blog.featured_image_url] },
+  };
+}
+
+export default async function BlogPost({ params }) {
+  const blog = await getBlogBySlug(params.slug);
+  if (!blog) notFound();
+
+  return (
+    <article>
+      <img src={blog.featured_image_url} alt={blog.title} />
+      <h1>{blog.title}</h1>
+      <time>{new Date(blog.published_at).toLocaleDateString()}</time>
+      <div
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: blog.content }}
+      />
+    </article>
+  );
+}
+```
+
+For a fully static export, add `output: 'export'` to your `next.config.js` and use `generateStaticParams` as shown above. If you'd rather refresh content on a schedule without redeploying, see the **Incremental Static Regeneration** note under [Build-time error handling](/docs/developers/static-sites/error-handling) below.

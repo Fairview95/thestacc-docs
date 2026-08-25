@@ -16,7 +16,7 @@ Use the Public Blog API when:
 
 If you use WordPress, Ghost, Webflow, or Zepio, you don't need this — use the [direct publishing integrations](/docs/content-seo/publishing) instead, which push posts straight into your CMS.
 
-This is the **pull** side of theStacc's integrations: your site reads content from us. For an end-to-end walkthrough of wiring it into a specific framework, follow [Static Site Integration](/docs/developers/static-site-integration).
+This is the **pull** side of theStacc's integrations: your site reads content from us. For an end-to-end walkthrough of wiring it into a specific framework, follow [Static Site Integration](/docs/developers/static-sites/overview).
 
 ## How it works
 
@@ -199,7 +199,7 @@ When theStacc writes a post that links to another one of your posts, it stores t
 
 Because resolution happens at read time, fixing or publishing the target post is reflected on your next fetch — you don't need to regenerate or republish the post that links to it.
 
-This matches the `your-site.com/blog/<slug>/` URL pattern used throughout the [Static Site Integration](/docs/developers/static-site-integration) guide. If your blog lives at a different path, you'll want to keep that path as `/blog/` (or adjust your routing accordingly) so resolved internal links point to the right place.
+This matches the `your-site.com/blog/<slug>/` URL pattern used throughout the [Static Site Integration](/docs/developers/static-sites/overview) guide. If your blog lives at a different path, you'll want to keep that path as `/blog/` (or adjust your routing accordingly) so resolved internal links point to the right place.
 
 ### Self-hosting images
 
@@ -231,6 +231,6 @@ In your fetch helper, treat a non-`200` response as a failure: throw on the list
 
 ## Next steps
 
-- Follow [Static Site Integration](/docs/developers/static-site-integration) for framework-specific setup (Astro, Next.js, Hugo, and more)
+- Follow [Static Site Integration](/docs/developers/static-sites/overview) for framework-specific setup (Astro, Next.js, Hugo, and more)
 - Set up [Deploy Hooks](/docs/developers/deploy-hooks) so your site rebuilds automatically when new content is published
 - Want an AI assistant or automation to create and publish posts on your behalf? That's a different, write-capable credential — see [Agent Keys & MCP](/docs/developers/agent-keys-mcp)

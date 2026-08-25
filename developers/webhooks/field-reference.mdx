@@ -1,0 +1,30 @@
+---
+title: "Field reference"
+description: "Every field theStacc sends in a blog.published or blog.updated event."
+---
+
+Every field theStacc sends in a `blog.published` / `blog.updated` event:
+
+| Field | Type | Always sent? | Practical limits | What it is |
+| --- | --- | --- | --- | --- |
+| `event` | string | Yes | enum: `blog.published` \| `blog.updated` \| `blog.unpublished` \| `blog.deleted` \| `test.ping` | Use this to route in your handler. |
+| `blog_id` | string (UUID) | Yes | 36 chars, or `preview-` + UUID for sample payloads | theStacc's stable identifier. Use as your dedup / foreign key. |
+| `title` | string | Yes | typically 50–120 chars | Blog title. Not HTML-escaped — your receiver renders it. |
+| `slug` | string | Yes | typically up to ~50 chars, lowercase, hyphenated | URL-safe identifier. Stable across re-publishes unless the user edits it. |
+| `content` | string (HTML) | Yes | typically 4,000–15,000 chars | Full blog HTML. Includes `<h2>`, `<p>`, `<ul>`, `<a>`, `<img>`, etc. The duplicate hero `<img>` is stripped (see note below). |
+| `excerpt` | string \| `""` | Yes (may be empty) | typically 100–300 chars | Short summary, plain text. |
+| `excerpt_short` | string \| `""` | Yes (may be empty) | word-boundary trimmed to roughly 256 chars | A truncated copy of `excerpt`. Use this when forwarding to a CMS with a strict Excerpt cap — notably Webflow's default 256-char Excerpt field. |
+| `meta_title` | string \| `null` | Yes | up to ~70 chars (SEO best practice) | Optimized SEO title. May equal `title`. |
+| `meta_description` | string \| `null` | Yes | up to ~160 chars (SEO best practice) | Optimized SEO description. |
+| `featured_image_url` | string (URL) \| `null` | Yes | `https://cdn.thestacc.com/...` | Public CDN URL for the hero image. Separate from `images[]`. |
+| `categories` | string\[\] | Yes (may be `[]`) | typically 0–3 items | One blog can have multiple categories. |
+| `tags` | string\[\] | Yes (may be `[]`) | typically 0–10 items | Loose keywords. |
+| `keyword` | string \| `null` | Yes | typically 1–8 words | Focus keyword the blog targets. `null` when the blog has no focus keyword set. |
+| `published_at` | string (ISO 8601 UTC) | Yes | always Z-suffixed UTC | When theStacc finalized this publish. |
+| `images` | `{url, alt}[]` | Yes (may be `[]`) | typically 0–4 items | Every `<img>` URL embedded in the `content` body, in document order, deduped. Use it to self-host body images — see [Self-hosting images](/docs/developers/webhooks/self-hosting-images) below. Does **not** include `featured_image_url`. |
+| `idempotency_key` | string | Autopilot publishes only | `"{blog_id}:{lifecycle}"` | Stable across all retries of a single publish; different across separate publish intents. Dedup on this. See [Idempotency & retries](/docs/developers/webhooks/idempotency). |
+| `publish_attempt` | integer | Autopilot publishes only | `1` on the first try, then `2`, `3`, ... | The attempt counter for this publish lifecycle. `> 1` means theStacc is retrying after a transient failure. Useful for logging. |
+
+> **The hero image is stripped from `content`.** Every generated blog carries its hero image both as `featured_image_url` and (originally) inlined as the first `<img>` in the body. theStacc removes that inline duplicate before sending, so `content` won't render the hero twice and `images[]` won't list the hero URL. Render the hero from `featured_image_url` and the body images from inside `content` (or mirror them via `images[]`).
+
+> **Field length is not enforced at the API level.** Postgres `TEXT` columns are unbounded, and theStacc-generated content stays well within the practical limits above. If you want hard caps in your database schema, the limits in the table are safe defaults.

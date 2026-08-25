@@ -1,0 +1,57 @@
+---
+title: "Styling"
+description: "The API returns HTML in the content field, including headings, lists, blockquotes, links, and images with alt text."
+---
+
+The API returns HTML in the `content` field — the same HTML that gets published to WordPress or Ghost, including headings (`h2`, `h3`, `h4`), paragraphs, lists, blockquotes, links, and images with alt text. Add CSS to style it within your site's design:
+
+```css
+.blog-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content p {
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.blog-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.blog-content ul, .blog-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+}
+```
+
+If you use Tailwind CSS, apply the [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin) plugin and wrap the content in a `prose` class:
+
+```html
+<div class="prose prose-lg" set:html={blog.content} />
+```

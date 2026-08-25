@@ -1,0 +1,56 @@
+---
+title: "Managing connections"
+description: "Every connected integration carries connection-health information that theStacc updates each time it tests or publishes."
+---
+
+## Status and diagnostics
+
+Every connected integration carries connection-health information theStacc updates each time it tests or publishes:
+
+- **Last tested** — when the connection was last checked.
+- **Last test success** — whether that most recent check passed or failed.
+- **Connection error** — the specific reason the last check failed (shown when you connect or test). This is the message to read first when something isn't working.
+
+Use the **Test Connection** button (admin only) any time to re-run the check on demand. WordPress, Ghost, and Zepio are also tested automatically the moment you connect them, so a bad credential is caught up front instead of at the next scheduled publish.
+
+### Common error messages
+
+| Message you might see | What it means | How to fix it |
+| --- | --- | --- |
+| \*"This looks like a regular WordPress password, not an Application Password."\* | You pasted your WordPress login password into the app-password field. | Generate an Application Password in **Users \> Profile \> Application Passwords** and paste that instead. |
+| \*"WordPress REST API not found at this URL"\* / \*"REST API is blocked"\* | The site URL is wrong, or a security plugin / server rule is blocking the WordPress REST API. | Check the URL, and allow REST API access in your WordPress security settings. |
+| \*"Invalid API key format. Expected format: &#123;id&#125;:&#123;secret&#125;"\* (Ghost) | The Ghost Admin API key isn't in `{id}:{secret}` form, or its secret isn't valid hex. | Copy the **Admin API key** (not the Content API key) from your Ghost custom integration. |
+| \*"Invalid Developer API key"\* / \*"…make sure it has the 'Create blog posts' permission"\* (Zepio) | The Zepio key was rejected, or it lacks the required permission. | Create a key with the **"Create blog posts"** permission and rotate it via **Edit**. |
+| \*"Webflow API token is invalid or expired"\* / \*"…lacks required scopes"\* | The Webflow token is wrong, revoked, or missing CMS/Sites scopes. | Generate a fresh token with **CMS: Read and write** and **Sites: Read and write**. |
+| \*"WordPress.com token expired"\* / \*"Shopify access token is invalid or expired"\* | An OAuth connection was revoked or aged out. | Click Connect again to re-authorize the account. |
+| \*"Your Zepio site is rate-limiting requests right now"\* (HTTP 429) | The destination is temporarily throttling — not an auth problem. | Wait a few minutes and try again. Don't rotate a working key over this. |
+| \*"Webhook returned redirect … — webhook receivers must respond with 2xx directly"\* (3xx) | Your webhook receiver answered with a redirect, which theStacc rejects for security. | Make your receiver return a 2xx status directly instead of redirecting. |
+
+## Field and credential limits at a glance
+
+| Field | Limit |
+| --- | --- |
+| Integration name | up to 100 characters |
+| WordPress.org application password | 8–200 characters, letters and numbers only (special characters rejected as a likely login password) |
+| Webhook secret | at least 16 characters (HMAC signing) |
+| Webflow API token | 10–500 characters |
+| Ghost Admin API key | `{id}:{secret}` format, 20–200 characters |
+| Zepio Developer API key | 10–500 characters |
+
+## Managing connections
+
+Each connected integration shows:
+
+- **Status** — active or inactive.
+- **Active/Inactive toggle** — turn this destination on or off. Turning one on automatically turns the others off (one active destination per project).
+- **Test button** — re-check that the connection works.
+- **Edit** — update settings or rotate credentials (available for Zepio, Webflow, and the other credential-based platforms) without a full reconnect.
+- **Disconnect** — remove the integration entirely.
+
+## Related
+
+- [Publishing](/docs/content-seo/publishing) — choose your publishing mode (auto-publish, require approval, or draft) and learn how a generated post reaches your site.
+- [Webhook Reference](/docs/developers/webhooks/overview) — the full developer contract for the Custom Webhook destination, including the timeout, retry, and redirect behavior that determines when a publish is marked failed.
+- [Deploy Hooks](/docs/developers/deploy-hooks) — trigger a static-site rebuild after each publish so new posts appear on the live site.
+
+> **Publishing errors & retries.** theStacc does not silently retry a failed publish — a timeout, a 5xx, or a rejected redirect fails the publish and surfaces a "Failed to publish" message with the reason. The exact contract (15-second timeout, no automatic retries, 3xx rejected) lives in the [Webhook Reference](/docs/developers/webhooks/overview); for non-webhook destinations, fix the connection error shown above and re-publish.

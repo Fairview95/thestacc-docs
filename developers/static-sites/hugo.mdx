@@ -1,0 +1,49 @@
+---
+title: "Hugo"
+description: "Hugo doesn't fetch API data natively."
+---
+
+## Create the data fetch script
+
+Hugo doesn't fetch API data natively. Use a build script that runs before Hugo.
+
+Create `fetch-blogs.sh`:
+
+```bash
+#!/bin/bash
+set -e
+mkdir -p content/blog
+
+# Fetch all blogs, including full HTML content
+RESPONSE=$(curl -s --fail "$THESTACC_API_URL?api_key=$THESTACC_API_KEY&include_content=true")
+
+# Generate a markdown file for each blog
+echo "$RESPONSE" | jq -c '.blogs[]' | while read -r blog; do
+  SLUG=$(echo "$blog" | jq -r '.slug')
+  TITLE=$(echo "$blog" | jq -r '.title')
+  DESC=$(echo "$blog" | jq -r '.meta_description')
+  DATE=$(echo "$blog" | jq -r '.published_at')
+  IMAGE=$(echo "$blog" | jq -r '.featured_image_url')
+  CONTENT=$(echo "$blog" | jq -r '.content')
+
+  cat > "content/blog/$SLUG.html" <<EOF
+---
+title: "$TITLE"
+description: "$DESC"
+date: "$DATE"
+featured_image: "$IMAGE"
+markup: html
+---
+
+$CONTENT
+EOF
+done
+```
+
+Note the `include_content=true` query parameter — the list endpoint returns metadata only by default, so you must ask for the HTML body. The script uses the `.html` extension and `markup: html` frontmatter so Hugo renders the API's HTML content as-is instead of treating it as markdown. In your Hugo template, use `{{ .Content | safeHTML }}` to output the content without escaping. The `set -e` and `--fail` flags make the build stop loudly if the API call fails, instead of publishing empty pages (see [Build-time error handling](/docs/developers/static-sites/error-handling)).
+
+Update your build command on Cloudflare Pages (or wherever you deploy):
+
+```
+bash fetch-blogs.sh && hugo
+```

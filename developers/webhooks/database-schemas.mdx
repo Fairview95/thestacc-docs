@@ -1,0 +1,117 @@
+---
+title: "Database schemas"
+description: "Pick the database you already use."
+---
+
+Pick the database you already use. Each schema below maps directly to the webhook payload — no transformation needed.
+
+<CodeGroup>
+
+```sql Postgres
+CREATE TABLE thestacc_blogs (
+    blog_id           UUID PRIMARY KEY,
+    title             TEXT NOT NULL,
+    slug              TEXT NOT NULL UNIQUE,
+    content           TEXT NOT NULL,
+    excerpt           TEXT,
+    meta_title        TEXT,
+    meta_description  TEXT,
+    featured_image_url TEXT,
+    keyword           TEXT,
+    categories        TEXT[] NOT NULL DEFAULT '{}',
+    tags              TEXT[] NOT NULL DEFAULT '{}',
+    published_at      TIMESTAMPTZ NOT NULL,
+    last_event        TEXT NOT NULL,
+    received_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    cms_post_id       TEXT,
+    is_unpublished    BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX idx_thestacc_blogs_slug ON thestacc_blogs(slug);
+CREATE INDEX idx_thestacc_blogs_published_at ON thestacc_blogs(published_at DESC);
+CREATE INDEX idx_thestacc_blogs_active ON thestacc_blogs(published_at DESC) WHERE is_unpublished = FALSE;
+```
+
+```sql MySQL / MariaDB
+CREATE TABLE thestacc_blogs (
+    blog_id            CHAR(36) PRIMARY KEY,
+    title              VARCHAR(255) NOT NULL,
+    slug               VARCHAR(255) NOT NULL UNIQUE,
+    content            LONGTEXT NOT NULL,
+    excerpt            TEXT,
+    meta_title         VARCHAR(255),
+    meta_description   VARCHAR(500),
+    featured_image_url VARCHAR(2048),
+    keyword            VARCHAR(255),
+    categories         JSON NOT NULL,
+    tags               JSON NOT NULL,
+    published_at       DATETIME(3) NOT NULL,
+    last_event         VARCHAR(50) NOT NULL,
+    received_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at         DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+    cms_post_id        VARCHAR(255),
+    is_unpublished     BOOLEAN NOT NULL DEFAULT FALSE,
+    INDEX idx_slug (slug),
+    INDEX idx_published_at (published_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+```prisma Prisma (Postgres-flavored)
+model ThestaccBlog {
+  blogId            String    @id @map("blog_id") @db.Uuid
+  title             String
+  slug              String    @unique
+  content           String
+  excerpt           String?
+  metaTitle         String?   @map("meta_title")
+  metaDescription   String?   @map("meta_description")
+  featuredImageUrl  String?   @map("featured_image_url")
+  keyword           String?
+  categories        String[]
+  tags              String[]
+  publishedAt       DateTime  @map("published_at")
+  lastEvent         String    @map("last_event")
+  receivedAt        DateTime  @default(now()) @map("received_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  cmsPostId         String?   @map("cms_post_id")
+  isUnpublished     Boolean   @default(false) @map("is_unpublished")
+
+  @@index([slug])
+  @@index([publishedAt(sort: Desc)])
+  @@map("thestacc_blogs")
+}
+```
+
+```javascript MongoDB
+db.createCollection("thestaccBlogs", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["blog_id", "title", "slug", "content", "published_at", "last_event"],
+      properties: {
+        blog_id:            { bsonType: "string" },
+        title:              { bsonType: "string" },
+        slug:               { bsonType: "string" },
+        content:            { bsonType: "string" },
+        excerpt:            { bsonType: ["string", "null"] },
+        meta_title:         { bsonType: ["string", "null"] },
+        meta_description:   { bsonType: ["string", "null"] },
+        featured_image_url: { bsonType: ["string", "null"] },
+        keyword:            { bsonType: ["string", "null"] },
+        categories:         { bsonType: "array", items: { bsonType: "string" } },
+        tags:               { bsonType: "array", items: { bsonType: "string" } },
+        published_at:       { bsonType: "date" },
+        last_event:         { bsonType: "string" },
+        cms_post_id:        { bsonType: ["string", "null"] },
+        is_unpublished:     { bsonType: "bool" }
+      }
+    }
+  }
+});
+db.thestaccBlogs.createIndex({ blog_id: 1 }, { unique: true });
+db.thestaccBlogs.createIndex({ slug: 1 }, { unique: true });
+db.thestaccBlogs.createIndex({ published_at: -1 });
+```
+
+</CodeGroup>

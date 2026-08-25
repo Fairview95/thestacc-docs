@@ -1,0 +1,30 @@
+---
+title: "Build-time error handling"
+description: "Because content is fetched while your site builds, you need a plan for when the API cannot be reached during a build."
+---
+
+Because content is fetched while your site builds, you need a plan for the rare case where the API can't be reached during a build — for example, a transient network blip or a `500` from the server.
+
+**What happens by default.** In each helper above, the list fetch throws an error when the response isn't OK (`if (!res.ok) throw new Error(...)`). That's intentional: if the blog list can't be fetched, the build **fails loudly and stops**, and your hosting platform keeps the previous successful deploy live. Your visitors keep seeing the last good version of your site — they never see a half-built site with missing posts. This is the safest default.
+
+The single-blog helpers instead return `null` on a non-OK response so one missing or unpublished post (a `404`) doesn't take down the whole build — the page-not-found path handles it gracefully.
+
+**Add a short retry.** Most build failures are momentary. A small retry-with-backoff around the list fetch makes builds far more resilient:
+
+```typescript
+async function fetchWithRetry(url: string, attempts = 3) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(url);
+    if (res.ok) return res;
+    if (res.status === 401 || res.status === 404) return res; // don't retry auth/not-found
+    await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+  }
+  throw new Error(`Failed after ${attempts} attempts`);
+}
+```
+
+Don't retry a `401` (your API key is wrong, missing, or was revoked) or a `404` — those won't fix themselves. Do retry `500` and network errors. See the [Public Blog API error reference](/docs/developers/public-blog-api#error-handling) for the full list of status codes.
+
+**Don't call the API from the browser.** The Public Blog API is built for build-time fetching, not live client requests — a typical build makes only a handful of calls. Fetching from client-side code would expose your key and add a runtime dependency on the API. Always fetch at build time.
+
+**Incremental Static Regeneration (ISR) as an alternative.** If you'd rather your pages refresh on a schedule instead of failing the build, frameworks like Next.js support ISR: serve the last-built version, then quietly re-fetch in the background every N seconds. Set `revalidate` to a number of seconds (for example, `next: { revalidate: 3600 }` for hourly) instead of `false`. With ISR, a momentary API outage means visitors simply keep seeing the previous cached page until the next successful refresh — no broken build, no missing content. The trade-off is that new posts can take up to your revalidate window to appear unless a [deploy hook](/docs/developers/deploy-hooks) also triggers a rebuild. Most sites are happiest with a deploy hook plus the fail-loud default above; ISR is an option if you want time-based refreshes on top.
