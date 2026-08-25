@@ -3,9 +3,9 @@
   "name": "theStacc",
   "theme": "mint",
   "colors": {
-    "primary": "#4f39f6",
-    "light": "#8b76ff",
-    "dark": "#3a28b5"
+    "primary": "#615fff",
+    "light": "#9897ff",
+    "dark": "#4b49d9"
   },
   "navigation": {
     "groups": [
