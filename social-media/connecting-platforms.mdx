@@ -19,7 +19,7 @@ A few things to know:
 
 theStacc publishes to social platforms through a **secure publishing partner** (the broker that handles the actual posting to Instagram, Facebook, LinkedIn, and X). When you connect an account, here's what happens behind the scenes:
 
-1. You click **Connect** on a platform. theStacc asks the publishing partner for a sign-in link and gets back an **authorization URL** plus a one-time security token (called a \*state\* token) that protects against tampering.
+1. You click **Connect** on a platform. theStacc asks the publishing partner for a sign-in link and gets back an **authorization URL** plus a one-time security token (called a *state* token) that protects against tampering.
 2. A small popup window opens that authorization URL. You sign in to the platform (or to Meta, for Instagram and Facebook) and approve the permissions.
 3. The platform sends you back to theStacc. theStacc checks that the security token matches the one it issued - if it doesn't match, or it's older than 15 minutes, the connection is rejected and you'll need to start again.
 4. theStacc then reads your newly connected account from the publishing partner and saves it - the account name, display name, and avatar - and marks the connection **Connected**.
@@ -100,7 +100,7 @@ Each platform card shows where the connection stands:
 - **Not Connected** - no account linked yet. Click **Connect** to start.
 - **Expired** - theStacc could no longer find a live account for this platform with the publishing partner. The token may have expired, or the connection was removed on the platform's side. The button changes to **Reconnect** (highlighted in amber) so you can re-authorize.
 
-Under the hood theStacc tracks a few states - **connected**, **expired**, **revoked**, and **error**. On the Connections page, anything that needs your attention (expired \*or\* revoked) is shown as **Expired** with a **Reconnect** button, so there's only ever one clear action to take.
+Under the hood theStacc tracks a few states - **connected**, **expired**, **revoked**, and **error**. On the Connections page, anything that needs your attention (expired *or* revoked) is shown as **Expired** with a **Reconnect** button, so there's only ever one clear action to take.
 
 ## Refreshing connection status
 

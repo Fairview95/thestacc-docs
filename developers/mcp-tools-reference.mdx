@@ -65,7 +65,7 @@ Adds brand-new planned posts to the project — handy when the plan is running l
 
 - **count** (required) — how many posts to add, from **1 to 10**.
 
-**What happens:** the new posts are created with AI-picked titles and keywords and land in **Awaiting Date** status. They are \*not\* generated yet. A human picks a publish date for each one in the dashboard before they can be generated. This is deliberate — it keeps a person in the loop on when new content goes out, and it respects your plan's remaining capacity (you can't add more than your subscription allows for the period).
+**What happens:** the new posts are created with AI-picked titles and keywords and land in **Awaiting Date** status. They are *not* generated yet. A human picks a publish date for each one in the dashboard before they can be generated. This is deliberate — it keeps a person in the loop on when new content goes out, and it respects your plan's remaining capacity (you can't add more than your subscription allows for the period).
 
 After a human sets dates, the agent can generate each one with [generate\_blog](#generate-blog).
 
@@ -210,7 +210,7 @@ A typical agent run looks like this:
 4. **generation\_status** — poll until it's done.
 5. **get\_blog** — read the result.
 6. **edit\_blog**, **regenerate\_section**, **regenerate\_image**, **upload\_image** — refine it.
-7. \*A human reviews and clicks Approve in the dashboard.\*
+7. *A human reviews and clicks Approve in the dashboard.*
 8. **publish\_blog** — push the approved post live.
 
 The two human checkpoints — picking publish dates for bonus posts, and approving before publish — are intentional. The agent does the heavy lifting; you keep the final say.

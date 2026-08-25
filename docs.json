@@ -34,7 +34,6 @@
             "pages": [
               "how-it-works/content-engine",
               "how-it-works/how-the-ai-works",
-              "how-it-works/ai-models-and-pipeline",
               "how-it-works/quality-safety"
             ]
           },
@@ -271,6 +270,10 @@
     {
       "source": "/content-seo/connect-platforms",
       "destination": "/integrations/overview"
+    },
+    {
+      "source": "/how-it-works/ai-models-and-pipeline",
+      "destination": "/how-it-works/how-the-ai-works"
     }
   ]
 }

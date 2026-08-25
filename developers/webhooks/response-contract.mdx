@@ -16,7 +16,7 @@ Your receiver should return a JSON body. theStacc reads two fields from it:
 | What theStacc reads | Required for | What theStacc does with it |
 | --- | --- | --- |
 | HTTP status `2xx` | every request | Only `200`, `201`, `202`, and `204` count as success. Anything else (`3xx`, `4xx`, `5xx`) fails the publish. |
-| `url` (also accepts `post_url` or `permalink`) | a clickable "View live post" link in theStacc | Stored against the blog. If omitted, theStacc shows a \*"Sent to webhook — your receiver didn't return a public URL"\* notice. |
+| `url` (also accepts `post_url` or `permalink`) | a clickable "View live post" link in theStacc | Stored against the blog. If omitted, theStacc shows a *"Sent to webhook — your receiver didn't return a public URL"* notice. |
 | `id` (also accepts `post_id` or `external_id`) | future updates / unpublishes to target the right CMS record | Stored as the external post id and sent back to you on later `blog.updated` / `blog.unpublished` events. |
 
 A non-JSON `2xx` response still counts as a successful publish — theStacc just won't have a URL or external id to store. For preview / test calls (`test.ping`, or `blog_id` starts with `preview-`), it's fine to skip both fields and return `{"ok": true, "skipped": true}`.

@@ -17,14 +17,14 @@ Use the **Test Connection** button (admin only) any time to re-run the check on 
 
 | Message you might see | What it means | How to fix it |
 | --- | --- | --- |
-| \*"This looks like a regular WordPress password, not an Application Password."\* | You pasted your WordPress login password into the app-password field. | Generate an Application Password in **Users \> Profile \> Application Passwords** and paste that instead. |
-| \*"WordPress REST API not found at this URL"\* / \*"REST API is blocked"\* | The site URL is wrong, or a security plugin / server rule is blocking the WordPress REST API. | Check the URL, and allow REST API access in your WordPress security settings. |
-| \*"Invalid API key format. Expected format: &#123;id&#125;:&#123;secret&#125;"\* (Ghost) | The Ghost Admin API key isn't in `{id}:{secret}` form, or its secret isn't valid hex. | Copy the **Admin API key** (not the Content API key) from your Ghost custom integration. |
-| \*"Invalid Developer API key"\* / \*"…make sure it has the 'Create blog posts' permission"\* (Zepio) | The Zepio key was rejected, or it lacks the required permission. | Create a key with the **"Create blog posts"** permission and rotate it via **Edit**. |
-| \*"Webflow API token is invalid or expired"\* / \*"…lacks required scopes"\* | The Webflow token is wrong, revoked, or missing CMS/Sites scopes. | Generate a fresh token with **CMS: Read and write** and **Sites: Read and write**. |
-| \*"WordPress.com token expired"\* / \*"Shopify access token is invalid or expired"\* | An OAuth connection was revoked or aged out. | Click Connect again to re-authorize the account. |
-| \*"Your Zepio site is rate-limiting requests right now"\* (HTTP 429) | The destination is temporarily throttling — not an auth problem. | Wait a few minutes and try again. Don't rotate a working key over this. |
-| \*"Webhook returned redirect … — webhook receivers must respond with 2xx directly"\* (3xx) | Your webhook receiver answered with a redirect, which theStacc rejects for security. | Make your receiver return a 2xx status directly instead of redirecting. |
+| *"This looks like a regular WordPress password, not an Application Password."* | You pasted your WordPress login password into the app-password field. | Generate an Application Password in **Users \> Profile \> Application Passwords** and paste that instead. |
+| *"WordPress REST API not found at this URL"* / *"REST API is blocked"* | The site URL is wrong, or a security plugin / server rule is blocking the WordPress REST API. | Check the URL, and allow REST API access in your WordPress security settings. |
+| *"Invalid API key format. Expected format: &#123;id&#125;:&#123;secret&#125;"* (Ghost) | The Ghost Admin API key isn't in `{id}:{secret}` form, or its secret isn't valid hex. | Copy the **Admin API key** (not the Content API key) from your Ghost custom integration. |
+| *"Invalid Developer API key"* / *"…make sure it has the 'Create blog posts' permission"* (Zepio) | The Zepio key was rejected, or it lacks the required permission. | Create a key with the **"Create blog posts"** permission and rotate it via **Edit**. |
+| *"Webflow API token is invalid or expired"* / *"…lacks required scopes"* | The Webflow token is wrong, revoked, or missing CMS/Sites scopes. | Generate a fresh token with **CMS: Read and write** and **Sites: Read and write**. |
+| *"WordPress.com token expired"* / *"Shopify access token is invalid or expired"* | An OAuth connection was revoked or aged out. | Click Connect again to re-authorize the account. |
+| *"Your Zepio site is rate-limiting requests right now"* (HTTP 429) | The destination is temporarily throttling — not an auth problem. | Wait a few minutes and try again. Don't rotate a working key over this. |
+| *"Webhook returned redirect … — webhook receivers must respond with 2xx directly"* (3xx) | Your webhook receiver answered with a redirect, which theStacc rejects for security. | Make your receiver return a 2xx status directly instead of redirecting. |
 
 ## Field and credential limits at a glance
 

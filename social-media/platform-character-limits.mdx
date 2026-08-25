@@ -64,7 +64,7 @@ When you publish or schedule a post, theStacc runs a pre-flight check before sen
 
 If any caption is too long, the publish is stopped with a **caption too long** error that names the offending platform and shows how far over you are (for example, `x (286/280)`). Nothing is sent to any platform.
 
-This matters because of how social publishing works: without the check, X might reject an over-limit caption \*after\* theStacc had already published the same post to LinkedIn and Facebook. You'd be left with a post that's live on some networks and failed on others, which you'd then have to reconcile by hand. The pre-flight check catches the problem up front so this never happens.
+This matters because of how social publishing works: without the check, X might reject an over-limit caption *after* theStacc had already published the same post to LinkedIn and Facebook. You'd be left with a post that's live on some networks and failed on others, which you'd then have to reconcile by hand. The pre-flight check catches the problem up front so this never happens.
 
 When the check stops a publish, the fix is simple: shorten the caption for the platform that's over the limit, then publish again.
 

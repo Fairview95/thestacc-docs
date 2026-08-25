@@ -7,11 +7,11 @@ A field-tested path from "we picked Webhook" to "first blog publishes live":
 
 1. **Generate a secret** — `openssl rand -hex 32` (the secret must be **16+ characters**, which theStacc enforces at save time).
 2. **Add an env var** to your hosting platform: `STACC_WEBHOOK_SECRET=<the secret>`.
-3. **Add a database table** for incoming blogs (schema templates below).
-4. **Add a receiver route** at, for example, `POST /api/stacc-webhook` (examples in six languages below).
+3. **Add a database table** for incoming blogs — see [Database schemas](/docs/developers/webhooks/database-schemas) for Postgres, MySQL, Prisma and MongoDB templates.
+4. **Add a receiver route** at, for example, `POST /api/stacc-webhook` — see [Receiver examples](/docs/developers/webhooks/receiver-examples) for Next.js, Express, Astro, FastAPI, Flask and PHP.
 5. **Deploy.** Note the public HTTPS URL.
 6. **In theStacc:** go to **Content SEO \> Settings \> Publishing**, add a Custom Webhook, enter the URL and secret, then click **Test Connection**. A green check means it's working.
 7. **Click Sample Payload** to validate your full publish handler with a fake blog (`blog_id` will start with `preview-`).
 8. **Approve a blog and publish.** The first real blog should land in your database within a few seconds.
 
-If anything fails, the [Troubleshooting](/docs/developers/webhooks/limits-troubleshooting) section below covers every error we've seen, and [Publishing Errors & Retries](/docs/content-seo/publishing-errors) explains how theStacc surfaces and recovers from a failed publish.
+If anything fails, [Limits & troubleshooting](/docs/developers/webhooks/limits-troubleshooting) covers every error we've seen, and [Publishing Errors & Retries](/docs/content-seo/publishing-errors) explains how theStacc surfaces and recovers from a failed publish.

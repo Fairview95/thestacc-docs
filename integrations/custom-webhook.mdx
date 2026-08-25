@@ -65,7 +65,7 @@ Respond with `200` (or `201`) and a JSON body containing the live post URL. theS
 }
 ```
 
-- **`url`** (or `published_url`) — the public URL of the blog on your site. If omitted, theStacc shows a \*"Sent to webhook — your receiver didn't return a public URL"\* warning.
+- **`url`** (or `published_url`) — the public URL of the blog on your site. If omitted, theStacc shows a *"Sent to webhook — your receiver didn't return a public URL"* warning.
 - **`id`** — your internal CMS post id. Stored as `external_post_id` so future updates / unpublishes can target the right record.
 
 For preview calls (`blog_id` starts with `preview-`), it's fine to skip both fields and return `{"ok": true, "skipped": true}`.
