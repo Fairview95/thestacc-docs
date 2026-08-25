@@ -9,7 +9,7 @@ Fetching at build time means new posts only appear when your site rebuilds. You 
 
 You'll find the **Deploy Hook** field right below your API key, under **Content \> Settings \> Publishing \> API Access**. Paste the deploy hook URL from your Cloudflare Pages, Vercel, or Netlify dashboard, click **Save**, then click **Test** to confirm it triggers a build. The URL must be an HTTPS URL.
 
-For the full walkthrough — getting the URL from each platform, GitHub Pages via GitHub Actions, and troubleshooting — see [Deploy Hooks](/docs/developers/deploy-hooks).
+For the full walkthrough — getting the URL from each platform, GitHub Pages via GitHub Actions, and troubleshooting — see [Deploy Hooks](/developers/deploy-hooks).
 
 ## Generating a sitemap
 
@@ -19,7 +19,7 @@ A sitemap helps Google discover and re-crawl your posts. The Public Blog API has
 GET https://api.thestacc.com/blog/api/v1/public/blogs/sitemap?api_key=YOUR_API_KEY
 ```
 
-It returns only `slug`, `published_at`, and `updated_at` for every published post (up to 5,000 posts), so it's fast and cheap to call during a build. Loop over the results to emit `<url>` entries for your `sitemap.xml`, mapping `updated_at` to `<lastmod>`. Full response shape is in the [Public Blog API sitemap reference](/docs/developers/public-blog-api#get-blog-sitemap-data).
+It returns only `slug`, `published_at`, and `updated_at` for every published post (up to 5,000 posts), so it's fast and cheap to call during a build. Loop over the results to emit `<url>` entries for your `sitemap.xml`, mapping `updated_at` to `<lastmod>`. Full response shape is in the [Public Blog API sitemap reference](/developers/public-blog-api#get-blog-sitemap-data).
 
 If your generator already produces a sitemap that includes your blog routes (such as `@astrojs/sitemap`), you don't need to call this endpoint separately — the blog pages are picked up automatically because they're static routes.
 
@@ -37,6 +37,6 @@ Run your site locally with the environment variables set, then verify:
 
 ## Next steps
 
-- Review the [Public Blog API](/docs/developers/public-blog-api) reference for every endpoint, parameter, default, and limit
-- Set up [Deploy Hooks](/docs/developers/deploy-hooks) so your site rebuilds automatically when blogs are published
-- Add an XML sitemap for SEO using the [sitemap endpoint](/docs/developers/public-blog-api#get-blog-sitemap-data)
+- Review the [Public Blog API](/developers/public-blog-api) reference for every endpoint, parameter, default, and limit
+- Set up [Deploy Hooks](/developers/deploy-hooks) so your site rebuilds automatically when blogs are published
+- Add an XML sitemap for SEO using the [sitemap endpoint](/developers/public-blog-api#get-blog-sitemap-data)

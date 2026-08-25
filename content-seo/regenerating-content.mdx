@@ -20,7 +20,7 @@ Every scheduled post starts as a *plan* - a title, a blog type, a short excerpt,
 Regenerating the plan rewrites:
 
 - **Title**
-- **Blog type** (the format, such as how-to, listicle, or guide - see [Blog Types](/docs/content-seo/blog-types))
+- **Blog type** (the format, such as how-to, listicle, or guide - see [Blog Types](/content-seo/blog-types))
 - **Excerpt** (the short summary)
 - **Category**
 
@@ -100,7 +100,7 @@ The prompt also changes how regeneration works:
 - **With a custom prompt and an existing image**, theStacc *edits* the current image to match your request, preserving its overall context.
 - **With no prompt**, theStacc generates a fresh image using the image's alt text (or, if there's none, the post's keyword or title) as context.
 
-For more on how images are created and the styles available across your whole site, see [Image Generation](/docs/content-seo/image-generation).
+For more on how images are created and the styles available across your whole site, see [Image Generation](/content-seo/image-generation).
 
 ## Retry failed images only
 
@@ -124,7 +124,7 @@ When at least one image succeeds, the post moves to **Generated, pending review*
 
 Retry is intentionally blocked while a post is mid-generation, and on posts that are already approved or published, so a retry can't collide with an in-flight job or quietly rewrite live content. If you land on the "text content already exists" message after clicking the main generate button, that's theStacc steering you here - use **Retry images** instead so you don't pay to re-write text that's already done.
 
-For more on what to do when generation fails and how theStacc recovers automatically, see [AI Error Recovery & Retries](/docs/content-seo/ai-error-recovery).
+For more on what to do when generation fails and how theStacc recovers automatically, see [AI Error Recovery & Retries](/content-seo/ai-error-recovery).
 
 ## Regenerate the entire blog from scratch
 
@@ -132,7 +132,7 @@ If a post just isn't working - wrong angle, weak structure, tone that's off thro
 
 **Important:** a full regeneration **replaces the existing post in place, and previous versions are not kept.** Read the current version first and copy anything you want to keep, because once you regenerate, the old article is gone. For a small fix, prefer a section or image regeneration instead - they leave the rest of the post untouched.
 
-See [Blog Generation](/docs/content-seo/blog-generation) for a full walkthrough of how the pipeline writes a post.
+See [Blog Generation](/content-seo/blog-generation) for a full walkthrough of how the pipeline writes a post.
 
 ## A note on editing reviewed posts
 
@@ -148,7 +148,7 @@ Regenerating isn't the only way to change a post - you can also edit by hand in 
 
 ## Related
 
-- [Blog Generation](/docs/content-seo/blog-generation) - how the AI writes a post end to end.
-- [Image Generation](/docs/content-seo/image-generation) - image styles, aspect ratios, and how images are created.
-- [AI Error Recovery & Retries](/docs/content-seo/ai-error-recovery) - what happens when generation fails and how theStacc retries.
-- [Blog Types](/docs/content-seo/blog-types) - the post formats the AI chooses from.
+- [Blog Generation](/content-seo/blog-generation) - how the AI writes a post end to end.
+- [Image Generation](/content-seo/image-generation) - image styles, aspect ratios, and how images are created.
+- [AI Error Recovery & Retries](/content-seo/ai-error-recovery) - what happens when generation fails and how theStacc retries.
+- [Blog Types](/content-seo/blog-types) - the post formats the AI chooses from.

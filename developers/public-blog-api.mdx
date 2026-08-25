@@ -14,9 +14,9 @@ Use the Public Blog API when:
 - Your site is built with a static site generator (Astro, Next.js, Nuxt, Hugo, Gatsby, 11ty, etc.)
 - You want full control over how blog content is rendered on your site
 
-If you use WordPress, Ghost, Webflow, or Zepio, you don't need this — use the [direct publishing integrations](/docs/content-seo/publishing) instead, which push posts straight into your CMS.
+If you use WordPress, Ghost, Webflow, or Zepio, you don't need this — use the [direct publishing integrations](/content-seo/publishing) instead, which push posts straight into your CMS.
 
-This is the **pull** side of theStacc's integrations: your site reads content from us. For an end-to-end walkthrough of wiring it into a specific framework, follow [Static Site Integration](/docs/developers/static-sites/overview).
+This is the **pull** side of theStacc's integrations: your site reads content from us. For an end-to-end walkthrough of wiring it into a specific framework, follow [Static Site Integration](/developers/static-sites/overview).
 
 ## How it works
 
@@ -34,7 +34,7 @@ Google crawls → sees full static HTML → indexes and ranks normally
 
 Because content is fetched at build time (not in the browser), Google sees fully rendered HTML pages. **SEO is identical to any other static site** — Google has no idea the content came from an API.
 
-To rebuild automatically whenever you publish or update a post, pair this with a [Deploy Hook](/docs/developers/deploy-hooks).
+To rebuild automatically whenever you publish or update a post, pair this with a [Deploy Hook](/developers/deploy-hooks).
 
 ## Authentication
 
@@ -59,7 +59,7 @@ If both are supplied, the `Authorization: Bearer` header wins.
 
 The `pk_live_` Public API Key is **read-only**. It can list and read your published blogs — nothing more. It cannot create, edit, publish, or delete content, and it can't see drafts or unpublished posts. That's why it's safe to use in a static-site build.
 
-It is a completely different credential from the **agent keys** (which start with `sk_agent_`) used by the [Model Context Protocol (MCP) server](/docs/developers/agent-keys-mcp). Agent keys are secret, write-capable (they can generate, edit, and publish blogs), are stored hashed, and live in the **Agent access** section right beside API Access. Never use one in place of the other — and never embed an `sk_agent_` key in a public build.
+It is a completely different credential from the **agent keys** (which start with `sk_agent_`) used by the [Model Context Protocol (MCP) server](/developers/agent-keys-mcp). Agent keys are secret, write-capable (they can generate, edit, and publish blogs), are stored hashed, and live in the **Agent access** section right beside API Access. Never use one in place of the other — and never embed an `sk_agent_` key in a public build.
 
 ### Keep your key safe
 
@@ -199,7 +199,7 @@ When theStacc writes a post that links to another one of your posts, it stores t
 
 Because resolution happens at read time, fixing or publishing the target post is reflected on your next fetch — you don't need to regenerate or republish the post that links to it.
 
-This matches the `your-site.com/blog/<slug>/` URL pattern used throughout the [Static Site Integration](/docs/developers/static-sites/overview) guide. If your blog lives at a different path, you'll want to keep that path as `/blog/` (or adjust your routing accordingly) so resolved internal links point to the right place.
+This matches the `your-site.com/blog/<slug>/` URL pattern used throughout the [Static Site Integration](/developers/static-sites/overview) guide. If your blog lives at a different path, you'll want to keep that path as `/blog/` (or adjust your routing accordingly) so resolved internal links point to the right place.
 
 ### Self-hosting images
 
@@ -231,6 +231,6 @@ In your fetch helper, treat a non-`200` response as a failure: throw on the list
 
 ## Next steps
 
-- Follow [Static Site Integration](/docs/developers/static-sites/overview) for framework-specific setup (Astro, Next.js, Hugo, and more)
-- Set up [Deploy Hooks](/docs/developers/deploy-hooks) so your site rebuilds automatically when new content is published
-- Want an AI assistant or automation to create and publish posts on your behalf? That's a different, write-capable credential — see [Agent Keys & MCP](/docs/developers/agent-keys-mcp)
+- Follow [Static Site Integration](/developers/static-sites/overview) for framework-specific setup (Astro, Next.js, Hugo, and more)
+- Set up [Deploy Hooks](/developers/deploy-hooks) so your site rebuilds automatically when new content is published
+- Want an AI assistant or automation to create and publish posts on your behalf? That's a different, write-capable credential — see [Agent Keys & MCP](/developers/agent-keys-mcp)

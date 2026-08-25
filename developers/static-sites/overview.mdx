@@ -5,7 +5,7 @@ description: "This guide walks you through connecting theStacc to your static si
 
 This guide walks you through connecting theStacc to your static site. By the end, your site will automatically display AI-generated blog posts — fully rendered as static HTML for perfect SEO.
 
-It uses the [Public Blog API](/docs/developers/public-blog-api), which exposes your published posts as JSON. Your site fetches that JSON at build time and turns it into static HTML pages, so Google sees ordinary, fully rendered pages — it has no idea the content came from an API.
+It uses the [Public Blog API](/developers/public-blog-api), which exposes your published posts as JSON. Your site fetches that JSON at build time and turns it into static HTML pages, so Google sees ordinary, fully rendered pages — it has no idea the content came from an API.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ The integration has three parts:
 2. **Render** — Your generator turns the API response into static HTML pages
 3. **Rebuild** — A deploy hook triggers a new build whenever you publish or unpublish a post
 
-This guide covers the first two parts. See [Deploy Hooks](/docs/developers/deploy-hooks) for automatic rebuilds.
+This guide covers the first two parts. See [Deploy Hooks](/developers/deploy-hooks) for automatic rebuilds.
 
 ## Get your API key
 
@@ -65,4 +65,4 @@ The API base path is `https://api.thestacc.com/blog/api/v1/public/blogs`. The th
 - `GET /{slug}` — one published blog by slug (always includes full HTML content)
 - `GET /sitemap` — a lightweight list of slugs and dates for building your sitemap
 
-Full parameters, defaults, and response shapes are in the [Public Blog API reference](/docs/developers/public-blog-api).
+Full parameters, defaults, and response shapes are in the [Public Blog API reference](/developers/public-blog-api).

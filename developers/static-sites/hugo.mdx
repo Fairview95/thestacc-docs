@@ -40,7 +40,7 @@ EOF
 done
 ```
 
-Note the `include_content=true` query parameter — the list endpoint returns metadata only by default, so you must ask for the HTML body. The script uses the `.html` extension and `markup: html` frontmatter so Hugo renders the API's HTML content as-is instead of treating it as markdown. In your Hugo template, use `{{ .Content | safeHTML }}` to output the content without escaping. The `set -e` and `--fail` flags make the build stop loudly if the API call fails, instead of publishing empty pages (see [Build-time error handling](/docs/developers/static-sites/error-handling)).
+Note the `include_content=true` query parameter — the list endpoint returns metadata only by default, so you must ask for the HTML body. The script uses the `.html` extension and `markup: html` frontmatter so Hugo renders the API's HTML content as-is instead of treating it as markdown. In your Hugo template, use `{{ .Content | safeHTML }}` to output the content without escaping. The `set -e` and `--fail` flags make the build stop loudly if the API call fails, instead of publishing empty pages (see [Build-time error handling](/developers/static-sites/error-handling)).
 
 Update your build command on Cloudflare Pages (or wherever you deploy):
 

@@ -11,7 +11,7 @@ A manual publish is **single-shot**. If your endpoint times out (the request bud
 
 ## Autopilot publish (theStacc publishes on a schedule)
 
-Autopilot publishes **retry automatically** on transient failures (a timeout, a network error, or a `5xx` from your receiver). theStacc makes up to **5 attempts** with exponential backoff — roughly **60s, then 120s, 240s, 480s, and 960s**, a full retry window of about **30 minutes**. After 5 failed attempts the publish is marked failed. A `4xx` from your receiver is treated as permanent and is **not** retried (fix your receiver and re-publish). For the full failure-and-recovery story, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+Autopilot publishes **retry automatically** on transient failures (a timeout, a network error, or a `5xx` from your receiver). theStacc makes up to **5 attempts** with exponential backoff — roughly **60s, then 120s, 240s, 480s, and 960s**, a full retry window of about **30 minutes**. After 5 failed attempts the publish is marked failed. A `4xx` from your receiver is treated as permanent and is **not** retried (fix your receiver and re-publish). For the full failure-and-recovery story, see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 ## Why your receiver must be idempotent
 

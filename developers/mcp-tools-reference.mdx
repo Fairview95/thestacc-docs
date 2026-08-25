@@ -5,13 +5,13 @@ description: "The theStacc MCP server lets an AI agent (like Claude) work on you
 
 The theStacc MCP server lets an AI agent (like Claude) work on your blog for you — reviewing the content plan, drafting and generating posts, editing them, swapping in your own images, and publishing to your site. This page documents every tool the agent can call, what each one does, what you can pass to it, and what comes back.
 
-Before you read this, make sure the MCP server is set up and connected to a project. That is covered in [Agent Keys & MCP Server](/docs/developers/agent-keys-mcp). Each agent key is tied to **one project**, so every tool here works on that single project automatically — the agent never has to choose a project.
+Before you read this, make sure the MCP server is set up and connected to a project. That is covered in [Agent Keys & MCP Server](/developers/agent-keys-mcp). Each agent key is tied to **one project**, so every tool here works on that single project automatically — the agent never has to choose a project.
 
 ## A few things that are true for every tool
 
 - **One project per key.** The agent key the server runs with is scoped to a single project. The agent doesn't pick a project; it's already decided by the key.
 - **You stay in control of approval and publishing.** An agent can write, edit, and prepare posts all day, but it can only publish a post **you** have approved in the dashboard. More on this under [publish\_blog](#publish-blog).
-- **Status drives everything.** Most tools only work when a post is in the right status (for example, you can't publish a post that's still generating). The full map of statuses is in [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle). The relevant statuses are called out under each tool below.
+- **Status drives everything.** Most tools only work when a post is in the right status (for example, you can't publish a post that's still generating). The full map of statuses is in [Blog Status Lifecycle](/content-seo/blog-status-lifecycle). The relevant statuses are called out under each tool below.
 - **Generation runs in the background.** Tools that create or generate a post return right away with a post ID — they don't wait for the writing to finish. The agent checks progress by polling [generation\_status](#generation-status).
 - **Errors are clear.** If a tool can't do what was asked (the key is invalid, the post isn't approved, a file can't be read, a publish is blocked for compliance), it returns a readable error message instead of silently failing.
 
@@ -122,7 +122,7 @@ Saves changes to a post's text and metadata. You only send the fields you want t
 - **meta\_title**
 - **meta\_description**
 
-**Important status behavior:** if you edit the **content** of a post that's sitting in **Pending Review** (it was generated and is awaiting your approval), saving moves it to **Modified — Pending Review**. That's the signal that the draft changed after generation and is waiting on a fresh look. Editing only metadata (title, excerpt, meta fields) does not flip the status. See [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) for what each review status means.
+**Important status behavior:** if you edit the **content** of a post that's sitting in **Pending Review** (it was generated and is awaiting your approval), saving moves it to **Modified — Pending Review**. That's the signal that the draft changed after generation and is waiting on a fresh look. Editing only metadata (title, excerpt, meta fields) does not flip the status. See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) for what each review status means.
 
 ### regenerate\_section
 
@@ -217,6 +217,6 @@ The two human checkpoints — picking publish dates for bonus posts, and approvi
 
 ## Related reading
 
-- [Agent Keys & MCP Server](/docs/developers/agent-keys-mcp) — how to create an agent key and connect the MCP server.
-- [Blog Status Lifecycle](/docs/content-seo/blog-status-lifecycle) — what every blog status means and how posts move between them.
-- [Public Blog API](/docs/developers/public-blog-api) — read your published posts as JSON for a static site or custom frontend.
+- [Agent Keys & MCP Server](/developers/agent-keys-mcp) — how to create an agent key and connect the MCP server.
+- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) — what every blog status means and how posts move between them.
+- [Public Blog API](/developers/public-blog-api) — read your published posts as JSON for a static site or custom frontend.

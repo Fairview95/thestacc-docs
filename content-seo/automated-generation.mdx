@@ -13,7 +13,7 @@ Automated generation only runs when you've opted in. You choose how hands-off yo
 - **Draft for me** - theStacc writes a new post on its scheduled date, then it lands in your review queue as **Pending Review**. Nothing goes live until you approve it.
 - **Manual** - Nothing runs on a schedule. You create and publish posts yourself.
 
-Both **Full autopilot** and **Draft for me** turn on automatic generation. **Full autopilot** additionally turns on auto-publish. Both require an active publishing integration so theStacc has somewhere to send the finished post - see [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes).
+Both **Full autopilot** and **Draft for me** turn on automatic generation. **Full autopilot** additionally turns on auto-publish. Both require an active publishing integration so theStacc has somewhere to send the finished post - see [Publishing Modes & Autopilot](/content-seo/publishing-modes).
 
 You can switch presets at any time from the same setting, and the change takes effect on the next run.
 
@@ -26,7 +26,7 @@ Once automation is on, a background task wakes up on a schedule and looks for po
 - Its project has automatic generation switched on, and
 - The project has an active publishing integration connected.
 
-For every due post it finds, the task hands the work off to a writer that runs the full AI pipeline - research, writing, images, and SEO scoring (see [Blog Generation](/docs/content-seo/blog-generation)). You don't have to keep a browser tab open; this all happens on theStacc's servers.
+For every due post it finds, the task hands the work off to a writer that runs the full AI pipeline - research, writing, images, and SEO scoring (see [Blog Generation](/content-seo/blog-generation)). You don't have to keep a browser tab open; this all happens on theStacc's servers.
 
 The due-post check runs **regularly throughout the day** (roughly every half hour during daytime hours), so a post scheduled for today gets picked up soon after its day begins - you don't have to wait until midnight or babysit the calendar.
 
@@ -41,7 +41,7 @@ If you have more than three posts due for the same project on the same day, that
 
 ## Quota safety net
 
-Your plan includes a set number of posts per billing period (see [Quota & Limits](/docs/content-seo/quota-and-limits)). The automation respects that limit as a hard safety net:
+Your plan includes a set number of posts per billing period (see [Quota & Limits](/content-seo/quota-and-limits)). The automation respects that limit as a hard safety net:
 
 - Before each post is written, theStacc checks how many posts the project has already used in its current period.
 - **If the project is at or over its quota, nothing generates.** The automation skips it rather than writing a post you're not entitled to.
@@ -69,7 +69,7 @@ Here's what happens after a post is written:
 
 The jitter is intentional. If a batch of posts all finish writing within the same minute, sending them to your CMS at the exact same instant could overwhelm it or hit its rate limits. Spreading the publishes across a short window lets them trickle out smoothly. You won't notice the delay in practice - posts still go live within minutes of being written.
 
-If a publish attempt fails for a transient reason (your CMS is briefly unreachable, say), theStacc retries automatically with a backoff before giving up and flagging the post for you. See [Publishing](/docs/content-seo/publishing) for how each integration behaves and what a failed publish looks like.
+If a publish attempt fails for a transient reason (your CMS is briefly unreachable, say), theStacc retries automatically with a backoff before giving up and flagging the post for you. See [Publishing](/content-seo/publishing) for how each integration behaves and what a failed publish looks like.
 
 In **Draft for me** mode there is no auto-publish step at all: the written post simply waits in **Pending Review** until you approve it.
 
@@ -98,11 +98,11 @@ Because posts are paced rather than generated all at once, you'll typically see 
 
 ## A note for regulated businesses
 
-If your project uses theStacc's compliance layer (for regulated professions such as healthcare or legal), the auto-publish path is stricter on purpose. A post that doesn't clearly pass the compliance check won't be pushed live automatically - it's held for a human to review instead, since the autopilot has no one in the loop to approve an exception. See [Quality & safety](/docs/how-it-works/quality-safety) for more.
+If your project uses theStacc's compliance layer (for regulated professions such as healthcare or legal), the auto-publish path is stricter on purpose. A post that doesn't clearly pass the compliance check won't be pushed live automatically - it's held for a human to review instead, since the autopilot has no one in the loop to approve an exception. See [Quality & safety](/how-it-works/quality-safety) for more.
 
 ## Related
 
-- [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes) - choosing Full autopilot, Draft for me, or Manual
-- [Quota & Limits](/docs/content-seo/quota-and-limits) - how many posts your plan generates per period
-- [Time-Based Scheduling](/docs/content-seo/scheduling-missed-posts) - how scheduled dates are set across your calendar
-- [Publishing](/docs/content-seo/publishing) - connecting a destination and how each integration publishes
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes) - choosing Full autopilot, Draft for me, or Manual
+- [Quota & Limits](/content-seo/quota-and-limits) - how many posts your plan generates per period
+- [Time-Based Scheduling](/content-seo/scheduling-missed-posts) - how scheduled dates are set across your calendar
+- [Publishing](/content-seo/publishing) - connecting a destination and how each integration publishes

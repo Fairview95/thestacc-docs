@@ -5,7 +5,7 @@ description: "This is the end-to-end reference for theStacc's Custom Webhook int
 
 This is the **end-to-end reference** for theStacc's Custom Webhook integration. It covers everything a developer needs to ship a production receiver: how authentication works, every event we send, every field we put in the payload, what to return, how retries and idempotency behave, and ready-to-paste receiver and database-schema examples.
 
-> **Quick orientation:** if you're configuring this from theStacc's dashboard, start at [Connect Platforms](/docs/integrations/overview) and choose Custom Webhook. This page is for the developer who needs to build (or audit) the receiving endpoint. For what happens when a publish fails and how to recover, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+> **Quick orientation:** if you're configuring this from theStacc's dashboard, start at [Connect Platforms](/integrations/overview) and choose Custom Webhook. This page is for the developer who needs to build (or audit) the receiving endpoint. For what happens when a publish fails and how to recover, see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 ## When to use a webhook
 
@@ -15,7 +15,7 @@ Choose the Custom Webhook integration when:
 - You want **full control** over what happens when a blog publishes — write to your own database, trigger a rebuild, push to a CDN, fan out to other systems.
 - You already have a CMS but want **theStacc to write into it via your own API**, not theStacc's direct integrations.
 
-If you use WordPress, Webflow, Ghost, Shopify, or Zepio, use those integrations instead — they handle authentication, image uploads, and field mapping for you. See [Connect Platforms](/docs/integrations/overview) for the full list.
+If you use WordPress, Webflow, Ghost, Shopify, or Zepio, use those integrations instead — they handle authentication, image uploads, and field mapping for you. See [Connect Platforms](/integrations/overview) for the full list.
 
 ## How the handshake works
 

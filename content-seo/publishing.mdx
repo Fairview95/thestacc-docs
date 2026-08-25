@@ -21,7 +21,7 @@ Blogs enter a "Pending Review" state. You get a notification, review the post, m
 
 Blogs publish automatically after generation and SEO scoring, with no review step. You can still unpublish or edit after a post goes live. Auto publish requires an active publishing destination. Best for hands-off operation.
 
-For a deeper walkthrough of autopilot, daily auto-generation, and how the cron pipeline schedules and spaces out publishes, see [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes).
+For a deeper walkthrough of autopilot, daily auto-generation, and how the cron pipeline schedules and spaces out publishes, see [Publishing Modes & Autopilot](/content-seo/publishing-modes).
 
 ## Supported platforms
 
@@ -35,7 +35,7 @@ theStacc publishes to all of these. Connect one as your active destination under
 - **Custom Webhook** - sends each publish as JSON to any HTTP endpoint you control, for sites and CMSes not directly supported.
 - **Shopify (beta)** - publishes to your Shopify store's built-in blog, connected with a secure OAuth sign-in.
 
-For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/docs/integrations/overview).
+For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/integrations/overview).
 
 ### One active destination at a time
 
@@ -61,7 +61,7 @@ The blog you see in the editor is cleaned up at publish time so it renders corre
 
 - **The hero image is removed from the body.** Your featured image is sent as a separate structured field that every platform renders at the top of the post. theStacc strips that same image out of the article body so it does not appear twice on the page.
 - **The excerpt is trimmed.** A short, clean excerpt (capped at 256 characters and trimmed at a word boundary) is sent alongside the post, so platforms with excerpt length limits accept it without error.
-- **Internal link placeholders are resolved.** While writing, the AI marks internal links as placeholders. At publish time these are matched to your configured internal links and turned into real URLs. Any placeholder with no match is removed and the visible link text is kept, so a broken link is never published. See [Internal Linking](/docs/content-seo/internal-linking) for how to set up the link targets.
+- **Internal link placeholders are resolved.** While writing, the AI marks internal links as placeholders. At publish time these are matched to your configured internal links and turned into real URLs. Any placeholder with no match is removed and the visible link text is kept, so a broken link is never published. See [Internal Linking](/content-seo/internal-linking) for how to set up the link targets.
 - **Relative links are made absolute.** Call-to-action links entered as a path (like `/contact`) are rewritten to your full site URL (like `https://yoursite.com/contact`) so they work everywhere the post is shown, including the in-app preview.
 
 The duplicate H1 is also removed, since platforms render your title as the page heading.
@@ -80,7 +80,7 @@ On a retry, theStacc first checks your site to see whether the earlier attempt a
 
 Some failures will never fix themselves, the most common being an expired token or an invalid credential (a 401 or 403 from your platform, or a URL theStacc cannot reach). These point at something only you can change, so theStacc does not waste retries on them. The blog is marked publish failed immediately with a message telling you exactly what to fix, such as reconnecting your account or generating a fresh Application Password.
 
-Because these are expected user-configuration issues rather than bugs, they do not page the engineering on-call team. Once you have updated the connection, click **Re-Publish** on the blog to try again. For the full list of error messages and how to clear each one, see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+Because these are expected user-configuration issues rather than bugs, they do not page the engineering on-call team. Once you have updated the connection, click **Re-Publish** on the blog to try again. For the full list of error messages and how to clear each one, see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 ## Custom webhook events
 
@@ -96,7 +96,7 @@ If you publish through a custom webhook, your receiver gets a JSON request for e
 
 Respond to publish events with a `2xx` status and a JSON body like `{"ok": true, "url": "<live-post-url>", "id": "<your-cms-id>"}` so theStacc can store the live URL and show a clickable **View live post** link. The `id` you return is remembered so later updates, unpublishes, and deletes can target the right record.
 
-For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/docs/integrations/overview) and the [Webhook Reference](/docs/developers/webhooks/overview).
+For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/integrations/overview) and the [Webhook Reference](/developers/webhooks/overview).
 
 ## Managing connections
 
@@ -110,7 +110,7 @@ Each saved connection shows:
 
 ## Related articles
 
-- [Publishing Modes & Autopilot](/docs/content-seo/publishing-modes) - control whether blogs publish automatically, wait for approval, or stay drafts.
-- [Connect Platforms](/docs/integrations/overview) - step-by-step setup for every supported platform and the custom webhook.
-- [Publishing Errors & Retries](/docs/content-seo/publishing-errors) - what each publish error means and how to fix it.
-- [Internal Linking](/docs/content-seo/internal-linking) - set up the internal links that placeholders resolve to at publish time.
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes) - control whether blogs publish automatically, wait for approval, or stay drafts.
+- [Connect Platforms](/integrations/overview) - step-by-step setup for every supported platform and the custom webhook.
+- [Publishing Errors & Retries](/content-seo/publishing-errors) - what each publish error means and how to fix it.
+- [Internal Linking](/content-seo/internal-linking) - set up the internal links that placeholders resolve to at publish time.

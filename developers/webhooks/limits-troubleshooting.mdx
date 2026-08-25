@@ -35,7 +35,7 @@ Everything else you set is passed through verbatim.
 
 ## Troubleshooting
 
-Concrete error, then cause, then fix. For the user-facing side of these — where the error shows up in theStacc and how to recover — see [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+Concrete error, then cause, then fix. For the user-facing side of these — where the error shows up in theStacc and how to recover — see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 | What you see in theStacc | Cause | Fix |
 | --- | --- | --- |
@@ -46,7 +46,7 @@ Concrete error, then cause, then fix. For the user-facing side of these — wher
 | "Sent to webhook — your receiver didn't return a public URL" | You returned `2xx` but no `url` field | Add `url` to your response JSON. theStacc displays it in the dashboard. |
 | Publish "succeeds" but the post never appears | You returned `2xx` without actually writing to your DB | Check your server logs — your handler probably threw after the response was sent. |
 | "Webhook URL must be HTTPS" at save time | URL starts with `http://` or points to localhost / a private IP | Deploy publicly with HTTPS. For local dev, use a tunnel like ngrok. |
-| A blog publishes twice | Receiver isn't idempotent across autopilot retries | UPSERT on `blog_id`, or dedup on `idempotency_key`. See [Idempotency & retries](/docs/developers/webhooks/idempotency). |
+| A blog publishes twice | Receiver isn't idempotent across autopilot retries | UPSERT on `blog_id`, or dedup on `idempotency_key`. See [Idempotency & retries](/developers/webhooks/idempotency). |
 
 ## Security best practices
 
@@ -70,11 +70,11 @@ The `X-Webhook-Signature` header verified against your secret. Nothing else is r
 
 **What's the `X-Fairview-Signature` header for?**
 
-It's a legacy compatibility header sent on autopilot publishes, carrying the same HMAC as `X-Webhook-Signature` but `sha256=`-prefixed. New receivers should use `X-Webhook-Signature`. See [Legacy `X-Fairview-Signature` compatibility header](/docs/developers/webhooks/authentication#legacy-x-fairview-signature-compatibility-header).
+It's a legacy compatibility header sent on autopilot publishes, carrying the same HMAC as `X-Webhook-Signature` but `sha256=`-prefixed. New receivers should use `X-Webhook-Signature`. See [Legacy `X-Fairview-Signature` compatibility header](/developers/webhooks/authentication#legacy-x-fairview-signature-compatibility-header).
 
 **Why did the same blog arrive twice?**
 
-Autopilot publishes retry automatically on transient failures, so a lost response packet can cause a re-delivery. Dedup on `idempotency_key` (autopilot payloads include it) or UPSERT on `blog_id`. See [Idempotency & retries](/docs/developers/webhooks/idempotency).
+Autopilot publishes retry automatically on transient failures, so a lost response packet can cause a re-delivery. Dedup on `idempotency_key` (autopilot payloads include it) or UPSERT on `blog_id`. See [Idempotency & retries](/developers/webhooks/idempotency).
 
 **Can I override the `Content-Type` or signature headers with a custom header?**
 
@@ -82,15 +82,15 @@ No. `Content-Type` is always `application/json`, and the signature headers are a
 
 **What's the maximum title / slug / content length?**
 
-theStacc doesn't enforce hard length limits at the API level — generated content stays well within reasonable bounds. If your CMS or DB needs hard caps, the [Field reference](/docs/developers/webhooks/field-reference) table lists safe defaults.
+theStacc doesn't enforce hard length limits at the API level — generated content stays well within reasonable bounds. If your CMS or DB needs hard caps, the [Field reference](/developers/webhooks/field-reference) table lists safe defaults.
 
 **What if my receiver is slow or down when a publish happens?**
 
-On a manual publish, that publish fails and the user clicks Republish. On an autopilot publish, theStacc retries automatically (up to 5 attempts over ~30 minutes) before marking it failed. See [Publishing Errors & Retries](/docs/content-seo/publishing-errors).
+On a manual publish, that publish fails and the user clicks Republish. On an autopilot publish, theStacc retries automatically (up to 5 attempts over ~30 minutes) before marking it failed. See [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 **Can I get historical blogs through the webhook?**
 
-No — webhooks are forward-only. For backfills, use the [Public Blog API](/docs/developers/public-blog-api), which lets you fetch all your published blogs.
+No — webhooks are forward-only. For backfills, use the [Public Blog API](/developers/public-blog-api), which lets you fetch all your published blogs.
 
 **Do I need to handle `test.ping` separately?**
 
@@ -102,15 +102,15 @@ Yes — set up multiple Custom Webhook integrations on the same project. Each ge
 
 **Does an agent or the MCP server publishing my blog use a different webhook?**
 
-No. Whether a teammate clicks Publish or an automation publishes through the MCP server, the publish flows through the same path and fires the same webhook events at the same URL. See [Agent Keys & MCP](/docs/developers/agent-keys-mcp).
+No. Whether a teammate clicks Publish or an automation publishes through the MCP server, the publish flows through the same path and fires the same webhook events at the same URL. See [Agent Keys & MCP](/developers/agent-keys-mcp).
 
 **What happens if I delete a blog in theStacc?**
 
-We send `event: "blog.deleted"` with the `blog_id` and `title`. Your handler should remove or hide the post. If your receiver fails, the blog stays deleted in theStacc but lingers on your site — periodic reconciliation via the [Public Blog API](/docs/developers/public-blog-api) is a defensive option.
+We send `event: "blog.deleted"` with the `blog_id` and `title`. Your handler should remove or hide the post. If your receiver fails, the blog stays deleted in theStacc but lingers on your site — periodic reconciliation via the [Public Blog API](/developers/public-blog-api) is a defensive option.
 
 ## Next steps
 
-- Set up the integration in [Connect Platforms](/docs/integrations/overview)
-- Understand failure handling in [Publishing Errors & Retries](/docs/content-seo/publishing-errors)
-- Automate publishing with [Agent Keys & MCP](/docs/developers/agent-keys-mcp)
-- Backfill historical content with the [Public Blog API](/docs/developers/public-blog-api)
+- Set up the integration in [Connect Platforms](/integrations/overview)
+- Understand failure handling in [Publishing Errors & Retries](/content-seo/publishing-errors)
+- Automate publishing with [Agent Keys & MCP](/developers/agent-keys-mcp)
+- Backfill historical content with the [Public Blog API](/developers/public-blog-api)

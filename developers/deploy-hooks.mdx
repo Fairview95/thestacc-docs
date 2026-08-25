@@ -16,7 +16,7 @@ Here's the full flow:
 1. A blog is published (or updated, or unpublished) in theStacc.
 2. theStacc sends a POST request to your deploy hook URL.
 3. Your hosting platform receives the request and starts a new build.
-4. During the build, your site fetches the latest content from the [Public Blog API](/docs/developers/public-blog-api).
+4. During the build, your site fetches the latest content from the [Public Blog API](/developers/public-blog-api).
 5. New static HTML pages are generated and deployed.
 
 The whole thing usually takes one to three minutes, depending on how long your site takes to build.
@@ -28,7 +28,7 @@ It's worth being clear about what a deploy hook is and isn't, because it's easy 
 - A **publishing integration** (WordPress, a custom webhook, and so on) is a **destination** — it's where theStacc sends the actual blog content.
 - A **deploy hook** is a **build trigger** — it carries no content. It only tells your hosting platform "something changed, please rebuild," and your site then pulls the content itself from the Public Blog API.
 
-The two are completely separate and can be used together. A static site typically uses the [Public Blog API](/docs/developers/public-blog-api) to read content plus a deploy hook to know when to rebuild. You do not need a publishing integration for the deploy hook to fire.
+The two are completely separate and can be used together. A static site typically uses the [Public Blog API](/developers/public-blog-api) to read content plus a deploy hook to know when to rebuild. You do not need a publishing integration for the deploy hook to fire.
 
 ## Events that trigger a rebuild
 
@@ -211,5 +211,5 @@ Clears the saved URL and returns `204 No Content`. After this, publishing no lon
 
 ## Next steps
 
-- Review the [Public Blog API](/docs/developers/public-blog-api) reference for the endpoints your build uses to fetch content.
-- Follow the [Static Site Integration](/docs/developers/static-sites/overview) guide if you haven't connected your site yet.
+- Review the [Public Blog API](/developers/public-blog-api) reference for the endpoints your build uses to fetch content.
+- Follow the [Static Site Integration](/developers/static-sites/overview) guide if you haven't connected your site yet.

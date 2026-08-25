@@ -93,11 +93,11 @@ Review replies don't have buttons or links, so the CTA and host checks above don
 - **We can't tell which review is which** - if two of your reviews look too similar to match safely, theStacc refuses to publish to the wrong one and asks you to copy and paste the reply manually instead. This is a safety stop, not a failure.
 - **The review hasn't synced yet** - if we can't find the review on your GBP account, you'll be asked to try again shortly or copy and paste.
 
-For businesses in regulated industries with an advertising-compliance profile turned on, both posts and review replies also pass through a compliance check before publishing. If the check holds your content, it won't be sent, and you'll see the specific reason so you can edit and republish. See [Advertising Compliance & Validation](/docs/local-seo/advertising-compliance) for how that gate works.
+For businesses in regulated industries with an advertising-compliance profile turned on, both posts and review replies also pass through a compliance check before publishing. If the check holds your content, it won't be sent, and you'll see the specific reason so you can edit and republish. See [Advertising Compliance & Validation](/local-seo/advertising-compliance) for how that gate works.
 
 ## Data sync errors
 
-When you sync a location, theStacc refreshes three things from Google and our data sources: your **business info** (rating and review count), your **reviews**, and your **local keywords**. (See [Data Sync & Status](/docs/local-seo/data-sync) for the full walkthrough.) Each can succeed or fail independently, and how theStacc handles a failure depends on whether it's partial or total.
+When you sync a location, theStacc refreshes three things from Google and our data sources: your **business info** (rating and review count), your **reviews**, and your **local keywords**. (See [Data Sync & Status](/local-seo/data-sync) for the full walkthrough.) Each can succeed or fail independently, and how theStacc handles a failure depends on whether it's partial or total.
 
 ### Partial success: one piece fails, the rest still saves
 
@@ -121,7 +121,7 @@ To make sure two syncs never run on the same location at once and corrupt each o
 - If a sync is **already running and was started recently (within the last 5 minutes)**, a second attempt politely steps aside and does nothing - the in-progress sync is doing the work.
 - If a sync looks **stuck or stale (started more than 5 minutes ago)** - for example, a previous run was interrupted and never finished - the new attempt safely takes over the claim and runs a fresh sync. This is the **force-claim**, and it's how a location that got stuck mid-sync recovers on its own the next time you (or a scheduled refresh) trigger a sync.
 
-So if a location ever appears to be stuck "syncing," you don't need to do anything special - simply trigger a sync again after a few minutes and theStacc will take over the stale claim and complete it. See [Data Sync & Status](/docs/local-seo/data-sync) for how sync status is displayed and refreshed.
+So if a location ever appears to be stuck "syncing," you don't need to do anything special - simply trigger a sync again after a few minutes and theStacc will take over the stale claim and complete it. See [Data Sync & Status](/local-seo/data-sync) for how sync status is displayed and refreshed.
 
 ## Posts that get stuck or fail mid-publish
 
@@ -132,7 +132,7 @@ Two safety behaviors worth knowing:
 - **theStacc never double-posts.** If your post actually went live on Google but our final bookkeeping step hiccuped, theStacc will **not** offer you a retry that would create a second identical post on Google. Instead it keeps the post marked as published and asks you to click **Sync** to refresh the live "View on GBP" link. Your single post is safe and live.
 - **A failed publish never strands your content.** Whatever the reason, the post keeps its content and lands in a clearly-failed state with the reason visible - never silently stuck on a spinner. Fix what the message points at (if anything) and retry.
 
-For the full lifecycle of a post from generation to publish, see [GBP Posts & Content Calendar](/docs/local-seo/gbp-posts-calendar).
+For the full lifecycle of a post from generation to publish, see [GBP Posts & Content Calendar](/local-seo/gbp-posts-calendar).
 
 ## "Resource not found" and why we don't say more
 
@@ -159,7 +159,7 @@ If you hit "Resource not found" on something you expect to have access to, doubl
 
 ## Related articles
 
-- [Data Sync & Status](/docs/local-seo/data-sync) - how syncing works and how to read sync status
-- [GBP Posts & Content Calendar](/docs/local-seo/gbp-posts-calendar) - the full post lifecycle and publishing flow
-- [Reviews](/docs/local-seo/reviews) - generating and publishing review replies
-- [Advertising Compliance & Validation](/docs/local-seo/advertising-compliance) - the compliance gate for regulated industries
+- [Data Sync & Status](/local-seo/data-sync) - how syncing works and how to read sync status
+- [GBP Posts & Content Calendar](/local-seo/gbp-posts-calendar) - the full post lifecycle and publishing flow
+- [Reviews](/local-seo/reviews) - generating and publishing review replies
+- [Advertising Compliance & Validation](/local-seo/advertising-compliance) - the compliance gate for regulated industries

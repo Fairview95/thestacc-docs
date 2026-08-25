@@ -89,7 +89,7 @@ Some post formats are text-only by design - they never produce an image. When on
 
 > Text generation failed for this post. Please try again.
 
-**What to do:** Click **Try again** to re-run generation. (See [Image Generation](/docs/content-seo/image-generation) for which formats are text-only and therefore never carry an image.)
+**What to do:** Click **Try again** to re-run generation. (See [Image Generation](/content-seo/image-generation) for which formats are text-only and therefore never carry an image.)
 
 ### Worker died / reaped
 
@@ -123,7 +123,7 @@ The state of a post is driven largely by what happened during image generation. 
 - **Failed** - the image step ran but produced zero images (for example, the image provider had an outage). For formats that are supposed to have a picture, the post is marked failed rather than quietly looking ready, so you never accidentally publish a post with a blank image slot. This is what produces the **Image failed only** state.
 - **Skipped** - the post is a text-only format that is not meant to have an image at all. An empty image slot here is intentional, not a failure.
 
-That last distinction is why theStacc separates **Text-only failed** from **Image failed only**: a missing image on a text format is normal, but a missing image on an image format is a problem to fix. For more on how images are created, sized for each platform, and branded with your logo, see [Image Generation](/docs/content-seo/image-generation).
+That last distinction is why theStacc separates **Text-only failed** from **Image failed only**: a missing image on a text format is normal, but a missing image on an image format is a problem to fix. For more on how images are created, sized for each platform, and branded with your logo, see [Image Generation](/content-seo/image-generation).
 
 ## Editing an image without double-firing
 
@@ -157,5 +157,5 @@ Image regeneration (generating a brand-new image rather than editing the current
 
 ## Related
 
-- [Content Plans & Generation](/docs/social-media/content-plans-generation) - how posts get created and what each generation step does.
-- [Image Generation](/docs/content-seo/image-generation) - how images are produced, sized per platform, branded, and which formats are text-only.
+- [Content Plans & Generation](/social-media/content-plans-generation) - how posts get created and what each generation step does.
+- [Image Generation](/content-seo/image-generation) - how images are produced, sized per platform, branded, and which formats are text-only.

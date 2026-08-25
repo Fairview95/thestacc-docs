@@ -49,8 +49,8 @@ Each connected integration shows:
 
 ## Related
 
-- [Publishing](/docs/content-seo/publishing) — choose your publishing mode (auto-publish, require approval, or draft) and learn how a generated post reaches your site.
-- [Webhook Reference](/docs/developers/webhooks/overview) — the full developer contract for the Custom Webhook destination, including the timeout, retry, and redirect behavior that determines when a publish is marked failed.
-- [Deploy Hooks](/docs/developers/deploy-hooks) — trigger a static-site rebuild after each publish so new posts appear on the live site.
+- [Publishing](/content-seo/publishing) — choose your publishing mode (auto-publish, require approval, or draft) and learn how a generated post reaches your site.
+- [Webhook Reference](/developers/webhooks/overview) — the full developer contract for the Custom Webhook destination, including the timeout, retry, and redirect behavior that determines when a publish is marked failed.
+- [Deploy Hooks](/developers/deploy-hooks) — trigger a static-site rebuild after each publish so new posts appear on the live site.
 
-> **Publishing errors & retries.** theStacc does not silently retry a failed publish — a timeout, a 5xx, or a rejected redirect fails the publish and surfaces a "Failed to publish" message with the reason. The exact contract (15-second timeout, no automatic retries, 3xx rejected) lives in the [Webhook Reference](/docs/developers/webhooks/overview); for non-webhook destinations, fix the connection error shown above and re-publish.
+> **Publishing errors & retries.** theStacc does not silently retry a failed publish — a timeout, a 5xx, or a rejected redirect fails the publish and surfaces a "Failed to publish" message with the reason. The exact contract (15-second timeout, no automatic retries, 3xx rejected) lives in the [Webhook Reference](/developers/webhooks/overview); for non-webhook destinations, fix the connection error shown above and re-publish.
