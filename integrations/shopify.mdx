@@ -1,15 +1,46 @@
 ---
 title: "Shopify"
-description: "Publish blog posts to your Shopify store's built-in blog."
+description: "Publish blog posts to your Shopify store's built-in blog, choose which blog they land in, and keep them in sync."
 ---
 
-Publish blog posts to your Shopify store's built-in blog. Shopify support is currently **Beta**.
+Publish blog posts to your Shopify store's built-in blog. Posts become Shopify **blog articles**, so they show up under `yourstore.com/blogs/<blog>/...`, get a date and an author, and are indexed like any other article on your store.
 
-1. Click **Connect Shopify**.
-2. Enter your store domain — you can type just the handle (`your-store`), the full `your-store.myshopify.com`, or even a pasted store URL. theStacc normalizes whatever you enter to the canonical `your-store.myshopify.com` form. (You'll find this in your Shopify admin URL.)
-3. You're redirected to Shopify to approve access (OAuth). theStacc never sees your Shopify password.
-4. After you approve, theStacc connects, finds the blog to publish to, and makes Shopify the active destination. If your store has no blog yet, theStacc creates one named **News** so there's somewhere for posts to land.
+## Connect your store
 
-Posts are published as Shopify blog articles with content, images, and tags, via Shopify's GraphQL Admin API. As with every destination, connecting Shopify deactivates whatever was active before — one destination at a time per project.
+1. Go to **Settings > Publishing** and click **Connect Shopify**.
+2. Enter your store domain. You can type just the handle (`your-store`), the full `your-store.myshopify.com`, or a pasted store URL; theStacc normalizes it to `your-store.myshopify.com`. (You'll find it in your Shopify admin URL.)
+3. You're sent to Shopify to approve access. theStacc asks for two permissions: **write content** (to create and update articles) and **read products** (for product-aware content). theStacc never sees your Shopify password.
+4. After you approve, theStacc connects, picks a blog to publish to, and makes Shopify the active destination. If your store has no blog yet, theStacc creates one named **News**.
 
-If the connection is lost (for example you uninstall the app on Shopify's side), you'll see *"Shopify access token is invalid or expired. Please reconnect."* — click Connect Shopify again to re-authorize.
+As with every destination, connecting Shopify turns off whatever was active before. One destination at a time per project.
+
+## Choose the blog and how posts go out
+
+Click **Settings** on the Shopify card to change two things:
+
+- **Blog.** A Shopify store can have several blogs (for example *News* and *Guides*). Pick the one theStacc should publish into. New posts go to the selected blog; posts already published stay where they are.
+- **Publishing behavior.**
+  - **Publish immediately.** The article is live on your store as soon as theStacc publishes it. This is the default.
+  - **Save as hidden draft.** The article is created in Shopify but stays unpublished until you make it visible in **Shopify admin > Online Store > Blog posts**. Use this if you want a final look inside Shopify before anything goes live.
+
+The card shows the current blog and behavior, so you can tell at a glance where posts will land.
+
+## What gets published
+
+Each post is created as one article with its title, full content, featured image (Shopify copies the image to its own CDN), summary, and tags. Links back to your site are absolute, and the article's URL slug comes from the post's slug in theStacc.
+
+## Editing, unpublishing, and deleting
+
+- **Sync.** Edit a published post in theStacc and click **Sync changes**. theStacc updates the same Shopify article in place; the URL does not change.
+- **Unpublish.** The article is hidden from your store but stays in Shopify admin as an unpublished article. **Republish** makes it visible again.
+- **Delete.** Deleting a published post in theStacc deletes the article from Shopify as well.
+
+## Reconnecting
+
+If the connection is lost, for example because the theStacc app was uninstalled from your store or a store owner changed, you'll see *"Shopify access token is invalid or expired. Please reconnect."* Click **Reconnect** on the Shopify card (or **Connect Shopify** again) to re-authorize. Your blog choice and publishing behavior are kept.
+
+## Good to know
+
+- Only project admins can connect, switch, or change Shopify settings.
+- Uninstalling the theStacc app from Shopify disconnects the destination on our side automatically. Published articles are not touched.
+- Shopify's blog does not support scheduling through the API in the way theStacc schedules posts; theStacc handles the schedule and publishes at the chosen time.
