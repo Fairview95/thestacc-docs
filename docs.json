@@ -12,6 +12,11 @@
     "dark": "/logo/logo.webp"
   },
   "favicon": "/favicon.svg",
+  "seo": {
+    "metatags": {
+      "canonical": "https://thestacc.com/docs"
+    }
+  },
   "navigation": {
     "tabs": [
       {
