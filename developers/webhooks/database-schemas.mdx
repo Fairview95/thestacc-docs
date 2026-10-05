@@ -115,3 +115,7 @@ db.thestaccBlogs.createIndex({ published_at: -1 });
 ```
 
 </CodeGroup>
+
+## Optional author storage
+
+For author-enabled webhook receivers, add nullable `author_name` (up to 200 characters) and `author_type` (`Person` or `Organization`) fields to your article schema, or map them to existing CMS fields. Null means use the site's default. Preserve these fields when an incoming payload omits `author`; explicitly clear them when it supplies `author: null`. Use this mapping for both creation and updates. See [Blog author](/developers/webhooks/field-reference#blog-author).

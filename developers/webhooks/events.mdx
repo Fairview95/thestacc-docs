@@ -71,3 +71,7 @@ On **autopilot (scheduled) publishes**, the same payload additionally carries tw
 ```
 
 For these events, look up the post in your CMS using the `blog_id` (which you should have stored when handling the original `blog.published`) and delete or hide it.
+
+## Author changes
+
+`blog.published` and `blog.updated` may include an optional `author` object with `name` and `type` (`Person` or `Organization`), or `author: null` to clear an override. Map it on every upsert, including author-only updates. If absent, preserve the existing author. See [Blog author](/developers/webhooks/field-reference#blog-author).
