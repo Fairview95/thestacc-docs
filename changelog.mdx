@@ -1,0 +1,36 @@
+---
+title: "Changelog"
+description: "Product updates, fixes, and integration changes in theStacc, with their release status and any action you need to take."
+---
+
+Follow this page to see what changed, where to find it, and whether your website integration needs an update. Changes marked **Awaiting release** are not yet available in production. Released entries will include the deployment date.
+
+## Awaiting release: blog authors and research sources
+
+These changes are prepared for review. They will become available after the backend and Content Hub updates are deployed.
+
+### Choose a blog author
+
+Set a person's name or an organization such as your Editorial Team from the blog's author settings in Content Hub. Reset the setting to use the default author again. WordPress blogs continue to use the connected site's existing author selection.
+
+Custom website integrations receive an optional `author` field when a blog is published or updated. Existing blogs without a custom author retain their default behavior.
+
+**Website action:** Support both `blog.published` and `blog.updated`, save the author before acknowledging the event, and keep the visible byline and structured data consistent. See [custom webhook setup](/integrations/custom-webhook) and the [author field reference](/developers/webhooks/field-reference).
+
+### Review the sources used for a blog
+
+Open **Sources used** in the Content Hub blog review or editor to inspect the research links, highlights, and available dates. The popup is shown when the blog has saved research sources; older blogs without those records do not show invented sources.
+
+**Your action:** Review the supporting sources before approving a blog. See [reviewing and publishing blogs](/content-seo/publishing).
+
+### Safer editing and saves
+
+The editor stays open when a final save fails or you continue typing while the save is in progress. Concurrent author and content updates detect conflicts instead of silently overwriting a newer save.
+
+**Your action:** If a save reports a conflict, review the latest blog and retry your change.
+
+## How to read future updates
+
+Each released entry will include its release date, the affected product area, what changed, and any steps customers or website developers need to take. Integration changes will link to the relevant event contracts and setup guides.
+
+The in-app **What's New** page also contains product announcements. This docs changelog provides the related setup and integration guidance.
