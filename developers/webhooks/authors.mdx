@@ -1,0 +1,63 @@
+---
+title: "Existing Website Authors"
+description: "Return your site's existing authors for selection in theStacc."
+---
+
+A custom website can provide an optional author directory. theStacc then shows its authors in the blog's author settings. Sites without a directory keep manual person or editorial-team names.
+
+## Configure the endpoint
+
+In **Publishing**, edit the **Custom Webhook** integration and enter **Author-list URL**. Use a public HTTPS GET endpoint. Leave the field blank to use manual names.
+
+The directory request does not include your publishing secret or custom webhook headers. Publish only the public author IDs, display names, and types needed for selection; do not return emails, credentials, or private staff information.
+
+## Return the authors
+
+Return HTTP 200 with uncompressed JSON:
+
+```json
+{
+  "authors": [
+    {"id": "editorial-team", "name": "Editorial Team", "type": "Organization"},
+    {"id": "aditi-rao", "name": "Aditi Rao", "type": "Person"}
+  ]
+}
+```
+
+| Field | Requirements |
+| --- | --- |
+| `id` | Unique stable string, 1–200 characters, without surrounding whitespace or control characters |
+| `name` | Nonblank display name, up to 200 characters |
+| `type` | `Person` or `Organization` |
+
+Return at most 500 authors and 128 KiB. `{"authors":[]}` is a valid empty directory. Redirects, private addresses, compressed responses, invalid JSON, duplicate IDs, and responses exceeding the request deadline are rejected.
+
+## Select or enter an author
+
+Open a blog in Content Hub and use **Existing website author**. Selecting an entry fills its name and type; click **Save author** to store it.
+
+If the directory is empty or unavailable, enter a name manually or retry the lookup. A removed author remains visible as a saved selection until the user chooses another author, edits it manually, or selects **Use website default** and saves. A directory refresh does not replace the saved byline or a typed draft.
+
+## Handle publish and update events
+
+An ID-selected author is included in `blog.published` and `blog.updated`:
+
+```json
+"author": {
+  "id": "editorial-team",
+  "name": "Editorial Team",
+  "type": "Organization"
+}
+```
+
+Resolve the ID against your own directory. Handle removed IDs with a clear error or an explicitly defined fallback; do not silently assign an unrelated author. Keep accepting manual authors without an ID:
+
+```json
+"author": {"name": "Editorial Team", "type": "Organization"}
+```
+
+An omitted `author` preserves your existing behavior. An explicit `"author": null` requests your default. Saving an author in theStacc does not change the website byline until you handle the next publish or sync/update event. See the [author receiver checklist](/developers/webhooks/field-reference#blog-author).
+
+## Platform-specific authors
+
+WordPress keeps its existing user/PublishPress picker. This custom directory is for webhook sites. Shopify author names/staff IDs and Webflow text/reference fields need their own mappings; connecting those platforms does not enable this webhook directory.

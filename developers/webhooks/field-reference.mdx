@@ -89,3 +89,7 @@ if (Object.hasOwn(body, 'author')) {
 8. Verify first publish, an author-only update, clearing the author, an old payload without the field, and a repeated delivery. Preserve the existing raw-body signature verification and deduplication behavior.
 
 The scheduled publishing payload includes generated `jsonld`; its `BlogPosting` author follows this selection. Do not require `jsonld` on every delivery: manual and Sync payloads may omit it. Your site should maintain structured data from the stored author fields on every update.
+
+## Select existing site authors
+
+Provide an optional public HTTPS author-list endpoint to show your site's authors in a dropdown. Selected authors include an optional stable `author.id` alongside the existing `name` and `type`; manual names keep the previous shape. See [Existing website authors](/developers/webhooks/authors) for setup, response limits, and receiver handling.

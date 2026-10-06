@@ -13,14 +13,14 @@ Publish blog content to your Webflow CMS collections via a Webflow API token.
 
 ## Step 1 — Generate a Webflow API token
 
-1. In Webflow, open the site you want to connect.
-2. Go to **Site Settings → Apps & Integrations → API Access**. You'll see this:
-
 <Frame caption="Webflow Site Settings → Apps &amp; Integrations → API access section">
 
 ![Webflow Site Settings → Apps & Integrations → API access section](/images/integrations/webflow/api-access-page.webp)
 
 </Frame>
+
+1. In Webflow, open the site you want to connect.
+2. Go to **Site Settings → Apps & Integrations → API Access**. You'll see this:
 
 1. **Click the blue "Generate API token" button on the right — NOT "Generate V1 token".** V1 tokens use Webflow's legacy API which theStacc doesn't support.
 2. On the next screen, name the token `theStacc` and set permissions exactly like this — Webflow shows a dropdown for each scope. The two scopes that need access are CMS and Sites; everything else stays on None.
@@ -43,8 +43,12 @@ Publish blog content to your Webflow CMS collections via a Webflow API token.
 
 ## Step 2 — Connect in theStacc
 
-1. In theStacc, open **Content SEO → Settings → Publishing** and toggle Webflow on.
-2. Paste the token, give the integration a friendly name, and click Continue.
+1. In theStacc, open **Publishing** in the sidebar. Click **Connect** on the **Webflow** card, then **Configure Webflow**.
+2. Enter an integration name and your API token, then click **Continue**.
+<Frame caption="Connect webflow from the Publishing page.">
+  <img src="/images/product/connect-webflow.jpg" alt="theStacc webflow connection setup" />
+</Frame>
+
 3. Select your Webflow site from the dropdown.
 4. Select the CMS collection where blog posts should land.
 5. Map theStacc fields to your Webflow collection fields:
