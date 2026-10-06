@@ -173,6 +173,7 @@
               {
                 "group": "Create posts",
                 "pages": [
+                  "social-media/video-posts",
                   "social-media/post-customization",
                   "social-media/repurpose-from-blog",
                   "social-media/platform-character-limits",
@@ -182,6 +183,7 @@
               {
                 "group": "Review & publish",
                 "pages": [
+                  "social-media/edit-posts",
                   "social-media/approval-review-workflow",
                   "social-media/publishing-scheduling",
                   "social-media/post-deletion"
