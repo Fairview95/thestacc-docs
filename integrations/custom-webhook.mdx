@@ -234,3 +234,7 @@ In the Content Hub's blog review or Blog Studio, set **Blog author** to a team n
 This control is available for custom webhook destinations. WordPress uses its existing site-user author picker; it does not accept an arbitrary custom byline through this webhook field.
 
 Your website's developer must implement the optional `author` field on both `blog.published` and `blog.updated`. Receiving the field does not automatically make it visible on the website. See [Author field and receiver checklist](/developers/webhooks/field-reference#blog-author).
+
+## Existing website authors
+
+If your developer supplies a public author directory, add its **Author-list URL** to the integration. Blogs can then select an existing author. Without it, manual names continue to work. See [Existing website authors](/developers/webhooks/authors).

@@ -7,12 +7,14 @@ Once a post is approved, you decide how and when it goes live. You can publish t
 
 If a post still needs sign-off first, see [Approval & Review Workflow](/social-media/approval-review-workflow). To check the live state of a post after it ships, see [Post States & Failures](/social-media/post-states-failures).
 
+For account-specific weekly slots and timezone setup, use [Posting schedules & timezones](/social-media/content-scheduling). Changes there apply to new automatic posts; posts already sent to the publisher retain their schedule.
+
 ## Publish now vs scheduled
 
 When you publish a post, you choose one of two timings:
 
 - **Publish now** - The post is sent to your connected accounts immediately. theStacc reads each platform's result the moment it's accepted, so the dashboard reflects what actually happened right away (no waiting for a callback).
-- **Schedule for later** - The post is queued and goes live at the date and time you pick, in your project's timezone. You can keep editing a scheduled post up until it fires, and your edits are pushed through so the live post matches what you last saved.
+- **Schedule for later** - The post is queued and goes live at the date and time you pick, in the timezone shown in the scheduling controls. You can keep editing a scheduled post up until it fires, and your edits are pushed through so the live post matches what you last saved.
 
 ### The 5-minute minimum
 
@@ -69,38 +71,11 @@ If you tap **Publish** twice in quick succession - or your connection hiccups an
 
 This only collapses *identical, back-to-back* publishes. A genuinely new action - for example, publishing to LinkedIn now and then deliberately publishing to X a little later - is always treated as its own publish.
 
-## Choosing how new posts go out
+## Choose how automatic posts go out
 
-The options above cover publishing a post by hand. You can also decide how *automatically generated* posts behave, so your content plan runs with as much or as little hands-on involvement as you want.
+Open **Social > Connections** and choose the **Publishing mode** for each connected platform. Review the selected account before enabling automation. Use **Manual** to pause automatic posting for that platform.
 
-Go to **Social Media \> Settings \> Connections** and find the **How should posts go out?** card. Pick one of three presets:
-
-- **Full Autopilot** - theStacc creates each scheduled post **and publishes it** to your connected accounts automatically. There is no review step.
-- **Draft for Me** - theStacc creates each scheduled post and holds it in **Review**. You approve the ones you want, and each approved post publishes at its scheduled time.
-- **Manual** - Automatic posting is off. You create and publish posts yourself from the Social Dashboard.
-
-### How the presets work
-
-Each preset is a combination of two settings that theStacc saves together for you:
-
-| Preset | Auto-generation | Publishing mode | What happens to a generated post |
-| --- | --- | --- | --- |
-| **Full Autopilot** | On | `auto` | Published automatically at its scheduled time |
-| **Draft for Me** | On | `approval_required` | Held in **Pending Review** until you approve it |
-| **Manual** | Off | `manual` | No new posts are generated automatically; you publish from the dashboard |
-
-A few notes:
-
-- Only **project admins** can change this setting.
-- **Full Autopilot** and **Draft for Me** require at least one connected account (they create real posts for real destinations). **Manual** is always available, even with nothing connected - it simply turns automatic posting off.
-- If no preset has been chosen yet, posts default to the **Full Autopilot** behavior.
-- Changing the preset doesn't touch posts that are already published or already scheduled - it affects how future generated posts are handled.
-
-### Posting schedule
-
-Below the preset picker, the **Posting schedule** card is where you set the specific dates and start time your automatic posts should go out (in your project's timezone). Pick a date, set a start time, and click **Add to schedule**. A generated content plan maps its posts onto these slots in order.
-
-Set the time a little ahead for exact posting. A time that's very soon or already past will post as soon as the post is generated. You can still change any individual post's time on the dashboard.
+For weekly posting days, account-specific timezones, and recommended times, follow [Posting schedules & timezones](/social-media/content-scheduling). Changes affect new automatic posts; review posts already scheduled individually.
 
 ## Related
 

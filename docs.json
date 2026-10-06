@@ -251,6 +251,7 @@
               "developers/webhooks/authentication",
               "developers/webhooks/events",
               "developers/webhooks/field-reference",
+              "developers/webhooks/authors",
               "developers/webhooks/response-contract",
               "developers/webhooks/idempotency",
               "developers/webhooks/self-hosting-images",
