@@ -36,7 +36,7 @@ The list view is a table of your posts with these columns:
 
 - **Preview** - a thumbnail of the post's image (when it has one).
 - **Post** - the caption preview and topic.
-- **Format** - whether the post is an Image, Carousel, or Text post (see [Post formats](#post-formats) below).
+- **Format** - whether the post is an Image, Carousel, Text, or Video post (see [Post formats](#post-formats) below).
 - **Pillar** - the content pillar the post belongs to.
 - **Date** - the scheduled publish date and time.
 - **Status** - the post's current state, plus a per-platform indicator showing how publishing went on each connected account.
@@ -76,10 +76,11 @@ For a deeper walkthrough of what each failure means and how to recover, see [Pos
 
 ## Post formats
 
-Every post has a format that decides what kind of content the AI produces and how it appears on each platform:
+Every post has a format that determines its media and how it appears on each platform:
 
 - **Image** - a single caption paired with one generated image. This is the default for most posts.
 - **Carousel** - a multi-slide post viewers swipe through, with a cohesive visual system across all slides. Great for listicles, step-by-steps, and case studies.
+- **Video** - your uploaded clip or an existing Library video, paired with captions for the selected channels. [Create a video post](/social-media/video-posts).
 - **Text** - a caption with no image. By default the Social module turns text-only ideas into image posts so your feed always has a visual; **Text** appears only if your project has opted back into text posts.
 - **Image** (legacy "Text-Image") - older posts created before the current format names will show as Image.
 
@@ -87,12 +88,14 @@ Every post has a format that decides what kind of content the AI produces and ho
 
 The same post can target several platforms at once, and the module tailors the caption to each one. A few platform rules are worth knowing because they affect what publishes successfully:
 
-- **Instagram** - every Instagram post needs an image; Instagram doesn't allow text-only posts. Carousels can hold between 2 and 10 images.
+- **Instagram** - posts need visual media: an image, carousel, or supported video. Text-only posts are not supported.
 - **LinkedIn** - publishes text and image posts. A multi-image "carousel" only renders as a true swipeable carousel when uploaded as a PDF document; otherwise the images post as separate images. LinkedIn also tends to show posts with external links to fewer people, so the editor will suggest moving links to the first comment.
 - **Facebook** - publishes text and image posts with a very high caption limit, so length is rarely a concern here.
 - **X (Twitter)** - allows up to 4 images per tweet, with a 280-character caption limit on the free tier (X Premium raises this to 25,000). Links always count as 23 characters regardless of their actual length.
 
 The post editor checks these rules before you publish and flags anything that would be rejected, so you can fix it first. For how to connect each account and what each connection supports, see [Connecting Platforms](/social-media/connecting-platforms).
+
+Video posts also target Facebook, LinkedIn, and X. Check the video composer's requirements for each selected channel before saving.
 
 ## Post-state badges: Ready, warnings, and failures
 
@@ -106,6 +109,8 @@ To understand each failure type and its recovery action in detail, see [Post Sta
 
 ## Where to go next
 
+- [Create Video Posts](/social-media/video-posts) - upload or reuse a clip, add copy, and review it in Content Hub.
+- [Edit Social Posts](/social-media/edit-posts) - use the drawer to change captions, hashtags, and first comments.
 - [Content Plans & Generation](/social-media/content-plans-generation) - how the AI builds a monthly plan from your content pillars and fills your calendar.
 - [Publishing & Scheduling](/social-media/publishing-scheduling) - how and when posts go live, and how to retry the ones that don't.
 - [Connecting Platforms](/social-media/connecting-platforms) - connect Instagram, LinkedIn, Facebook, and X.
