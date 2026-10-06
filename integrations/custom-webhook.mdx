@@ -222,3 +222,11 @@ For `blog.updated` / `blog.unpublished` / `blog.deleted`, look up the post in yo
 - Verify the `X-Webhook-Signature` header on every request when a secret is set.
 - Idempotency — use `blog_id` as a dedupe key in case of retries.
 - Set up error alerting on your endpoint so silent 4xx/5xx responses don't go unnoticed.
+
+## Blog authors for custom sites
+
+In the Content Hub's blog review or Blog Studio, set **Blog author** to a team name (for example, `Rian Air Editorial Team`) or a person's name. Choose **Editorial team** or **Person**, then click **Save author**. Leave the name blank and save to restore your website's default. For an already-published article, sync the blog after saving.
+
+This control is available for custom webhook destinations. WordPress uses its existing site-user author picker; it does not accept an arbitrary custom byline through this webhook field.
+
+Your website's developer must implement the optional `author` field on both `blog.published` and `blog.updated`. Receiving the field does not automatically make it visible on the website. See [Author field and receiver checklist](/developers/webhooks/field-reference#blog-author).

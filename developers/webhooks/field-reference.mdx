@@ -9,6 +9,7 @@ Every field theStacc sends in a `blog.published` / `blog.updated` event:
 | --- | --- | --- | --- | --- |
 | `event` | string | Yes | enum: `blog.published` \| `blog.updated` \| `blog.unpublished` \| `blog.deleted` \| `test.ping` | Use this to route in your handler. |
 | `blog_id` | string (UUID) | Yes | 36 chars, or `preview-` + UUID for sample payloads | theStacc's stable identifier. Use as your dedup / foreign key. |
+| `author` | object \| `null` | Only when explicitly configured or cleared | `name`: 1–200 characters; `type`: `Person` or `Organization` | Optional blog byline. Omitted preserves the site default/current author; `null` resets to the site default. See below. |
 | `title` | string | Yes | typically 50–120 chars | Blog title. Not HTML-escaped — your receiver renders it. |
 | `slug` | string | Yes | typically up to ~50 chars, lowercase, hyphenated | URL-safe identifier. Stable across re-publishes unless the user edits it. |
 | `content` | string (HTML) | Yes | typically 4,000–15,000 chars | Full blog HTML. Includes `<h2>`, `<p>`, `<ul>`, `<a>`, `<img>`, etc. The duplicate hero `<img>` is stripped (see note below). |
@@ -29,3 +30,62 @@ Every field theStacc sends in a `blog.published` / `blog.updated` event:
 > **The hero image is stripped from `content`.** Every generated blog carries its hero image both as `featured_image_url` and (originally) inlined as the first `<img>` in the body. theStacc removes that inline duplicate before sending, so `content` won't render the hero twice and `images[]` won't list the hero URL. Render the hero from `featured_image_url` and the body images from inside `content` (or mirror them via `images[]`).
 
 > **Field length is not enforced at the API level.** Postgres `TEXT` columns are unbounded, and theStacc-generated content stays well within the practical limits above. If you want hard caps in your database schema, the limits in the table are safe defaults.
+
+## Blog author
+
+An explicitly configured byline is sent on first publication, republication, and **Sync**, including scheduled publishing:
+
+```json
+{
+  "event": "blog.published",
+  "blog_id": "8f3e...",
+  "author": {
+    "name": "Rian Air Editorial Team",
+    "type": "Organization"
+  }
+}
+```
+
+The example shows only the author-related fields. The normal blog payload also includes the article fields documented above. For a personal byline, send `{"name": "Aditi Rao", "type": "Person"}`. This identifies the author; it does not change the article's blog format/category.
+
+| Incoming value | Receiver behavior |
+| --- | --- |
+| `author` omitted | Keep the current author on updates; use your site's default on creation. |
+| `author: {name, type}` | Validate and store the explicit name and type. Replace any previously configured author. |
+| `author: null` | Clear the explicit author and fall back to the site's default. |
+
+Do not use a truthiness check such as `if (body.author)` to decide whether to update: that would ignore an explicit reset. Check property presence:
+
+```javascript
+const authorPatch = {};
+if (Object.hasOwn(body, 'author')) {
+  if (body.author === null) {
+    authorPatch.authorName = null;
+    authorPatch.authorType = null;
+  } else {
+    const author = body.author;
+    if (typeof author !== 'object' || typeof author.name !== 'string'
+        || !author.name.trim() || author.name.length > 200
+        || !['Person', 'Organization'].includes(author.type)) {
+      throw new Error('Invalid blog author');
+    }
+    authorPatch.authorName = author.name.trim();
+    authorPatch.authorType = author.type;
+  }
+}
+// Merge authorPatch into your existing validated article upsert, keyed by blog_id.
+// Use the same mapping for blog.published AND blog.updated.
+```
+
+### Website receiver checklist
+
+1. Allow the optional field in your payload validator. Continue accepting older payloads without it and `test.ping` without article fields.
+2. Store nullable author name and type alongside the article, or map them to an existing CMS byline field. No separate author-account creation is required for a text byline.
+3. Handle both `blog.published` and `blog.updated` through the same article upsert by `blog_id`.
+4. Render the effective author name on article pages as escaped text. Use your configured default when no explicit author exists. Update listing cards too if they display authors.
+5. Set `BlogPosting.author` to `{"@type": "Person", "name": "Aditi Rao"}` or the corresponding `Organization`. The visible byline and structured data must agree. Escape `<` when embedding serialized JSON into an HTML script element.
+6. Refresh page/build caches after updates so author changes appear on the live page.
+7. Acknowledge only after the write succeeds, returning the existing CMS id and public URL. Never acknowledge an unsupported update as success.
+8. Verify first publish, an author-only update, clearing the author, an old payload without the field, and a repeated delivery. Preserve the existing raw-body signature verification and deduplication behavior.
+
+The scheduled publishing payload includes generated `jsonld`; its `BlogPosting` author follows this selection. Do not require `jsonld` on every delivery: manual and Sync payloads may omit it. Your site should maintain structured data from the stored author fields on every update.

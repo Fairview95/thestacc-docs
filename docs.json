@@ -260,6 +260,12 @@
           "developers/agent-keys-mcp",
           "developers/mcp-tools-reference"
         ]
+      },
+      {
+        "tab": "Changelog",
+        "pages": [
+          "changelog"
+        ]
       }
     ]
   },
