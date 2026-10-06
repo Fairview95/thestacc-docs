@@ -31,7 +31,8 @@
               "getting-started/key-concepts",
               "getting-started/accounts-workspaces",
               "getting-started/onboarding-first-steps",
-              "getting-started/troubleshooting-setup"
+              "getting-started/troubleshooting-setup",
+              "getting-started/library"
             ]
           },
           {
@@ -174,7 +175,8 @@
                 "pages": [
                   "social-media/post-customization",
                   "social-media/repurpose-from-blog",
-                  "social-media/platform-character-limits"
+                  "social-media/platform-character-limits",
+                  "social-media/image-editing"
                 ]
               },
               {

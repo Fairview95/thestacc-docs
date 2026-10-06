@@ -6,13 +6,17 @@ description: "Send blog posts to any platform via HTTP."
 Send blog posts to any platform via HTTP. Works with any system that accepts HTTP POST requests — a custom CMS, a static-site build pipeline, an internal tool, or a no-code automation.
 
 > **Building the receiver?** See the [Webhook Reference](/developers/webhooks/overview) for the full developer guide — handshake, signing, every event, every field, response contract, database schemas, and ready-to-paste receiver examples in 6 languages.
+<Frame caption="Connect custom webhook from the Publishing page.">
+  <img src="/images/product/connect-webhook.jpg" alt="theStacc custom webhook connection setup" />
+</Frame>
 
-1. Click **Add Webhook**.
+
+1. Open **Publishing** in the sidebar. Click **Connect** on the **Custom Webhook** card, then **Configure Webhook**.
 2. Enter your **Webhook URL**.
 3. Add an optional **Secret Key** — when set, theStacc signs every request so your receiver can verify it really came from theStacc. The secret must be **at least 16 characters** (and at most 256).
-4. Add **custom headers** (optional) — for authentication tokens, API keys, or routing.
-5. Click **Test Connection** to verify the URL is reachable.
-6. Click **Sample Payload** to send the real publish-shape JSON and validate your parser.
+4. If your receiver cannot return a public URL, add a **Public URL Template**, such as `https://example.com/blog/{slug}/`.
+5. Click **Save Integration**.
+6. Use **Test Connection** on the saved integration. Your receiver must handle `test.ping` and return a successful response.
 
 ## Two events your receiver must handle
 
@@ -225,7 +229,7 @@ For `blog.updated` / `blog.unpublished` / `blog.deleted`, look up the post in yo
 
 ## Blog authors for custom sites
 
-In the Content Hub's blog review or Blog Studio, set **Blog author** to a team name (for example, `Rian Air Editorial Team`) or a person's name. Choose **Editorial team** or **Person**, then click **Save author**. Leave the name blank and save to restore your website's default. For an already-published article, sync the blog after saving.
+In the Content Hub's blog review or Blog Studio, set **Blog author** to a team name (for example, `Editorial Team`) or a person's name. Choose **Editorial team** or **Person**, then click **Save author**. Leave the name blank and save to request your website's default. For an already-published article, sync the blog after saving.
 
 This control is available for custom webhook destinations. WordPress uses its existing site-user author picker; it does not accept an arbitrary custom byline through this webhook field.
 

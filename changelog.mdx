@@ -1,36 +1,34 @@
 ---
 title: "Changelog"
-description: "Product updates, fixes, and integration changes in theStacc, with their release status and any action you need to take."
+description: "The latest features, improvements, and fixes in theStacc."
 ---
 
-Follow this page to see what changed, where to find it, and whether your website integration needs an update. Changes marked **Awaiting release** are not yet available in production. Released entries will include the deployment date.
+The latest updates to help you create, review, and publish your content.
 
-## Awaiting release: blog authors and research sources
+## October 6, 2026
 
-These changes are prepared for review. They will become available after the backend and Content Hub updates are deployed.
+### Blog authors and research sources
 
-### Choose a blog author
+- **Choose a blog author:** Use a person's name or your editorial team's name for blogs sent to a custom website. Open a blog in Content Hub, enter the name, choose the author type, and save. Your website must support author updates to show the byline. [Author setup](/content-seo/publishing#blog-authors-for-custom-sites).
+- **Review Sources used:** Open the research links and saved highlights behind a blog before approving it. Available for blogs with saved research sources. [Review sources](/content-seo/publishing#review-the-sources-used).
+- **Safer saves:** The editor keeps your draft open when saving fails or you keep typing during a save.
 
-Set a person's name or an organization such as your Editorial Team from the blog's author settings in Content Hub. Reset the setting to use the default author again. WordPress blogs continue to use the connected site's existing author selection.
+<Frame caption="Choose a person or editorial team for a custom website blog.">
+  <img src="/images/product/blog-author.jpg" alt="Blog review with author name, author type, and Save author controls" />
+</Frame>
 
-Custom website integrations receive an optional `author` field when a blog is published or updated. Existing blogs without a custom author retain their default behavior.
+<Frame caption="Check the research behind a blog before approving it.">
+  <img src="/images/product/blog-sources.jpg" alt="Sources used popup showing the blog research pages and saved highlights" />
+</Frame>
 
-**Website action:** Support both `blog.published` and `blog.updated`, save the author before acknowledging the event, and keep the visible byline and structured data consistent. See [custom webhook setup](/integrations/custom-webhook) and the [author field reference](/developers/webhooks/field-reference).
+## October 5, 2026
 
-### Review the sources used for a blog
+### Edit social images on a canvas
 
-Open **Sources used** in the Content Hub blog review or editor to inspect the research links, highlights, and available dates. The popup is shown when the blog has saved research sources; older blogs without those records do not show invented sources.
+Open a social post and click **Edit image**. Describe a change, mark an area, or place a comment exactly where the change belongs. Add a reference image when you want to guide the result.
 
-**Your action:** Review the supporting sources before approving a blog. See [reviewing and publishing blogs](/content-seo/publishing).
+Compare the generated versions, then click **Use image** to choose the one for your post. [Social image editing guide](/social-media/image-editing).
 
-### Safer editing and saves
-
-The editor stays open when a final save fails or you continue typing while the save is in progress. Concurrent author and content updates detect conflicts instead of silently overwriting a newer save.
-
-**Your action:** If a save reports a conflict, review the latest blog and retry your change.
-
-## How to read future updates
-
-Each released entry will include its release date, the affected product area, what changed, and any steps customers or website developers need to take. Integration changes will link to the relevant event contracts and setup guides.
-
-The in-app **What's New** page also contains product announcements. This docs changelog provides the related setup and integration guidance.
+<Frame caption="The social image editor brings your canvas, tools, and image versions together.">
+  <img src="/images/product/social-image-editor.jpg" alt="Social image editor with Markup, Comment, Change background, and Use image controls" />
+</Frame>
