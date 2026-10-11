@@ -1,0 +1,51 @@
+---
+title: "Connect theStacc to Claude"
+sidebarTitle: "Claude"
+description: "Add theStacc to Claude (web, desktop and mobile) as a custom connector: paste one address, sign in, pick a project and approve."
+---
+
+Works on Claude's web app, desktop app and mobile app (connectors you add on the web show up on every device). You need a theStacc account and to be the owner or an admin of the project.
+
+<Steps>
+  <Step title="Open Connectors">
+    In Claude, go to **Customize > Connectors**, click **+ Add**, then **Add custom connector**.
+  </Step>
+  <Step title="Add theStacc">
+    Name it **theStacc**, paste this address and click **Add**:
+
+    ```
+    https://mcp.thestacc.com/mcp
+    ```
+  </Step>
+  <Step title="Sign in with theStacc">
+    Click **Connect** next to theStacc. A theStacc page opens in your browser. Log in with your usual account.
+  </Step>
+  <Step title="Pick a project and permissions">
+    Choose the **one project** Claude should work on. Reading and drafting are ticked. Tick **Publish approved posts** only if you want Claude to publish what you approved.
+  </Step>
+  <Step title="Approve">
+    Click **Approve**. You are sent back to Claude, connected.
+  </Step>
+</Steps>
+
+On a Claude Team or Enterprise plan, an organization owner adds the custom connector first (**Organization settings > Connectors**). Members then click **Connect** next to it under **Customize > Connectors**.
+
+## Use it in a chat
+
+Click **+** at the bottom left of the message box, open **Connectors** and switch theStacc on. Then try:
+
+- *"What can you do with theStacc?"*
+- *"Review my content plan and write the next blog."*
+- *"Create a LinkedIn post about our new opening hours."*
+- *"Draft a Google Business post about our weekend offer."*
+
+Claude asks before running tools that change things. Read-only tools (lists, reports) are marked as such.
+
+## Disconnect
+
+In theStacc, open **Content SEO > Settings > Publishing > Agent access**, find **MCP: Claude** and click **Revoke**. Claude stops working with your project straight away.
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview): tools, workflows and important notes
+- [Permissions and safety](/developers/agent-keys-mcp)

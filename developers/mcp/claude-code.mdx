@@ -1,0 +1,46 @@
+---
+title: "Connect theStacc to Claude Code"
+sidebarTitle: "Claude Code"
+description: "Add the hosted theStacc MCP server to Claude Code with one command, then sign in from /mcp."
+---
+
+<Steps>
+  <Step title="Add the server">
+    In your terminal:
+
+    ```bash
+    claude mcp add --transport http thestacc https://mcp.thestacc.com/mcp
+    ```
+
+    To use theStacc in every folder, not just the current one, add `--scope user`:
+
+    ```bash
+    claude mcp add --transport http --scope user thestacc https://mcp.thestacc.com/mcp
+    ```
+  </Step>
+  <Step title="Sign in">
+    Start Claude Code, type `/mcp`, choose **thestacc** and pick **Authenticate**. Your browser opens theStacc: log in, pick the project and permissions, and click **Approve**.
+  </Step>
+  <Step title="Try it">
+    Ask *"Use thestacc to review my content plan"*. The guided workflows appear as slash commands, for example `/mcp__thestacc__weekly_content_review`.
+  </Step>
+</Steps>
+
+## Check the connection
+
+```bash
+claude mcp list
+```
+
+`thestacc` shows **connected**. If it says **needs authentication**, run `/mcp` again and sign in.
+
+## Troubleshooting
+
+- **"Sign in again" or 401 errors:** the connection was revoked in theStacc. Run `/mcp`, choose thestacc, and authenticate again.
+- **A tool you expect is missing:** ask *"call get_permissions"*. It lists what this connection may do; grant more by reconnecting and ticking it.
+- **Remove it:** `claude mcp remove thestacc`.
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview)
+- [MCP Tools Reference](/developers/mcp-tools-reference)

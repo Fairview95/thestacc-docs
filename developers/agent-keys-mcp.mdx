@@ -11,7 +11,7 @@ One connection covers everything:
 - **SEO and analytics**: Search Console, Google Analytics 4, SEO insights, monthly report
 - **Site audit**: run an audit and read the findings
 - **Keywords**: see, add and research keywords
-- **Social**: read, edit and redraw posts, publish approved posts
+- **Social**: create new posts from a topic, read, edit and redraw posts, publish approved posts
 - **Google Business**: write, edit and illustrate posts, publish approved posts
 
 There are 56 tools in total. The full list is in the [MCP Tools Reference](/developers/mcp-tools-reference).
@@ -31,7 +31,7 @@ Both ways end up the same: a key locked to one project, with the permissions you
 
 <Steps>
   <Step title="Add theStacc to your AI tool">
-    Add `https://mcp.thestacc.com/mcp` as a remote (custom) MCP server or connector. Step-by-step instructions for each tool are in [Connect theStacc to Claude](/developers/connect-claude) and [Connect from the terminal](#connect-from-the-terminal) below.
+    Add `https://mcp.thestacc.com/mcp` as a remote (custom) MCP server or connector. Step-by-step instructions: [Claude](/developers/mcp/claude), [Claude Code](/developers/mcp/claude-code), [Cursor](/developers/mcp/cursor), [Codex CLI](/developers/mcp/codex-cli), [Gemini CLI](/developers/mcp/gemini-cli) and [other clients](/developers/mcp/other-clients).
   </Step>
   <Step title="Sign in">
     Your tool opens a theStacc page in your browser. Log in with your usual theStacc account.
@@ -40,7 +40,7 @@ Both ways end up the same: a key locked to one project, with the permissions you
     You see the projects you own or are an admin of. Pick the one this tool should work on.
   </Step>
   <Step title="Choose what it can do">
-    The permissions are pre-ticked with what the tool asked for. Untick anything you don't want to allow. You can only narrow the list, never add to it.
+    You see the permissions the tool asked for. Reading and drafting are ticked; publishing is never pre-ticked, so tick **Publish approved posts** only if you want the tool to publish what you approved. Untick anything you don't want to allow.
   </Step>
   <Step title="Approve">
     Click **Approve**. You are sent back to your tool, connected. Click **Deny** to cancel.
@@ -117,7 +117,7 @@ Every key carries permissions that decide what the agent can do. You choose them
 | Blog | **Draft and edit** | `blog:write` | Write, edit, add images, set dates |
 | Blog | **Publish approved posts** | `blog:publish` | Publish blogs a person approved |
 | Social | **Read posts** | `social:read` | See posts, progress and image versions |
-| Social | **Draft and edit** | `social:write` | Edit copy and schedule, rewrite captions, redraw and edit images |
+| Social | **Draft and edit** | `social:write` | Create new posts, edit copy and schedule, rewrite captions, redraw and edit images |
 | Social | **Publish approved posts** | `social:publish` | Publish or schedule posts a person approved |
 | Google Business | **Read posts** | `gbp:read` | See locations, posts, plan and connection |
 | Google Business | **Draft and edit** | `gbp:write` | Write, edit and illustrate posts |
@@ -262,7 +262,7 @@ The Public Blog API key is safe in a website because it can only read published 
 
 ## Related
 
-- [Connect theStacc to Claude](/developers/connect-claude): the quickest way to get started
+- [theStacc MCP Server](/developers/mcp/overview): connect your AI tool, tools and guided workflows
 - [MCP Tools Reference](/developers/mcp-tools-reference): every tool, its permission and limits
 - [Public Blog API](/developers/public-blog-api): the read-only key for showing published blogs
 - [Webhook Reference](/developers/webhooks/overview): what theStacc sends when a blog is published

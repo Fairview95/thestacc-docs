@@ -1,0 +1,47 @@
+---
+title: "Other MCP clients"
+sidebarTitle: "Other clients"
+description: "Connect any MCP client to theStacc: the hosted server with sign-in, mcp-remote for clients without remote sign-in, or a local install with an agent key."
+---
+
+## Any client with remote MCP and sign-in
+
+Add `https://mcp.thestacc.com/mcp` as a remote (streamable HTTP) MCP server. The client finds theStacc's sign-in on its own (OAuth 2.1 with dynamic client registration and PKCE), opens your browser, and you approve.
+
+## Clients without remote sign-in: mcp-remote
+
+`mcp-remote` runs on your computer, does the sign-in in your browser and passes everything through. Needs Node.js 18 or newer:
+
+```json
+{
+  "mcpServers": {
+    "thestacc": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.thestacc.com/mcp"]
+    }
+  }
+}
+```
+
+## Local install with an agent key
+
+For tools that only run local servers, or for scripts. Create a key in theStacc (**Content SEO > Settings > Publishing > Agent access**), then:
+
+```json
+{
+  "mcpServers": {
+    "thestacc": {
+      "command": "npx",
+      "args": ["-y", "@thestacc/mcp-server"],
+      "env": { "THESTACC_AGENT_KEY": "sk_agent_..." }
+    }
+  }
+}
+```
+
+A pasted key also works against the hosted server: send `Authorization: Bearer sk_agent_...` to `https://mcp.thestacc.com/mcp`. Details in [Local install with an agent key](/developers/agent-keys-mcp#local-install-with-an-agent-key).
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview)
+- [Permissions and safety](/developers/agent-keys-mcp)

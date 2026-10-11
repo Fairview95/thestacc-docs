@@ -1,0 +1,30 @@
+---
+title: "Connect theStacc to Codex CLI"
+sidebarTitle: "Codex CLI"
+description: "Add the hosted theStacc MCP server to OpenAI's Codex CLI and sign in."
+---
+
+<Steps>
+  <Step title="Add the server">
+    ```bash
+    codex mcp add thestacc --url https://mcp.thestacc.com/mcp
+    ```
+  </Step>
+  <Step title="Sign in">
+    ```bash
+    codex mcp login thestacc
+    ```
+
+    Your browser opens theStacc: log in, pick the project and permissions, and click **Approve**.
+  </Step>
+  <Step title="Try it">
+    Start `codex` and ask *"Use thestacc to review my content plan"*.
+  </Step>
+</Steps>
+
+Codex stops waiting for a tool after 60 seconds by default. theStacc's tools answer within that: a longer job (an image redraw, publishing) returns `still_running` and Codex checks on it instead of starting it again.
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview)
+- [MCP Tools Reference](/developers/mcp-tools-reference)

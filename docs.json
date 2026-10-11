@@ -262,9 +262,20 @@
               "developers/webhooks/limits-troubleshooting"
             ]
           },
-          "developers/connect-claude",
-          "developers/agent-keys-mcp",
-          "developers/mcp-tools-reference"
+          {
+            "group": "MCP Server",
+            "pages": [
+              "developers/mcp/overview",
+              "developers/mcp/claude",
+              "developers/mcp/claude-code",
+              "developers/mcp/cursor",
+              "developers/mcp/codex-cli",
+              "developers/mcp/gemini-cli",
+              "developers/mcp/other-clients",
+              "developers/agent-keys-mcp",
+              "developers/mcp-tools-reference"
+            ]
+          }
         ]
       },
       {
@@ -291,6 +302,10 @@
     {
       "source": "/how-it-works/ai-models-and-pipeline",
       "destination": "/how-it-works/how-the-ai-works"
+    },
+    {
+      "source": "/developers/connect-claude",
+      "destination": "/developers/mcp/claude"
     }
   ]
 }

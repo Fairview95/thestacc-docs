@@ -5,7 +5,7 @@ description: "Every tool in the theStacc MCP, grouped by area, with the permissi
 
 This page lists every tool your AI tool (Claude, Cursor, or another MCP client) can use once it is connected to theStacc. You don't call these yourself. You ask in plain words, like *"show me this week's social posts"* or *"draft a Google post about our weekend offer"*, and the agent picks the right tool.
 
-To connect first, see [theStacc MCP](/developers/agent-keys-mcp) or the [Connect theStacc to Claude](/developers/connect-claude) quickstart.
+To connect first, see [theStacc MCP Server](/developers/mcp/overview).
 
 ## Before you start
 
@@ -14,7 +14,10 @@ To connect first, see [theStacc MCP](/developers/agent-keys-mcp) or the [Connect
 - **The agent only sees what you allowed.** Each tool needs one permission (shown next to its name below). Tools the key has no permission for are left out of the agent's list. If a call still reaches theStacc without the permission, it fails with `missing_scope`. See [Permissions](/developers/agent-keys-mcp#permissions).
 - **A person approves, always.** Agents can draft, edit and prepare content. Only a person can approve it, in the theStacc app. Agents can publish only what a person approved, and only if it has not changed since. See [Safety rules](/developers/agent-keys-mcp#safety-rules).
 - **Long jobs run in the background.** Some tools start work and return straight away. The agent then checks progress with a status tool. Each section below says which tools work this way and how to check.
-- **Requests time out after 60 seconds** unless a tool says otherwise. A timeout does not mean the work failed: the agent should check the current state before trying again.
+- **Nothing waits more than a minute.** A tool waits up to 55 seconds for theStacc (60 seconds for quick reads). A slow job (an image redraw, a Google Business post, publishing) keeps running after that: the tool answers `status: "still_running"` with `check_with`, the tool to check it with. The agent checks there instead of starting the job again.
+- **Every tool is labelled.** Each tool has a title and says whether it only reads, creates something new, changes existing content or publishes. Most AI tools run read-only tools without asking you each time.
+- **Big lists come in pages.** List tools take `limit` and `offset` and return `next_offset` when there is more. Very large results are cut with a note saying how to ask for less.
+- **Text from the web is marked as data.** Page titles, search queries and post copy are wrapped in `untrusted-data` tags so the agent does not follow instructions hidden inside them.
 
 ## Permissions
 
@@ -30,7 +33,6 @@ Tells the agent who it is: the project the key belongs to, the permissions it ha
 
 | Tool | Needs | What it does |
 | --- | --- | --- |
-| `get_project_context` | `blog:read` | The project this key is for (id, account, name) |
 | `review_content_plan` | `blog:read` | Planned and draft blogs plus plan details. Start here |
 | `get_blog` | `blog:read` | One blog in full |
 | `generation_status` | `blog:read` | Progress of a blog that is being written |
@@ -48,7 +50,10 @@ Tells the agent who it is: the project the key belongs to, the permissions it ha
 
 ### review\_content\_plan
 
-Returns the blog list (id, title, status, scheduled date for every planned and draft blog) and the plan summary (dates, expiry, whether a new plan can start). If the plan summary can't be loaded, you still get the blog list.
+Returns the blog list (id, title, status, scheduled date for planned and draft blogs) and the plan summary (dates, expiry, whether a new plan can start). If the plan summary can't be loaded, you still get the blog list.
+
+- **status** (optional): only blogs in this status, for example `generated_pending_review` or `approved`.
+- **limit** (1 to 200, default 50) and **offset**. `total` and `next_offset` say whether there are more.
 
 ### generate\_blog
 
@@ -102,8 +107,9 @@ The blog moves to `to_be_generated` and is written on that date. If its topic wa
 ### get\_blog
 
 - **blog\_id** (required)
+- **include\_config** (optional): also return the generator's full working data. Rarely needed.
 
-Returns the full content, title, excerpt, meta title and description, status and other details. The agent should read the latest version before editing.
+Returns the full content, title, excerpt, meta title and description, status, scheduled date and image regeneration state. The agent should read the latest version before editing.
 
 ### edit\_blog
 
@@ -226,13 +232,13 @@ Starts a crawl of the project's website. **Runs in the background.** If a run is
 - `get_audit_status`: **run\_id** (optional; defaults to the latest run). Returns the phase, pages crawled, and `nextPollSeconds`.
 - `get_audit_issues`: filter by **stage** (`availability`, `indexability`, `discoverability`, `page_understanding`, `search_relevance`, `experience`, `ai_retrieval`), **severity** (`critical`, `warning`, `info`), **status** (`open`, `regressed`, `verifying`, `resolved`) or **search** (up to 200 characters). **page** and **page\_size** (up to 200, default 50).
 - `get_audit_finding`: **finding\_id** (required).
-- `get_audit_pages`: **disposition** (for example `ok`, `blocked`, `broken`, `redirected`, `noindex`) and **limit** (up to 500, default 200).
+- `get_audit_pages`: **disposition** (for example `ok`, `blocked`, `broken`, `redirected`, `noindex`) and **limit** (up to 500, default 50).
 
 ## Keywords
 
 | Tool | Needs | What it does |
 | --- | --- | --- |
-| `list_keywords` | `seo:read` | All keywords with volume, difficulty, intent and the blog for each |
+| `list_keywords` | `seo:read` | Keywords with volume, difficulty, intent and the blog for each (paged: `limit` up to 500, default 100, and `offset`) |
 | `add_keywords` | `keywords:write` | Add 1 to 50 keywords |
 | `generate_keywords` | `keywords:write` | Research and add a fresh batch |
 
@@ -247,6 +253,7 @@ Starts a crawl of the project's website. **Runs in the background.** If a run is
 | `social_get_post` | `social:read` | One post in full |
 | `social_generation_status` | `social:read` | Caption and image progress |
 | `social_list_image_versions` | `social:read` | Image versions and the running edit |
+| `social_generate_post` | `social:write` | Create a new post from a topic, or generate a planned one now |
 | `social_edit_post` | `social:write` | Change copy or schedule |
 | `social_regenerate_caption` | `social:write` | Rewrite one platform's caption |
 | `social_regenerate_image` | `social:write` | Redraw the post's images |
@@ -262,7 +269,19 @@ A social post a person approved, or one that is already scheduled or live, is **
 
 - **status** (optional): for example `pending_review`, `approved`, `scheduled`, `published`.
 - **content\_plan\_id** (optional)
-- **limit** (1 to 500, default 100) and **offset**
+- **limit** (1 to 500, default 25) and **offset**
+
+### social\_generate\_post
+
+Creates a new social post with AI: caption, hashtags and image or images for the project's platforms, in your brand's style. **Runs in the background.**
+
+- **topic** (3 to 500 characters): what the post is about, for example "our Diwali offer: 20% off until Nov 5". Creates a new post.
+- **post\_id** (instead of topic): generate a post that is already planned (status to be generated, failed, missed, rejected or cancelled) now.
+- **platforms** (optional, new post only): `linkedin`, `instagram`, `x`, `facebook`. Defaults to every connected platform.
+- **scheduled\_date** (optional, new post only, `YYYY-MM-DD`): the earliest date. The post takes the first day from there with no other post. Defaults to tomorrow.
+- **additional\_direction** (optional, up to 1,000 characters): extra steering, like "friendly tone, mention free parking".
+
+Returns the **post\_id** with status `generating`. Poll `social_generation_status` until it is done (usually 1 to 3 minutes), then read it with `social_get_post`. The post lands in review: **you** approve it in theStacc before it is published. It counts against your plan's monthly post quota. If generation could not start (for example the plan is out of posts), the error names the post that was created so the agent does not create it twice.
 
 ### social\_get\_post and social\_generation\_status
 
@@ -297,7 +316,7 @@ Redraws the post's image or images from its saved design and keeps the caption.
 - **in\_image\_copy** (optional): the words drawn on the image (`headline`, `cta_text`, `mechanism_line`, `outcome_line`). Leave out to keep the current words.
 - **slide\_content** (optional, carousels only, up to 12 slides)
 
-Takes **30 to 90 seconds** (longer for a carousel; the tool waits up to 5 minutes) and returns the new image addresses. If it times out, the work may still finish: poll `social_generation_status` until `image_generation_status` is `success` or `failed`, then read the post. A second request while one is running is refused with `regen_in_progress`.
+Takes **30 to 90 seconds** (longer for a carousel) and returns the new image addresses. If it takes longer than about a minute, the tool answers `still_running` while the redraw continues: poll `social_generation_status` until `image_generation_status` is `success` or `failed`, then read the post. A second request while one is running is refused with `regen_in_progress`.
 
 ### social\_edit\_image
 
@@ -307,6 +326,8 @@ Edits an image with an instruction, like "make the background navy". **Runs in t
 - **instruction** (required, up to 4,096 characters)
 - **intent** (optional): `image` edits the picture itself, `scene` changes a carousel's layout or text.
 - **slide\_index** (optional, carousels, counting from 0) or **apply\_all** (optional, every slide)
+
+- **request\_id** (optional): send the same one when retrying the same edit, so it runs and is paid for once. Without it, retrying the same edit on the same post version reuses the running job automatically.
 
 Returns at once with status `editing`. Poll `social_list_image_versions` until `job.state` is no longer `queued` or `running`. On success the new version's id is `candidate_revision_id`. The post's image does not change until the agent calls `social_use_image_version`.
 
@@ -402,24 +423,30 @@ An agent can't change status (`approval_requires_person`). Blanking the title or
 | Start with | Then check with | Done when |
 | --- | --- | --- |
 | `generate_blog`, `draft_from_abstract` | `generation_status` | the blog reaches Pending Review |
+| `social_generate_post` | `social_generation_status` | the caption and images are ready |
 | `regenerate_image` | `get_blog` | `ai_generation_config.image_regen_status` is `success` or `failed` |
 | `run_site_audit` | `get_audit_status` | status is `completed` |
 | `social_edit_image` | `social_list_image_versions` | `job.state` is no longer `queued` or `running` |
-| `social_regenerate_image` (if it timed out) | `social_generation_status` | `image_generation_status` is `success` or `failed` |
+| `social_regenerate_image` (if it answered `still_running`) | `social_generation_status` | `image_generation_status` is `success` or `failed` |
+| Any tool that answers `still_running` | the tool named in `check_with` | the result shows up there |
 | `gbp_publish` | `gbp_publish_status` | status is `published` or `publish_failed` |
 
 ## A typical session
 
 1. `get_permissions` to see the project and what the key may do.
 2. `review_content_plan`, `social_list_posts` or `gbp_list_locations` to see what is waiting.
-3. Draft and refine: `generate_blog`, `edit_blog`, `social_edit_post`, `gbp_generate_post`, and so on.
+3. Draft and refine: `generate_blog`, `edit_blog`, `social_generate_post`, `social_edit_post`, `gbp_generate_post`, and so on.
 4. **You** review and click **Approve** in theStacc.
 5. The agent publishes what you approved: `publish_blog`, `social_publish` or `gbp_publish`.
 
 ## Related
 
 - [theStacc MCP](/developers/agent-keys-mcp): connecting, permissions, safety rules and error messages
-- [Connect theStacc to Claude](/developers/connect-claude): the quickest way to get started
+- [theStacc MCP Server](/developers/mcp/overview): connect your AI tool, guided workflows
 - [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): what each blog status means
 - [Social approval and review](/social-media/approval-review-workflow)
 - [Google Business posts calendar](/local-seo/gbp-posts-calendar)
+
+## Guided workflows
+
+Ready-made prompts your AI tool shows as slash commands. Each is listed only when the connection has the permissions it needs: `weekly_content_review`, `seo_next_actions`, `create_social_post` (arguments `topic` and optional `date`) and `refresh_declining_post`. See [Guided workflows](/developers/mcp/overview#guided-workflows).
