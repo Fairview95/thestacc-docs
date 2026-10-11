@@ -262,6 +262,7 @@
               "developers/webhooks/limits-troubleshooting"
             ]
           },
+          "developers/connect-claude",
           "developers/agent-keys-mcp",
           "developers/mcp-tools-reference"
         ]

@@ -65,7 +65,7 @@ There are a few different limits at play, so here is exactly how they fit togeth
 - **A hard ceiling of 200 blogs per request** applies to every request, regardless of plan. This exists mainly to protect unlimited-style plans from accidentally asking for a huge batch in one click. If you request more than 200, you are asked to add 200 or fewer and simply click again for the rest.
 - **Fixed-allotment plans** (for example, plans that grant 30 blogs per period) are naturally bounded by that allotment through your headroom - there is no separate per-click number for them.
 
-If you drive theStacc through the **agent (MCP) integration**, note that the `generate_more` tool there accepts **1 to 10** blogs per call by design, even though the underlying limit is higher. Agents add blogs in smaller, reviewable batches.
+If you drive theStacc through the **agent (MCP) integration**, note that the `generate_more` tool there accepts **1 to 10** blogs per call by design, even though the underlying limit is higher. Agents add blogs in smaller, reviewable batches. An agent can then pick each blog's publish date with the `set_scheduled_date` tool, or you can pick the dates yourself as described below. See [theStacc MCP](/developers/agent-keys-mcp).
 
 ## Picking a publish date
 

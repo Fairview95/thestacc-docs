@@ -1,0 +1,98 @@
+---
+title: "Connect theStacc to Claude"
+description: "Add theStacc to Claude in a few clicks: paste one address, sign in, pick a project and approve."
+---
+
+Connect Claude to your theStacc project and ask it to work on your blog, SEO, social and Google Business posts in plain words. There is no key to copy and nothing to install.
+
+You need a theStacc account and to be the owner or an admin of the project you want to connect.
+
+## Claude (web and desktop app)
+
+<Steps>
+  <Step title="Open Connectors">
+    In Claude, go to **Customize > Connectors**, click **+ Add**, then **Add custom connector**.
+  </Step>
+  <Step title="Add theStacc">
+    Name it **theStacc**, paste this address and click **Continue**. Keep the sign-in settings Claude detects and click **Add**:
+
+    ```
+    https://mcp.thestacc.com/mcp
+    ```
+  </Step>
+  <Step title="Sign in with theStacc">
+    A theStacc page opens in your browser (if it doesn't, click **Connect** next to theStacc in Connectors). Log in with your usual theStacc account.
+  </Step>
+  <Step title="Pick a project and permissions">
+    Choose the **one project** Claude should work on. The permissions are pre-ticked; untick anything you don't want to allow. For example, untick **Publish approved posts** if you only want drafts.
+  </Step>
+  <Step title="Approve">
+    Click **Approve**. You are sent back to Claude, connected.
+  </Step>
+</Steps>
+
+On a Claude Team or Enterprise plan, an organization owner adds the custom connector first (in **Organization settings > Connectors**). Members then find it under **Customize > Connectors** and click **Connect**.
+
+To use it in a chat, click **+** at the bottom left of the message box, open **Connectors** and make sure theStacc is switched on.
+
+## Try it
+
+- *"What can you do with theStacc?"*
+- *"Review my content plan and write the next blog."*
+- *"Which of my blogs got the most Google clicks last month?"*
+- *"Show me this week's social posts and tighten the LinkedIn captions."*
+- *"Draft a Google Business post about our weekend offer."*
+
+When a draft is ready, **you** approve it in theStacc. Then ask Claude to publish it. Claude can never approve or publish anything you haven't approved. See [Safety rules](/developers/agent-keys-mcp#safety-rules).
+
+## Connect from the terminal
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http thestacc https://mcp.thestacc.com/mcp
+```
+
+Then run `/mcp` inside Claude Code, choose **thestacc** and sign in in your browser. Add `--scope user` to use it in every project:
+
+```bash
+claude mcp add --transport http --scope user thestacc https://mcp.thestacc.com/mcp
+```
+
+**Cursor**: add to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "thestacc": {
+      "url": "https://mcp.thestacc.com/mcp"
+    }
+  }
+}
+```
+
+**Codex CLI**
+
+```bash
+codex mcp add thestacc --url https://mcp.thestacc.com/mcp
+codex mcp login thestacc
+```
+
+**Gemini CLI**
+
+```bash
+gemini mcp add --transport http thestacc https://mcp.thestacc.com/mcp
+```
+
+Then run `/mcp auth thestacc` inside Gemini CLI.
+
+For tools without remote sign-in, see [Local install with an agent key](/developers/agent-keys-mcp#local-install-with-an-agent-key).
+
+## Disconnect
+
+Go to **Content SEO > Settings > Publishing > Agent access** in theStacc. The connection is listed as **MCP: \<app name\>**. Click **Revoke**. Claude stops working with your project straight away.
+
+## Related
+
+- [theStacc MCP](/developers/agent-keys-mcp): permissions, safety rules and error messages
+- [MCP Tools Reference](/developers/mcp-tools-reference): everything the agent can do
