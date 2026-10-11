@@ -268,9 +268,7 @@
       },
       {
         "tab": "Changelog",
-        "pages": [
-          "changelog"
-        ]
+        "href": "https://thestacc.com/changelog/"
       }
     ]
   },
@@ -290,6 +288,10 @@
     {
       "source": "/how-it-works/ai-models-and-pipeline",
       "destination": "/how-it-works/how-the-ai-works"
+    },
+    {
+      "source": "/changelog",
+      "destination": "https://thestacc.com/changelog/"
     }
   ]
 }
