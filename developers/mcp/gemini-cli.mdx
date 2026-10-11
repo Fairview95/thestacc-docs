@@ -1,0 +1,30 @@
+---
+title: "Connect theStacc to Gemini CLI"
+sidebarTitle: "Gemini CLI"
+description: "Add the hosted theStacc MCP server to Google's Gemini CLI and sign in."
+---
+
+<Steps>
+  <Step title="Add the server">
+    ```bash
+    gemini mcp add --transport http thestacc https://mcp.thestacc.com/mcp
+    ```
+  </Step>
+  <Step title="Sign in">
+    Start `gemini` and run:
+
+    ```
+    /mcp auth thestacc
+    ```
+
+    Your browser opens theStacc: log in, pick the project and permissions, and click **Approve**.
+  </Step>
+  <Step title="Try it">
+    Ask *"Use thestacc to find my top SEO actions"*.
+  </Step>
+</Steps>
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview)
+- [MCP Tools Reference](/developers/mcp-tools-reference)

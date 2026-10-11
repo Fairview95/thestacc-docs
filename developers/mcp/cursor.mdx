@@ -1,0 +1,36 @@
+---
+title: "Connect theStacc to Cursor"
+sidebarTitle: "Cursor"
+description: "Add the hosted theStacc MCP server to Cursor and sign in with theStacc."
+---
+
+<Steps>
+  <Step title="Add the server">
+    Add this to `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (one project):
+
+    ```json
+    {
+      "mcpServers": {
+        "thestacc": {
+          "url": "https://mcp.thestacc.com/mcp"
+        }
+      }
+    }
+    ```
+  </Step>
+  <Step title="Sign in">
+    Open **Cursor Settings > MCP** and click the login button next to theStacc. Your browser opens theStacc: log in, pick the project and permissions, and click **Approve**.
+  </Step>
+  <Step title="Try it">
+    In the agent chat, ask *"Use thestacc to show this week's social posts"*.
+  </Step>
+</Steps>
+
+<Tip>
+Cursor works best with fewer tools. Grant only the permissions you need (for example Social only) so the assistant sees a short, focused list.
+</Tip>
+
+## Related
+
+- [theStacc MCP Server](/developers/mcp/overview)
+- [MCP Tools Reference](/developers/mcp-tools-reference)

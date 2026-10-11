@@ -59,7 +59,7 @@ If both are supplied, the `Authorization: Bearer` header wins.
 
 The `pk_live_` Public API Key is **read-only**. It can list and read your published blogs — nothing more. It cannot create, edit, publish, or delete content, and it can't see drafts or unpublished posts. That's why it's safe to use in a static-site build.
 
-It is a completely different credential from the **agent keys** (which start with `sk_agent_`) used by the [Model Context Protocol (MCP) server](/developers/agent-keys-mcp). Agent keys are secret, write-capable (they can generate, edit, and publish blogs), are stored hashed, and live in the **Agent access** section right beside API Access. Never use one in place of the other — and never embed an `sk_agent_` key in a public build.
+It is a completely different credential from the **agent keys** (which start with `sk_agent_`) used by [theStacc MCP](/developers/agent-keys-mcp). Agent keys are secret, can be write-capable (depending on their permissions, they can work on blogs, SEO, keywords, social posts and Google Business posts, and publish what a person approved), are stored hashed, and live in the **Agent access** section right beside API Access. Never use one in place of the other — and never embed an `sk_agent_` key in a public build.
 
 ### Keep your key safe
 
@@ -233,4 +233,4 @@ In your fetch helper, treat a non-`200` response as a failure: throw on the list
 
 - Follow [Static Site Integration](/developers/static-sites/overview) for framework-specific setup (Astro, Next.js, Hugo, and more)
 - Set up [Deploy Hooks](/developers/deploy-hooks) so your site rebuilds automatically when new content is published
-- Want an AI assistant or automation to create and publish posts on your behalf? That's a different, write-capable credential — see [Agent Keys & MCP](/developers/agent-keys-mcp)
+- Want an AI assistant to work on your blog, social or Google Business posts for you? That's a different, write-capable credential: see [theStacc MCP](/developers/agent-keys-mcp)
