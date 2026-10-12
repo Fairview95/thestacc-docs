@@ -1,119 +1,110 @@
 ---
 title: "Publishing Errors & Retries"
-description: "When theStacc publishes a blog to your website, it talks to your platform over the internet - WordPress, Ghost, Webflow, Zepio, Shopify, or your own webhook."
+description: "Find a failed publishing request, check the destination, and retry safely. Understand scheduled retries, duplicate risks, and webhook delivery limits."
 ---
 
-When theStacc publishes a blog to your website, it talks to your platform over the internet - WordPress, Ghost, Webflow, Zepio, Shopify, or your own webhook. Most of the time this just works. When it doesn't, theStacc tries to tell the difference between a problem that will fix itself (like your site being briefly busy) and a problem that needs you (like an expired password), and it handles each one differently.
+A publishing error means theStacc could not complete a delivery step. It does not necessarily mean the article is missing from the receiving website: a request can succeed there while its response is lost. Check both the blog's error and the destination before retrying or changing its slug.
 
-This page explains what happens behind the scenes, what the error messages mean, and how to get a stuck blog published.
+Start with the affected blog's detail page. Identify whether you are publishing a new post, retrying a failure, or syncing changes to an existing post. Those actions do not all use the same recovery path.
 
 ## Two kinds of problems
 
-Every publish failure falls into one of two buckets, and theStacc reacts differently to each.
-
 ### Temporary problems - theStacc retries for you
 
-Some failures are not your fault and usually clear up on their own:
+The scheduled publishing worker treats server errors, rate limits, and network failures as reasons for a bounded retry. Its current limit is **five total attempts**, including the initial attempt. The waits between attempts increase and include a random delay; scanning and queue timing also affect when the next request runs.
 
-- Your platform returns a **server error** (a 5xx status)
-- Your platform says **"too many requests, slow down"** (a 429 rate limit)
-- The connection **times out** or drops mid-request (a network blip)
+Do not interpret that limit as five additional retries or a guaranteed completion window. A successful request can end the retry sequence early; repeated failures can leave the blog in **Publish Failed**. A rate-limit response is a signal to slow down, not proof that waiting alone will resolve the issue.
 
-When theStacc sees one of these, it does not give up. It waits a moment and tries again, automatically, **up to 5 attempts**. The wait gets longer each time so it doesn't hammer a struggling site - roughly 1 minute, then 2, then 4, then 8, then 16 minutes (the full retry window is about 30 minutes). You don't have to do anything; if one of the retries succeeds, the blog publishes and you'll see it go live.
-
-If all 5 attempts fail, theStacc stops retrying and marks the blog **publish failed** so you can take a look.
+An action you trigger manually can instead return an error directly. Do not assume every failed **Publish Now** or **Sync Changes** request has been placed in the scheduled retry queue. Inspect the resulting status and message.
 
 ### Permanent problems - theStacc stops and tells you
 
-Other failures won't be fixed by trying again, so theStacc doesn't waste time retrying:
+The scheduled worker stops on failures classified as requiring a change, such as rejected credentials, insufficient permissions, or invalid content. Correct the cause before requesting another attempt. A new password does not fix an invalid CMS field, and a new slug does not fix a revoked token.
 
-- A **login or permission problem** (your platform returns a 401 or 403)
-- A **bad request** your platform rejects (most 4xx errors, like a validation error or a slug conflict)
-- A **security block** - if a publishing URL points at a private or internal address instead of a public website, theStacc refuses to send your content there
+Publishing URLs are also checked for allowed public destinations. A private or internal address can be rejected before content is sent. That check does not certify the receiver's security or its ability to publish the payload.
 
-These stop immediately and the blog is marked **publish failed** with a message explaining what to fix. Retrying the exact same thing would just fail the exact same way, so theStacc waits for you to correct the underlying issue and republish.
+<h2 id="why-most-failures-don’t-set-off-alarms">What a failure message tells you</h2>
 
-## Why most failures don't set off alarms
+An error message helps locate the failing step. Authentication messages point toward credentials or account access; validation messages point toward the submitted content or destination schema; a timeout leaves uncertainty about whether the receiver completed the request.
 
-The vast majority of publish failures are configuration issues - an expired token, a platform that isn't connected, a password that needs updating, a slug that already exists. theStacc treats these as **warnings**, not emergencies. They're expected, they're yours to fix, and they show up clearly on the affected blog so you know exactly what to do.
-
-theStacc only treats a failure as an internal emergency when it looks like a genuine bug on our side - never for a normal credential or configuration error. In plain terms: an expired WordPress password is your cue to reconnect, not a reason for our team to get paged at 3 a.m.
+The message is not a promise about internal incident handling, a complete diagnosis of every platform response, or proof that nothing was published. Record the blog, action, destination, and message when asking for help. Keep API keys, application passwords, and webhook secrets out of support screenshots or messages.
 
 ## New post vs. republish
 
-theStacc remembers where each blog lives on your platform, which changes how publishing behaves:
+For supported update paths, theStacc uses a stored external post ID to update an existing post. The current detail page offers **Sync Changes** for a published blog, **Republish** for an unpublished blog, and **Retry Publish** for a blog marked **Publish Failed**.
 
-- **First publish** creates a brand-new post on your platform and records its ID. This is sent as a `blog.published` event to webhooks.
-- **Republish** updates the existing post in place, using the stored ID - it does not create a second copy. This is sent as a `blog.updated` event to webhooks.
+A stored ID does not guarantee that the remote post still exists. Some connectors can recreate a post when the stored ID is stale. Inspect the destination before retrying, particularly if somebody deleted, moved, or edited the remote post outside theStacc.
 
-So if you edit a blog and publish it again, your readers see the same post updated, not a duplicate. (For platforms that can't update an existing post, like Zepio, republish isn't possible - see the Zepio note below.)
+Webhook events can distinguish a new publication from an update, but the receiving application must implement the corresponding create or update behavior. See [Webhook Reference](/developers/webhooks/overview) for the integration contract.
 
 ## How theStacc avoids duplicate posts on retry
 
-There's one tricky case worth knowing about. Sometimes theStacc sends your post, your platform actually creates it, but the "success" reply gets lost on the way back. theStacc thinks it failed and schedules a retry - which could create a second copy of the same post.
+Some connectors check for a previously created post before repeating a request. Those checks differ by platform and depend on available identifiers and matching rules. They reduce duplicate risk; they do not establish a universal guarantee that every retry is duplicate-free.
 
-To prevent that, before retrying a first-time publish, theStacc first checks your platform to see whether the previous attempt already created the post. It matches on the post's **slug** plus a **matching title created within roughly the last 35 minutes** (comfortably longer than the whole retry window). If it finds that the post is already there, theStacc treats the publish as done instead of creating a duplicate.
+Before retrying a timeout or interrupted request:
 
-This check is deliberately cautious: it only claims a match when the title lines up and the timing fits, so an unrelated post you happened to publish under the same slug is never mistaken for theStacc's work.
+1. Search the destination for the blog's title and slug.
+2. Check whether an existing post is the intended article and whether its content is current.
+3. Inspect the stored live link or external ID when available.
+4. Resolve an uncertain match before repeatedly creating another post or changing its slug.
+
+For custom receivers, plan for idempotency: handling the same intended publication more than once without creating another article. The scheduled webhook path includes an `idempotency_key`, while the manual path is not identical. Verify the payload for the path you use and implement stable duplicate handling at the receiver. HTTP does not make a repeated POST automatically idempotent; see the [HTTP idempotency specification](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2).
 
 ## What the per-platform messages mean
 
-When a publish fails permanently, the message on the blog is tailored to your platform so you know precisely what to fix.
-
 ### WordPress
 
-- **"It appears to be a regular login password, not a WordPress Application Password"** - You entered your normal WordPress login password. WordPress needs a dedicated **Application Password** instead. Generate one in **WordPress Admin \> Users \> Profile \> Application Passwords** and update it in your integration settings.
-- **"Authentication failed (401 Unauthorized)"** - Your username or Application Password is wrong or has been revoked. Double-check the username and regenerate the Application Password.
-- **"403 Forbidden"** - The connected WordPress user doesn't have permission to create posts. Make sure that user has an Administrator, Editor, or Author role.
-- **"WordPress.com token expired. Please reconnect your WordPress.com account."** - For WordPress.com (OAuth) connections, your access has lapsed. Reconnect the account from **Content SEO \> Settings \> Publishing**.
+For a self-hosted WordPress connection using an Application Password, check the username, password, and site URL. An Application Password is separate from the user's normal login password. WordPress documents creating it in the user's profile and using it with REST API authentication over HTTPS; see [WordPress REST API authentication](https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/).
+
+An authentication error does not establish that the password was the only cause. A permission error needs a check of the connected user's capabilities and access to the affected post. For WordPress.com OAuth, reconnect the account when the connection reports invalid or expired authorization.
 
 ### Ghost
 
-- **"Ghost authentication failed. Please check your Admin API key."** - The Admin API key is wrong, malformed, or has been removed in Ghost. Recreate it in **Ghost Admin \> Settings \> Integrations** and paste the new key in.
-- **"Ghost validation error"** - Ghost rejected something in the post itself. The message includes Ghost's own explanation.
+Check the **Admin API** key and admin URL associated with the Ghost integration. A Content API key is not a substitute for the credentials used to write through the Admin API. Ghost's admin domain can differ from the public site's domain; see [Ghost Admin API documentation](https://docs.ghost.org/admin-api/).
+
+For a validation error, read Ghost's returned field or content explanation before replacing a working key.
 
 ### Zepio
 
-- **"Your Zepio site is rate-limiting requests right now."** - Zepio is temporarily throttling. theStacc retries automatically; no action needed unless it persists.
-- **"Zepio Developer API not found at this URL."** - The site URL is wrong, or the Developer API isn't enabled on your Zepio plan. Confirm the URL (for example `https://mybusiness.com`) and that the Developer API is turned on.
-- **"Invalid Developer API key"** - The key was rejected. Check it under **Zepio Admin \> Settings \> Developer API**.
-- **Republish not supported** - Zepio's Developer API can only create posts, not update them. To change a published Zepio post, edit it directly in your Zepio dashboard, or delete it there and publish again.
+Inspect the site URL and Developer API credentials configured in the integration when a Zepio request is rejected. If the scheduled request is rate-limited, check its retry status rather than issuing repeated manual requests.
+
+The current theStacc Zepio connector does not support republishing a post already associated with that connector. This describes the connector's behavior, not a claim about every capability of Zepio's current API. Check the post directly in Zepio before deciding how to correct it; deleting it is not a harmless prerequisite.
 
 ### Webflow
 
-- **"Webflow authentication failed. Please re-verify your API token." / "Invalid API token"** - Your Webflow API token is wrong or revoked. Generate a new one and reconnect.
-- **"Webflow site has never been published."** - Webflow won't accept content until the site has been published at least once. Open the Webflow Designer, click **Publish** once, then republish from theStacc.
-- **"Item with this slug already exists in Webflow."** - A different item already uses that slug. Change the blog's slug and republish. (On a first publish, theStacc tries adding a numbered suffix automatically before showing this.)
-- **Access denied / 403** - The API token doesn't have the right permissions, or the Webflow plan doesn't include the CMS. Make sure the token has **CMS: Read and write** and **Sites: Read and publish** access, and that your Webflow plan includes the CMS.
-- **"Webflow validation error"** - Webflow rejected one or more fields; the message lists which field and why.
+Check the token, site, collection, field configuration, and returned validation message. If a slug conflicts, inspect the existing CMS item before changing the article's URL. A conflict does not prove that the existing item is unrelated.
+
+Check the public site as well as the CMS item. Webflow distinguishes staged content from live content and provides separate publishing workflows. The current connector can complete an item operation while a subsequent site-publishing step fails. A successful item response therefore does not independently prove that the page is publicly updated. See [Webflow CMS publishing](https://developers.webflow.com/data/docs/working-with-the-cms/publishing).
 
 ### Custom webhook
 
-- **"Webhook receivers must respond with 2xx directly" (redirect rejected)** - Your endpoint replied with a 3xx redirect. For security, theStacc does not follow redirects on publish - your receiver must accept the request and respond with a 2xx status itself.
-- **"Webhook URL rejected"** - The URL points at an internal or private address. Publishing URLs must point at a public host.
-- **HTTPS required** - Webhook endpoints must use **HTTPS**, not plain HTTP.
-- **No live URL returned** - This isn't an error. Your endpoint accepted the post but didn't return a URL, so theStacc marks it published without a clickable live link. That's expected for fire-and-forget receivers.
+Use a public receiving endpoint, preferably HTTPS. The current URL safety check accepts both HTTP and HTTPS, so do not treat an accepted URL as proof of encrypted delivery. Configure appropriate authentication and validate the receiver's handling of content and repeated requests.
+
+Publishing requests do not follow redirects. Point the integration at the receiving endpoint itself rather than a URL that redirects elsewhere. The manual and scheduled paths differ in accepted success statuses and retry handling; do not assume every response is handled identically.
+
+A receiver can accept a request without returning a live URL. A configured URL template can supply a link, but a link alone does not prove that the receiver published the article. In particular, HTTP **202 Accepted** means processing has been accepted, not completed; see the [HTTP response definition](https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.3). Check the receiver's job result and actual website.
 
 ## Where to see what went wrong
 
-Two places tell you the story:
+Open the blog's detail page for its current status and publishing error. A scheduled failure can show **Publish Failed** with **Retry Publish** available to an authorized editor. A manually triggered request can also report an error without entering that same state.
 
-1. **The blog itself.** A blog that failed to publish shows a **publish failed** state with the most recent error message - the same per-platform text described above. This is the fastest way to see why a specific post didn't go live.
-2. **The integration's test history.** Under **Content SEO \> Settings \> Publishing**, each connected platform records when it was **last tested**, whether that **last test succeeded**, and the **connection error** from the most recent failure. If several blogs are failing at once, this is usually the quickest way to confirm it's a credential or connection problem rather than something about one specific post.
+On the destination's connection card, **Last Tested** records a previous test and its result; **Test Connection** runs another check. A past **Passed** result is useful history, not proof that the current credentials or the next publishing request will succeed.
 
-Whenever a publish hits an authentication failure, theStacc also flags the integration's last test as unsuccessful - so a green "last test succeeded" is a good sign your credentials are still valid.
+If several posts fail, inspect the shared destination first. If one fails, compare that post's fields and remote record with a working request. Do not paste private credentials into the article to troubleshoot authentication.
 
 ## How to recover
 
-For a blog stuck in **publish failed**, the fix is almost always the same three steps:
+1. Read the current message and record which action failed.
+2. Inspect the destination for an existing or partially updated post, especially after a timeout.
+3. Correct the relevant credentials, permissions, content fields, connection, or receiver behavior.
+4. Run **Test Connection** where available. Then use the blog's appropriate action, such as **Retry Publish**, **Publish Now**, or **Sync Changes**.
+5. Inspect the resulting blog status and actual public page. For a webhook or build receiver, check its downstream result too.
 
-1. **Fix the underlying issue.** Read the error on the blog and follow it - reconnect WordPress.com, paste a fresh Ghost Admin API key, generate a WordPress Application Password, change a conflicting slug, publish your Webflow site once, and so on.
-2. **Re-test the connection.** Go to **Content SEO \> Settings \> Publishing**, open the affected integration, and run the connection test. A successful test confirms the credentials are good before you spend a publish on it.
-3. **Republish.** Open the blog and click **Republish**. Since theStacc remembers the post, a republish updates the existing post rather than creating a duplicate.
-
-If the integration was turned off or disconnected, re-enable or reconnect it first - theStacc will not auto-publish through an inactive integration.
+If the error persists or the remote outcome is uncertain, contact support with the blog and sanitized error details. Repeated retries cannot establish whether an earlier request already succeeded.
 
 ## Related
 
-- [Connect Platforms](/integrations/overview) - full setup steps for WordPress, Ghost, Webflow, Zepio, Shopify, and custom webhooks.
-- [Publishing](/content-seo/publishing) - publishing modes, integrations, and how generated content reaches your site.
+- [Connect Platforms](/integrations/overview): configure the intended destination.
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes): distinguish review-first and automatic workflows.
+- [Draft & Approval Workflow](/content-seo/draft-approval-workflow): review and authorize a draft before publication.
+- [Webhook Reference](/developers/webhooks/overview): inspect the receiving application's responsibilities.
