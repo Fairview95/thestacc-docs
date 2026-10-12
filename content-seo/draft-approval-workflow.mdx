@@ -1,77 +1,89 @@
 ---
 title: "Draft & Approval Workflow"
-description: "When your publishing mode is set to Requires approval, every blog theStacc generates waits for a human to give it the green light before it goes live."
+description: "Review generated drafts, make edits, approve or reject posts, and check publishing and sync results in theStacc."
 ---
 
-When your publishing mode is set to **Requires approval**, every blog theStacc generates waits for a human to give it the green light before it goes live. This page walks through that review flow end to end - what a draft looks like, what you can check before you approve, and what happens to anything you reject.
+In a review-first publishing setup, a generated draft waits for a decision before it goes live. Use the blog detail page to read the content, inspect the product's checks, and make changes before approving it. Approval authorizes a workflow action; it does not independently verify the article or provide expert signoff.
 
-If you have not chosen a publishing mode yet, see [Publishing Modes & Autopilot](/content-seo/publishing-modes) first. For the complete list of every status a blog can move through, see the [Blog Status Lifecycle](/content-seo/blog-status-lifecycle).
+Check [Publishing Modes & Autopilot](/content-seo/publishing-modes) before relying on a review queue. **Draft for me** is the documented review-first preset; **Full autopilot** publishes without that human approval step. See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) for the state names.
 
 ## The review flow at a glance
 
-A blog that has just finished generating lands in **Pending Review** (internally `generated_pending_review`). From there you have two choices:
+A finished draft awaiting review has status **Pending Review** (`generated_pending_review`). From the detail page, you can:
 
-- **Approve** - the draft moves to **Ready to Publish** (`approved`) and is cleared to go live.
-- **Reject** - the draft moves to **Rejected** and stays in your project so you can fix or regenerate it later.
+- **Approve:** move it to **Ready to Publish** (`approved`).
+- **Reject:** keep it in **Rejected** so you can revise or regenerate it.
 
-If you edit the content of a pending draft before deciding, it quietly moves to **modified pending review** (`modified_pending_review`) - same Pending Review badge in the calendar, but theStacc now knows the article is your edited version rather than the raw AI draft. You can still Approve or Reject from there.
+Editing the body of a pending draft changes its technical state to `modified_pending_review`. The calendar still shows a Pending Review badge, but the version awaiting your decision includes your edits. Read the changed version before approving it.
 
-Open any blog from the **Content SEO** dashboard (calendar or list view) to land on the blog detail page, where the **Approve** and **Reject** buttons appear in the action bar.
+Open the post from **Content SEO** to use its available **Approve** or **Reject** actions.
 
 ## What you see before you approve
 
-The blog detail page gives you everything you need to make the call without leaving the screen:
+The editor provides the article title, slug, metadata, featured image, and body. Use that view to review the content; also check the published destination after publishing, because a CMS theme or integration can render it differently.
 
-- **The full article** - rendered in the editor with its title, slug, meta title, meta description, featured image, and body. You can read it exactly as it will publish.
-- **SEO score** - an overall score out of 100, with a category-by-category breakdown (keyword placement, content length and depth, heading structure, readability, technical meta, images, and more) plus specific improvement suggestions. A score of 70 or above is treated as a healthy pass.
-- **Readability** - scored as one of the SEO categories, so you can see at a glance whether the writing is clear and easy to read. (Readability scoring runs on English-language content.)
-- **Image count** - the draft shows how many images were generated (featured image plus in-section images). If any images failed during generation, the draft still arrives in Pending Review so you can retry just the images without re-running the whole article.
-- **Compliance violations** (regulated businesses only) - if your project has a compliance profile turned on (for regulated professions), a compliance banner flags any issues found in the content, listing each violation and any required disclosures that are missing. For most businesses this section does not appear at all.
+The detail page also surfaces:
 
-Take your time here. You can edit anything - rewrite a paragraph, swap the featured image, fix the meta description, regenerate a single section or image - and theStacc saves your changes. As noted above, editing the body of a pending draft flips it to **modified pending review** so your edited version is what gets approved.
+- **SEO score and suggestions:** inspect the category breakdown and specific gaps. The internal score, including any numerical threshold shown, is not an accuracy certificate or a Google ranking score. See [SEO Scoring Explained](/content-seo/seo-scoring).
+- **Readability:** an English-specific scoring check. It does not replace a fluent review of another language or a careful review of technical explanations.
+- **Images:** check relevance, alt text, and whether any generation failed. Use image-only retries when the text is complete; see [Retry failed images only](/content-seo/regenerating-content#retry-failed-images-only).
+- **Compliance findings:** an enabled [Compliance Profile](/content-seo/compliance-profiles) can show violations or missing disclosures. No banner does not prove that compliance was checked or that a post meets professional obligations.
+
+Before approving, read the complete draft and check:
+
+1. The title's promise is answered for the intended reader.
+2. Offers, contact details, product features, and important claims match approved information or supporting sources.
+3. Quotations, testimonials, and examples have appropriate evidence and permission.
+4. Links, images, and metadata are useful and accurate.
+5. Any required specialist review has actually happened and has a record.
+
+Edit a specific passage or image when the rest of the draft is useful. If regenerating, save wording you need to keep: the [regeneration guide](/content-seo/regenerating-content#before-you-start) explains that previous versions are not retained.
 
 ## Approving a draft
 
-1. Open the blog from the **Content SEO** dashboard.
-2. Read the article and check the SEO score, readability, image count, and (if shown) the compliance banner.
-3. Make any edits you want.
-4. Click **Approve**.
+1. Open the blog from **Content SEO**.
+2. Read the current content and inspect score suggestions, images, and any compliance findings.
+3. Make the necessary edits and complete any required professional review.
+4. Click **Approve** when the version is ready for publication.
 
-The blog moves to **Ready to Publish**. What happens next depends on your setup:
+The documented flow moves it to **Ready to Publish**. The next action depends on the project's setup:
 
-- **Publish it now** - on an approved blog, the action bar shows a **Publish Now** button. Click it to publish immediately. If you have a CMS connected (WordPress, Webflow, Ghost, Shopify, Zepio, or a webhook), the post is pushed straight to your site; if you publish without a CMS integration, theStacc marks the blog published and fires your project's deploy hook so pull-model sites (deploy hook plus the Public Blog API) go live.
-- **Let it publish on its schedule** - in **Autopilot** (auto-publish mode), an approved-and-scheduled blog publishes automatically on its planned date. theStacc's publishing cron picks up scheduled blogs once their publish time arrives and pushes them live - no extra click. See [Publishing Modes & Autopilot](/content-seo/publishing-modes) for how that hand-off works.
+- **Publish now:** the **Publish Now** action sends the post through the configured publishing path. Connected CMS destinations include WordPress, Webflow, Ghost, Shopify, Zepio, and custom webhooks.
+- **API/deploy-hook publishing:** the documentation also describes marking a post published and firing a deploy hook for sites that pull content through the Public Blog API. Check that the receiving build or website actually updated; a recorded publish status is not proof of successful downstream deployment.
+- **Scheduled publishing:** approved and scheduled posts can enter the automatic publishing queue at their publish time. Check the saved mode, destination, and schedule; approval alone does not describe every part of that setup.
 
-For the full publishing setup - connecting WordPress, Webflow, Ghost, Shopify, Zepio, or a webhook, and what each platform receives - see [Publishing](/content-seo/publishing).
+See [Publishing](/content-seo/publishing) for connection requirements and [Publishing Modes & Autopilot](/content-seo/publishing-modes) for the preset behavior. In a compliance-enabled project, the documented hold/block gate can affect publication; see [What happens at publish](/content-seo/compliance-profiles#what-happens-at-publish).
 
 ## Rejecting a draft
 
-Click **Reject** on a pending draft and it moves to **Rejected**. Rejecting never deletes anything - the blog stays in your project, keeps its calendar slot, and keeps its title, keyword, and content until you decide what to do with it.
+**Reject** keeps the draft in the project rather than approving it. The documented flow preserves its calendar slot, title, keyword, and content so you can decide what to do next:
 
-From a rejected blog you have three paths:
+- **Regenerate the plan:** request a fresh title and excerpt for the same keyword when the topic or angle needs work.
+- **Regenerate the content:** rewrite the article against the plan when the writing needs a new pass. Save useful text first.
+- **Approve Anyway:** use the documented action on a rejected draft when you have reviewed it and changed your decision.
 
-- **Regenerate the plan** - click **Regenerate** to get a fresh title and description (excerpt) for the same keyword, based on your current business details. This moves the blog back to a generatable state so you can produce a brand-new article on a different angle. Use this when the topic or angle missed the mark.
-- **Regenerate the content directly** - if you like the title and just want a different write-up, generate content again against the existing plan.
-- **Approve anyway** - changed your mind? A rejected blog shows an **Approve Anyway** action that sends it straight to **Ready to Publish** without regenerating - handy when you rejected by accident or decided the draft was fine after all.
-
-Because rejected blogs stay put, nothing is ever lost by rejecting. You can come back to a rejected draft any time.
+Rejecting a draft is different from regenerating it. The latter replaces content, so do not interpret keeping a rejected draft as a general promise that all versions are recoverable.
 
 ## Who can approve
 
-Approving, rejecting, editing, and publishing all require an **Editor** role or higher. On a project that means **Owner**, **Admin**, or **Editor** can run the review flow. **Viewers** can open and read drafts but cannot approve, reject, edit, or publish. See [Workspace & Team](/account/workspace-team) for how project roles work.
+The documented review actions require **Editor** access or higher: **Owner**, **Admin**, or **Editor**. **Viewers** can read drafts but cannot approve, reject, edit, or publish them. See [Workspace & Team](/account/workspace-team) to review project access.
+
+An access role grants product permissions, not a professional credential. Assign the appropriate reviewer for regulated or specialized claims before granting final publication approval.
 
 ## Where approval notifications appear
 
-When a blog finishes generating and is ready for your review, theStacc notifies every member of the project. The notification appears in your **in-app notifications** on the dashboard (a "Blog ready for review" alert linking to the draft), and you also receive an **email** so you know to come take a look even when you are not in the app. The same happens on the other side: when a blog is published, project members get a "Blog published" notification.
+The documentation describes in-app notifications and email when a blog is ready for review or published, with a link to the post. Check the dashboard's review queue rather than relying only on receiving an email. A notification does not establish who reviewed the draft or what they checked.
 
-Because notifications go to the whole project team, anyone with approval rights can step in and review - useful when one person is away.
+If several members can approve, agree who is responsible for factual and specialist review. Team-wide notification does not replace that assignment.
 
 ## After you publish
 
-Once a blog is live it shows as **Published** with a **View Live** link (when your platform returns a URL). If you edit a published blog, theStacc flags it as needing a re-sync and shows a **Sync Changes** button so your live post stays in step with your edits. You can also **Unpublish** a post to pull it back to a draft state, then **Republish** when you are ready.
+A published post shows **Published**, with **View Live** when a destination returns a URL. Open the actual page to inspect its title, body, images, links, and disclosures. For a pull-model site, verify the deployed page after its build completes.
+
+The documented **Sync Changes** action sends edits from a published post to the destination. Check the live result after syncing. **Unpublish** returns the post toward a draft state, and **Republish** can publish it again; destination behavior depends on the integration, so confirm what is publicly visible rather than assuming every platform removed the page.
 
 ## Related
 
-- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) - every status a blog moves through, start to finish.
-- [Publishing](/content-seo/publishing) - connect WordPress, Webflow, Ghost, Shopify, Zepio, or a webhook and control how posts reach your site.
-- [Publishing Modes & Autopilot](/content-seo/publishing-modes) - choose between no auto-publish, requires approval, and full autopilot.
+- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): state names and documented transitions.
+- [Publishing](/content-seo/publishing): publishing destinations and setup.
+- [Compliance Profiles](/content-seo/compliance-profiles): configured disclosures, holds, and publishing limits.

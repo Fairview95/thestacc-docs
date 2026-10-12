@@ -1,127 +1,116 @@
 ---
 title: "Compliance Profiles"
-description: "If you advertise in a regulated profession - real estate, mortgage, contracting, healthcare, law, financial advice, or insurance - the words in your blog…"
+description: "Configure theStacc's optional compliance profile, review its disclosure and hold/block checks, and understand manual and automatic publishing limits."
 ---
 
-If you advertise in a regulated profession - real estate, mortgage, contracting, healthcare, law, financial advice, or insurance - the words in your blog posts are subject to rules your industry takes seriously. A compliance profile teaches theStacc those rules for your project, so generated content includes the disclosures you are required to make and steers clear of the claims you are not allowed to make.
+A **compliance profile** adds project-specific disclosure instructions and content checks for regulated businesses. It is **opt-in and off by default**. An enabled profile can help identify missing information or prohibited wording, but it does not determine all the rules that apply to your business or certify a post's compliance.
 
-Compliance is **opt-in and off by default**. The vast majority of businesses on theStacc never need it - roughly 7% of projects operate in a regulated vertical. If that is you, this page explains how to set it up and exactly what changes once it is on.
-
-> Compliance guardrails **assist** your review. They do not guarantee legal or regulatory compliance. The licensed professional stays responsible for everything that gets published. Always review generated content - and consult your own compliance or legal counsel - before it goes live.
+Have the responsible professional or compliance reviewer confirm the applicable requirements, supplied identifiers, and final content. The setting, an automated verdict, and a publishing approval are different parts of that process.
 
 ## Who needs this
 
-Turn on a compliance profile if your project markets in one of these regulated verticals:
+The documented profile options cover:
 
-- **Real estate** - agents and brokerages
-- **Mortgage** - loan originators and lenders
-- **Contractor** - licensed trades and general contractors
-- **Healthcare** - providers, clinics, and practices
-- **Law firm** - attorneys
-- **Financial adviser** - advisers and investment firms
-- **Insurance** - agencies and producers
+- **Real estate:** agents and brokerages.
+- **Mortgage:** loan originators and lenders.
+- **Contractor:** licensed trades and general contractors.
+- **Healthcare:** providers, clinics, and practices.
+- **Law firm:** attorneys.
+- **Financial adviser:** advisers and investment firms.
+- **Insurance:** agencies and producers.
 
-If your business is not regulated, you do not need a compliance profile, and leaving it off keeps generation exactly as it is today.
+These are product categories, not a legal assessment of your obligations. Do not infer that a business outside this list has no advertising requirements. Ask the person responsible for compliance whether the available profile matches the work you publish.
 
 ## Where to set it up
 
-Go to **Settings \> Project \> Compliance** (it carries a **Beta** badge in the sidebar). Compliance is a **project-level** setting - each project has its own profile, so a regulated project and a non-regulated one under the same account behave independently.
+Open **Settings > Project > Compliance**, shown with a **Beta** badge in the documented interface. The setting is per project, so check the selected project before making changes.
 
-Editing the profile requires **project admin** access. If you are not an admin, you will see the settings in read-only mode and the values your admin has set, but you will not be able to change them.
+Editing requires **project admin** access. Non-admins can view the saved settings but cannot change them. A permission to edit the profile is not evidence of professional qualification to approve regulated content.
 
 ## Setting up a profile
 
-1. **Turn on Enable compliance guardrails.** Until this is on, the rest of the form is inactive and nothing changes about your content.
-2. **Choose your industry.** Pick the regulated vertical your project operates in. (Financial adviser and Insurance are marked **Advanced**.) If you want the universal guardrails without a specific vertical, pick **Not regulated** - compliance stays on with the baseline rules only.
-3. **Choose your jurisdiction.** Select the primary US state whose rules apply to your content, or pick **Nationwide** if you market across the whole US and are not bound to a single state. Federal rules apply either way - the state choice layers any state-specific requirements on top of the federal baseline.
-4. **Enter your license number(s).** Each vertical asks for the identifier it needs:
+1. Turn on **Enable compliance guardrails**. Until it is enabled, the profile does not apply to generation.
+2. Choose the industry. **Financial adviser** and **Insurance** are marked **Advanced**. **Not regulated** enables the documented baseline rules without a vertical-specific profile.
+3. Select the primary US state or **Nationwide**. This chooses the product's rule configuration. It does not establish that state-specific obligations cease to apply when you select Nationwide, or that all applicable requirements are represented.
+4. Enter the relevant license identifiers. The documented form labels include DRE # for real estate, NMLS # for mortgage, CSLB # for contractors, Board / license # for healthcare, Bar # for law firms, CRD # for financial advisers, and NPN for insurance. Confirm the correct identifier for your actual business and jurisdiction; these labels are not universal licensing instructions.
+5. Enter the **responsible firm** or practice name.
+6. Add a **custom disclaimer**, if needed. Have its wording reviewed rather than assuming any disclaimer cures an unsupported claim.
+7. Click **Save changes**. Admins have the Save control. The **What we'll enforce** panel previews the selected profile's required and prohibited rules.
 
-- Real estate - **DRE \#**
-
-- Mortgage - **NMLS \#**
-
-- Contractor - **CSLB \# (license \#)**
-
-- Healthcare - **Board / license \#**
-
-- Law firm - **Bar \#**
-
-- Financial adviser - **CRD \#**
-
-- Insurance - **NPN (producer \#)**
-
-theStacc uses these to fill in the disclosures your field requires. It never invents a license number - if you leave it blank, any disclosure that needs it is reported as missing rather than published with a hole in it.
-
-1. **Name your responsible firm.** The licensed firm or practice to attribute in content where your industry requires it (for example, "Acme Realty Group, Inc.").
-2. **Add a custom disclaimer (optional).** Any extra language you want appended to generated posts, in addition to your industry's standard disclaimers.
-3. **Save changes.** Only admins see the Save button. The **What we'll enforce** panel shows a reference preview of the required and prohibited rules for your selected vertical.
+The documented behavior reports a missing identifier when a disclosure cannot be filled. Review that result and supply real information. Neither an empty field nor an automatically filled disclosure establishes that the legal requirement has been satisfied.
 
 ### Apply to content you already have
 
-Once a profile is saved and enabled, admins see an **Apply to existing content** option with a **Re-scan existing** button. This re-checks drafts you already created against your rules - adding required disclosures where it can and flagging anything that needs review before publishing. Save your changes first; the re-scan always reflects what is saved, not unsaved edits. A large project may be scanned in batches, in which case theStacc tells you the scan was partial so you can run it again to finish.
+After saving an enabled profile, admins can use **Apply to existing content > Re-scan existing**. The scan uses saved settings, so save changes first. It can add disclosures where the required details are available and flag drafts for review.
+
+A scan may be partial on a large project. Inspect the reported coverage and run it again if necessary. Do not treat a partial scan, or a scan with no detected issue, as expert approval of the full content library.
 
 ## What gets enforced
 
-When a profile is on, two things happen automatically.
+The documentation describes two layers:
 
-**Required disclosures are injected at planning time.** Before theStacc writes a post (and whenever it regenerates one), it adds your industry's required disclosures and language to the instructions - your license number, responsible firm, equal-housing or not-a-commitment language, not-medical-advice or not-legal-advice statements, and your custom disclaimer where one applies. Where a disclosure can be filled in from the details you entered, theStacc also appends it deterministically when the post is sent to your site, so it is present even if the draft missed it.
+**Writing and disclosure instructions.** The selected profile adds relevant disclosure language and business details to planning and regeneration. Some disclosures can also be appended during publishing when the necessary data is available. Verify their wording, placement, and applicability in the actual output.
 
-**Prohibited content is steered away from.** The same instructions tell the writer what it must never say for your field - guarantees of outcome (property value, loan approval, case results, returns, claim approval, cure), steering language tied to protected classes, unsubstantiated "\#1 / best" claims, fabricated testimonials or reviews, and similar. theStacc does not fabricate license numbers, testimonials, quotes, or patient information.
+**Content restrictions.** The profile steers writing away from the claims it lists as prohibited, such as unsupported guarantees, fabricated testimonials, or unsubstantiated superiority claims. The rule preview depends on the selected vertical and jurisdiction. Read it before relying on it, and review claims against the requirements your professional reviewer identifies.
 
-The exact required and prohibited rules depend on your vertical and jurisdiction. The **What we'll enforce** panel on the settings page is a plain-language preview of them.
+The profile's intended restrictions are not proof that a draft cannot contain an error. An instruction to avoid patient information, invented credentials, or unsupported outcomes does not replace checking the completed content.
 
 ## The review gate
 
-Every draft on a compliance-enabled project gets a **compliance verdict** before it can be approved or published. The verdict is one of three levels:
+A compliance-enabled draft receives a documented verdict before approval or publication:
 
-- **None** - the draft passed; nothing to address.
-- **Hold for review** - the draft needs a human to look before it ships (for example, a missing disclosure that could not be auto-filled, a discretionary flag, or a vertical that always requires review).
-- **Block** - the draft contains something that must not publish as written (for example, a prohibited guarantee or a fabricated review).
+<p id="compliance-verdict-title" className="content-table-title">Interpret the product verdict</p>
+<div className="content-table-scroll" role="region" aria-labelledby="compliance-verdict-title" tabIndex="0">
+<table aria-labelledby="compliance-verdict-title">
+<thead><tr><th scope="col">Verdict</th><th scope="col">Meaning in the workflow</th><th scope="col">Reviewer responsibility</th></tr></thead>
+<tbody>
+<tr><th scope="row">None</th><td>The configured check did not report a hold or block.</td><td>Review applicable requirements and factual claims; this is not a compliance certificate.</td></tr>
+<tr><th scope="row">Hold for review</th><td>A finding needs human attention, such as a missing disclosure.</td><td>Resolve the finding or use an authorized manual override only after appropriate review.</td></tr>
+<tr><th scope="row">Block</th><td>The content is prohibited by the configured check as written.</td><td>Edit the content and check it again; the documented hard block is not overridable.</td></tr>
+</tbody>
+</table>
+</div>
 
-The verdict is shown to you ahead of approval, along with the specific **violations** found and any **missing disclosures** that still need to be inserted - so you know exactly what to fix rather than getting a vague "not allowed." Drafts that need review are flagged with a small badge in your blog list and on the draft itself, so enabling compliance visibly surfaces the content that needs attention instead of surprising you at publish time.
-
-The verdict is recorded as part of the draft's record for your audit trail - which rule versions ran, what was inserted, what is still missing, and the pass/hold/block result.
+Inspect the listed **violations** and **missing disclosures**. The documentation describes badges on affected drafts and a compliance audit trail recording rule versions, inserted language, missing items, and verdicts. Review these records rather than assuming an absent badge proves that every requirement was checked.
 
 ## What happens at publish
 
-The gate runs again at publish, and what it does depends on how you publish.
+The documented gate runs again at publishing:
 
-**Manual publish (you click Publish):**
+- **Manual publish:** Block prevents publication; Hold for review can require a human override; None follows the normal publish workflow.
+- **Automatic publish:** a block or hold routes the post for review. Some configured profiles require manual review regardless of the verdict. Check the selected profile rather than treating this product setting as a statement of law for every state.
 
-- **Block** prevents publishing. A hard block is **not overridable** - the content must be edited first.
-- **Hold for review** stops the publish but **can be overridden** by a person who accepts responsibility (see below).
-- **None** publishes normally.
+The documented failure paths differ. It is inaccurate to describe both as fail-safe:
 
-**Automatic publish (autopilot / scheduled):**
+<p id="compliance-failure-title" className="content-table-title">Different failure paths have different consequences</p>
+<div className="content-table-scroll" role="region" aria-labelledby="compliance-failure-title" tabIndex="0">
+<table aria-labelledby="compliance-failure-title">
+<thead><tr><th scope="col">Failure path</th><th scope="col">Documented behavior</th><th scope="col">What to do</th></tr></thead>
+<tbody>
+<tr><th scope="row">Check errors while evaluating a post: fail-closed</th><td>The post is held instead of published.</td><td>Inspect the status and error; arrange review rather than assuming the check completed.</td></tr>
+<tr><th scope="row">Compliance layer unavailable: fail-open</th><td>The ordinary publishing workflow may proceed without the extra compliance check.</td><td>Do not rely on the gate to prevent publication. Confirm review-first settings and resolve uncertainty before publishing sensitive content.</td></tr>
+</tbody>
+</table>
+</div>
 
-- Autopilot is stricter because there is no human in the loop. **Both** a block **and** a hold-for-review stop the post and route it to your review queue for a person to handle - autopilot never overrides a hold on its own.
-- Some profiles forbid auto-publish entirely (for example, attorney advertising in states that require a bar filing). Content on those profiles always routes to manual review, regardless of the verdict.
-
-**When the gate cannot run cleanly, theStacc fails safe:**
-
-- If the gate errors while checking a post (**fail-closed**), the post is **held**, not published - unreviewed content never slips out because a check hiccupped.
-- If the compliance layer itself is unavailable, the publish proceeds as it would for a non-regulated project (**fail-open**) - an infrastructure outage does not block every publish on the platform. Your manual review and the disclosure insertion still apply; only the extra double-check is skipped, and it is logged for the team.
+A missing or disabled profile does not become enabled automatically. If you need review before publication, confirm the actual [publishing mode](/content-seo/publishing-modes) and responsible reviewer. The unavailable-layer path is not evidence that every remaining disclosure or review control succeeded.
 
 ## Overrides: accepting responsibility
 
-A hold-for-review on a **manual** publish can be overridden by a person. Overriding means a human is explicitly saying "I have reviewed this and I take responsibility for publishing it." You can attach a reason, and the override is **recorded in the draft's compliance audit trail** - who overrode it and why.
+The documented manual **Hold for review** override records that someone chose to publish despite a finding. It can include the reason and the person who acted in the audit trail. An override is a workflow decision, not proof that the concern was legally resolved or that the person is appropriately licensed.
 
-Two guarantees matter here:
-
-- **Only a person can override.** Automated callers (such as agent-key integrations) can never clear a compliance hold, even if they ask to - the override is reserved for a signed-in human.
-- **Overrides are never silently cleared.** Once you have overridden a hold and published, regenerating or re-checking that draft will **not** quietly erase your override evidence. The record that a licensee approved despite a hold is preserved.
-
-A hard **block** is never overridable on any path - it must be fixed in the content.
+The documentation restricts this action to a signed-in person, excludes automated callers such as agent-key integrations, and retains override evidence when a draft is regenerated or re-checked. Confirm the recorded identity and reason before relying on that record. A hard **Block** remains non-overridable in the documented flow and requires content changes.
 
 ## Auto-suggestion
 
-If theStacc notices signals that your project looks like a regulated business - from your business category, name, website, or description - it may **suggest** enabling a compliance profile and pre-select the likely vertical for you. This is a **suggestion only**. theStacc never turns compliance on by itself. You will see a dismissible banner, and a profile only becomes active when an admin enables it and saves. You stay in control of whether the layer is on at all.
+Business information may trigger a suggestion to enable a profile and pre-select a likely vertical. The documented behavior is a suggestion only: an admin must enable and save the profile. Dismissing a banner or leaving the profile disabled does not establish that the business is unregulated.
 
 ## A note on placeholder language
 
-Some required disclosures ship with language marked **\[PENDING COUNSEL\]** - wording that is still awaiting legal sign-off. Any draft that relies on a pending-counsel disclosure is automatically held for review rather than auto-published, so it always passes through a person before going live. This is deliberate: theStacc would rather route a regulated post to you than publish wording that has not been finalized. As always, the licensed professional is responsible for confirming the final language is correct for their jurisdiction.
+The documentation identifies some disclosure text with `[PENDING COUNSEL]`, indicating unfinished wording. It describes routing drafts that depend on this text to review instead of automatic publication. Do not publish the placeholder itself or treat the existence of a hold as counsel approval. Obtain appropriate reviewed wording and check the final output.
 
 ## Related
 
-- [Quality & safety](/how-it-works/quality-safety) - the full set of systems that keep generated content on-brand, accurate, and safe, including how compliance fits in.
-- [Publishing](/content-seo/publishing) - publishing modes (auto, review queue, draft) and how the review gate interacts with each.
+- [AI Content Safety & Integrity Guardrails](/content-seo/content-safety-guardrails): general generation checks and their limits.
+- [Draft & Approval Workflow](/content-seo/draft-approval-workflow): review, edit, approve, or reject a draft.
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes): choose when a human reviews content.

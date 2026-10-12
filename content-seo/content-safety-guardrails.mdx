@@ -1,104 +1,111 @@
 ---
 title: "AI Content Safety & Integrity Guardrails"
-description: "AI writing tools are happy to make things up."
+description: "Understand theStacc's documented promotion, placeholder, quality and image checks, and what to review before publishing generated content."
 ---
 
-AI writing tools are happy to make things up. They will cheerfully invent a discount code, a phone number, or a glowing customer quote if it makes a sentence flow better. For a business publishing under its own name, that is not a small problem - a fake "SAVE20" code or an imaginary "30% off this weekend" can mislead customers, break promises you never made, and in some cases create real legal exposure.
+A generated draft can include an unsupported price, invented quotation, or unfinished placeholder. theStacc's content-integrity checks are designed to identify these problems during generation. Use them alongside accurate business information and a review of the finished draft.
 
-theStacc is built so that does not happen. Every post runs through a set of automatic safety and integrity guardrails before it is ever saved as a draft. You do not turn these on, and you cannot accidentally turn them off - they protect every blog, on every project, every time.
-
-This page explains exactly what those guardrails catch and what they do about it.
+The controls described here are part of the documented generation workflow, rather than optional project settings. A check or rewrite does not prove that every statement is correct. Review important claims before publishing, especially when using [Full autopilot](/content-seo/publishing-modes#full-autopilot), which has no human approval step.
 
 ## The short version
 
-Before a draft is saved, theStacc checks the writing for:
+The documented checks cover:
 
-- **Fabricated promotions** - made-up promo codes, discounts, prices, and fake-urgency language.
-- **Leftover template placeholders** - bracketed stand-ins like \[your product\] or \[competitor\] that were never filled in.
-- **Minimum quality** - the post has to be real, complete content, not a truncated stub.
-- **AI-fingerprint tells** - the robotic clichés and patterns that make writing read as machine-generated, which both readers and Google penalize.
+- **Promotional claims:** codes, discounts, prices, and urgency language that need a real offer behind them.
+- **Template placeholders:** unfinished stand-ins for a product, business, location, or source.
+- **Incomplete output:** empty or truncated drafts.
+- **Writing patterns:** repetitive openings, filler transitions, dash use, and keyword repetition flagged by the internal scorer.
+- **Image safety:** moderation of generated images.
 
-And separately, every image is screened by a content-safety check before it is attached to your post.
+Some findings are described as rewrite triggers; others appear as warnings or score deductions. These have different consequences. A saved draft is not evidence that a person has verified its claims.
 
-## Fabricated promotions are caught and cleaned up
+## How promotion checks support review
 
-The most damaging thing an AI can do is invent a specific offer. theStacc scans the finished writing for promotional content and treats it by how much harm it could cause.
+A customer may act on a price or discount in an article. Supply the actual offer, eligibility, and dates in your business information, then check that the published wording matches those details.
 
-### Promo and coupon codes are blocked outright
+### Promo and coupon codes
 
-If the writing contains anything that looks like an invented promo, coupon, or discount code - the classic "use code SAVE20" or "WELCOME10" shapes - the draft is rejected and sent back to be rewritten. There is no "maybe" here. A fake code is the kind of thing a customer will actually try to redeem, so theStacc will not let one through.
+The documented workflow treats suspected fabricated codes, such as "SAVE20" or "WELCOME10", as a reason to reject and rewrite a draft. The fallback can use general wording such as "contact us for current offers" rather than an unsupported code.
 
-When this happens, the post is rewritten to use general, honest language instead - phrases like **"contact us for current offers"** or **"visit our website for pricing details"** - so the post still encourages action without promising something that was never real.
+That describes the intended check, not a guarantee that every invented or expired code will be detected. If your business has a genuine offer, verify its exact wording and conditions rather than assuming a familiar-looking code is valid.
 
-### Specific discounts, prices, and urgency are flagged for review
+### Specific discounts, prices, and urgency
 
-Specific numbers that *could* be real but probably are not - "20% off", "50% discount", "$99/month", "starting at $49" - are flagged as something to double-check. So is fake-urgency language such as "ends Friday", "this week only", "limited time", or "hurry, act now".
+The documentation describes flagging figures such as a discount percentage or monthly price, along with deadlines such as "ends Friday". A flag asks for verification; it does not establish that the figure is false. Equally, an unflagged figure is not proof that it is current.
 
-These do not automatically block the draft the way a fake promo code does, because sometimes the number genuinely came from your business details. They are recorded so the figure can be verified against what you actually offer. The guiding rule is simple: if a price, discount, or sale date was not provided in your business context, it should not appear as a hard fact in your post.
+<p id="safety-offer-review-title" className="content-table-title">Evidence to review for a promotional claim</p>
+<div className="content-table-scroll" role="region" aria-labelledby="safety-offer-review-title" tabIndex="0">
+<table aria-labelledby="safety-offer-review-title">
+<thead><tr><th scope="col">Claim in the draft</th><th scope="col">Check before publishing</th></tr></thead>
+<tbody>
+<tr><th scope="row">Price or fee</th><td>Match the current product, currency, billing basis, and included scope.</td></tr>
+<tr><th scope="row">Discount or code</th><td>Confirm the real offer, eligibility, redemption method, and any exclusions.</td></tr>
+<tr><th scope="row">Sale deadline</th><td>Confirm the actual date and relevant timezone; remove invented urgency.</td></tr>
+<tr><th scope="row">Customer quotation</th><td>Use supplied, approved wording and confirm permission and context.</td></tr>
+</tbody>
+</table>
+</div>
 
-## Leftover template placeholders are caught and rewritten
+## Leftover template placeholders
 
-AI writing sometimes leaves "fill in the blank" stand-ins behind - bracketed text like **\[your product\]**, **\[competitor\]**, **\[location\]**, **\[your company\]**, **\[product name\]**, or instructions like **\[detailed explanation\]** and **\[insert relevant statistic\]**. Published as-is, these make a post look unfinished and templated.
+The placeholder check looks for unfinished text such as `[your product]`, `[competitor]`, or `[insert relevant statistic]`. The documented response is to rewrite using the business context. Read the replacement: a concrete-looking sentence still needs a real fact behind it.
 
-theStacc scans for this leftover bracket text. When it finds a genuine placeholder, the draft is rejected and rewritten using your real business details - the actual business name, website, features, and competitors that are already in your brief. Every mention ends up concrete and specific instead of a hollow stand-in.
+The documentation distinguishes placeholders from build markers and references:
 
-The check is smart about what is *not* a placeholder, so it never breaks legitimate content:
+- **Internal-link markers**, such as `[INTERNAL:...]`, are handled by the linking workflow.
+- **Image markers**, such as `IMAGE_1`, belong to image placement.
+- **Numbered references**, such as `[1]`, can be legitimate citations.
 
-- **Internal-link markers** (the \[INTERNAL:...\] tags theStacc uses to wire up links between your posts) are left alone.
-- **Image markers** (IMAGE\_1, IMAGE\_2, and so on) are part of how the post is built and are skipped.
-- **Numbered footnotes and references** like \[1\], \[2\], \[3\] are recognized as citations, not placeholders, and are left in place.
+These exclusions prevent a blanket search for brackets from treating every marker as unfinished prose. Check the final rendered draft for missing images, unresolved links, and citation destinations as well as visible placeholder text.
 
-Only genuine "fill this in later" text gets caught and fixed.
+## Integrity rules for generated content
 
-## Integrity rules that are never fabricated
+The writing instructions prohibit fabrication of:
 
-Underneath the automatic scans is a firm set of rules the writing engine is instructed never to break. theStacc will not invent any of the following:
+- Promo codes, discounts, sale dates, prices, and contact details.
+- Statistics, research, or named studies without supporting sources.
+- Testimonials, reviews, customer quotations, or implied customer experiences.
+- Awards, certifications, rankings, partnerships, or endorsements without evidence.
 
-- **Promo, coupon, or discount codes** (no "SAVE20", "WELCOME10", etc.)
-- **Discount percentages or dollar amounts** (no "20% off" or "$50 off" unless you provided it)
-- **Sale dates or limited-time offers** (no "ends Friday" or "this week only")
-- **Specific prices** (no "$99/month" unless it is in your business details)
-- **Phone numbers or email addresses** (a generic "contact us" is used instead)
-- **Statistics, studies, or research data** without a legitimate, citable source
-- **Testimonials, reviews, or customer quotes** - these are never invented, paraphrased, or implied, for any business, in any industry
-- **Awards, certifications, or rankings** - only mentioned if they are in your business context
-- **Partnership or endorsement claims** - never implied unless you specified them
+Providing a business detail helps ground the draft; it does not independently verify that detail. Use approved records, current product information, and sources that support the exact claim. Do not upload a guess and treat its repetition in an article as confirmation.
 
-This is not just a stylistic preference. Made-up reviews and testimonials, for example, are independently against the law in some places, so the engine will only ever reproduce a quote when its exact text was supplied by you - it never writes one on its own.
+### User Direction does not authorize fabrication
 
-### These rules cannot be overridden - not even by you
+[User Direction](/content-seo/user-direction) steers the topic, audience, and emphasis of an individual post. The documented instruction hierarchy keeps content-integrity rules above that direction. Asking for a made-up promotion or testimonial does not make it appropriate to publish.
 
-The User Direction feature lets you steer a specific post: change the angle, emphasize a topic, name a customer to reference, or tell the engine what to avoid. It is a powerful steering signal and it overrides most of theStacc's default behavior. See [User Direction](/content-seo/user-direction) for how it works.
-
-The integrity rules above are the one exception. They are inviolable. If you write a direction like "include promo code SAVE20" or "mention our 30% off sale", theStacc reads that as *"this post should talk about promotions in general"* - and it will write hedged language like "ask about our current promotions" rather than printing the specific code or percentage. The only way a real code, price, or statistic appears in a post is if it is part of your verified business details, never because it was typed into the direction box for a single post.
-
-This is deliberate. User Direction is there to make a post better, not to switch off the protections that keep you out of trouble.
+The generation documentation describes using general promotion language when a specific offer is not supported by the business context. Review the output rather than assuming the instruction hierarchy is an infallible filter on every publishing path.
 
 ## Minimum-quality gates
 
-A draft also has to clear a couple of basic quality bars before it is saved.
+Two documented checks help identify incomplete or weakly supported output:
 
-- **At least 500 characters of real content.** If the writing comes back empty or unusually short, theStacc treats it as a truncated or failed draft, rejects it, and asks for complete content. This catches the rare cases where generation was cut off partway, so a half-finished stub never lands in your review queue.
-- **Two or more external links recommended.** Linking out to authoritative sources builds credibility, so theStacc looks for at least two external links. If a post has fewer, that does not block it - but it is recorded as a warning, and it costs the post points on its SEO score. A post with one external link is nudged to "add one more"; a post with none loses the full external-links credit. See [SEO Scoring Explained](/content-seo/seo-scoring) for how links factor into the overall score.
+- **Minimum content length:** the documentation describes a floor of about **500 characters**, with shorter output treated as truncated and sent for rewriting. This is an internal completeness check, not a Google word-count requirement or proof of useful coverage.
+- **External links:** the rubric recommends **two or more** external sources. Fewer links can trigger a warning or reduce the link score, without necessarily blocking the draft. Read the sources and check what they support; link quantity is not factual verification.
 
-## AI-fingerprint penalties
+See [SEO Scoring Explained](/content-seo/seo-scoring) for the documented scoring preferences and their limits.
 
-The last layer is about *sounding* human, not just being accurate. There are well-known tells that make writing read as machine-generated, and both human readers and Google's spam systems notice them. theStacc's SEO scorer applies a penalty for each of these, which lowers the post's overall score:
+## Writing-pattern penalties
 
-- **Banned cliché openers** - tired AI intros like "In today's fast-paced world", "When it comes to", "In this comprehensive guide", "Let's dive in", "Unlock the power of", and "In conclusion". The more of these show up near the top, the bigger the penalty.
-- **Scaffolding-transition overuse** - leaning on "Additionally,", "Furthermore,", "Moreover,", and similar connective filler over and over. A single one is fine; a pile of them in the opening reads as robotic.
-- **Dash overuse** - too many em-dashes and en-dashes. theStacc actually trims excess dashes automatically as the post is written, and the scorer still penalizes any post that runs far over a natural rate.
-- **Repetitive sentence starts** - several paragraphs in a row beginning with the same word. Varied openings read as human; identical ones read as a template.
-- **Keyword stuffing** - cramming the target keyword in at an unnaturally high density. Google has said for years that keyword density is not a ranking signal, so stuffing only hurts - and theStacc treats real stuffing as a penalty, not a positive.
+The internal scorer can deduct points for stock openers, repeated filler transitions, heavy dash use, repeated paragraph openings, or excessive keyword repetition. These are prompts for editorial review. A quotation, technical term, or deliberate repetition can be appropriate in context.
 
-These penalties do not block a post from being saved. They pull its SEO score down, which is exactly the signal you want - a post that trips these tests is one to look at more closely before it goes live. For the full breakdown of how the score is built, see [SEO Scoring Explained](/content-seo/seo-scoring).
+The documentation also describes trimming excess dashes during writing. Check whether an edit improves meaning and flow rather than treating punctuation as evidence of factual accuracy or a search-engine penalty. Google's [spam policy](https://developers.google.com/search/docs/essentials/spam-policies#keyword-stuffing) addresses manipulative keyword repetition; it does not make this internal writing rubric a Google assessment.
+
+Pattern deductions are described as score changes rather than hard publication blocks. Inspect the relevant passage before deciding what to revise.
 
 ## Image safety
 
-Text is not the only thing that gets screened. Every image theStacc generates for your post passes through a content-safety moderation check. If an image is rejected by that check, theStacc does not show you a confusing technical error - it returns a friendly, plain message telling you the image was blocked and to **try a different prompt**. Your post still finishes; the rejected image simply is not attached, and you can adjust the description and regenerate.
+Generated images are described as passing through moderation before attachment. A blocked image can produce a message asking you to **try a different prompt**. Check the post's current status and whether text or images need attention; the [generation guide](/content-seo/blog-generation#if-only-the-images-failed) distinguishes image-only retries from rewriting the whole article.
 
-## Why this matters
+Moderation does not verify a depicted product, customer, professional credential, or procedure. Review an image's relevance and accuracy, along with its alt text, before publishing. Do not use an illustrative image as proof of a real customer outcome.
 
-The whole point of these guardrails is that you can let theStacc publish on autopilot without worrying that it is quietly inventing facts in your name. Promo codes are blocked. Prices, discounts, and sale dates are never conjured out of thin air. Placeholders never slip through. Fake quotes and statistics are off the table - permanently, with no override. And the writing is held to a standard that keeps it reading like a person wrote it.
+## Review before relying on automation
 
-To go deeper on the systems that keep your content on-brand and trustworthy, see [Quality & safety](/how-it-works/quality-safety). To understand how a post earns its score, see [SEO Scoring Explained](/content-seo/seo-scoring). And to learn how to steer an individual post within these rules, see [User Direction](/content-seo/user-direction).
+Before publication, confirm:
+
+- Offers and contact details match current approved business information.
+- Important factual claims have sources that support the statement.
+- Customer quotations and proof have permission and are represented accurately.
+- Placeholders, links, citations, and images work in the rendered draft.
+- The selected publishing mode and review responsibilities fit the content's risks.
+
+These checks support publishing decisions; they do not guarantee that autopilot is free of factual or compliance errors. Regulated projects can also use [Compliance Profiles](/content-seo/compliance-profiles), which assist review without certifying compliance. See [Quality & safety](/how-it-works/quality-safety) for the broader documented workflow.
