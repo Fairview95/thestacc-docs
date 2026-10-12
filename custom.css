@@ -1,6 +1,7 @@
 /* Preserve Mintlify's theme while correcting observed light-mode contrast. */
 html:not(.dark) a[aria-current="page"][class~="bg-primary/10"] { color: #4f46e5; }
 html:not(.dark) #footer a[href^="https://www.mintlify.com"] { color: #6e6d6c; }
+html.dark #footer a[href^="https://www.mintlify.com"] { color: #a1a1a6; }
 
 /* Static, keyboard-accessible comparison tables also work without hydration. */
 .content-table-scroll { max-width: 100%; overflow-x: auto; margin: 1.5rem 0; }
