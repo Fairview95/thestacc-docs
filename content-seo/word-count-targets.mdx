@@ -1,48 +1,68 @@
 ---
 title: "Word Count & Targets"
-description: "Longer, well-structured articles tend to rank better in search - up to a point."
+description: "Understand theStacc's article length targets, review word counts, and decide when a draft needs more detail or a tighter scope."
 ---
 
-Longer, well-structured articles tend to rank better in search - up to a point. theStacc handles article length for you automatically, then measures the real word count of every finished post and factors it into the SEO score. This page explains how that works and what a healthy length looks like.
+theStacc sets a target length during article planning and shows a word count with the finished post. Use that count to review the draft alongside its content and SEO suggestions. A useful article answers the reader's question; adding words alone does not make the answer better.
 
 ## How length is decided
 
-You don't have to pick a word count by hand. When theStacc plans a blog post, the AI sets a **target length** for that specific article based on its topic and the type of post it is (a how-to guide, a listicle, an in-depth guide, and so on). That target is used as a **hint** that steers the writing - it's a goal, not a hard limit.
+When theStacc plans a post, it chooses a **target length** for the topic and [blog type](/content-seo/blog-types). The target guides generation rather than imposing an exact final word count.
 
-In practice the generator aims for substantial, in-depth posts - typically a few thousand words for a full article - because that depth is what helps content rank and genuinely answer a reader's question. Different post types get different targets: an ultimate guide is written to be longer and broader than a short, focused how-to.
+A broad guide may need more explanation than a focused how-to. The useful distinction is what each post needs to cover: prerequisites, steps, examples, alternatives, or limitations. Review those needs before deciding that a draft should be longer.
 
-There is no manual word-count slider in your settings today. Length is chosen per article during generation, so you get a sensible target for each topic without having to tune a number yourself.
+[Preferences](/content-seo/preferences) does not provide a per-project target-word-count slider. Article planning chooses the target; you review the generated content before publishing.
 
-## The actual word count
+## Where to check the word count
 
-After a post finishes generating, theStacc measures its **real word count**. It does this by stripping out all the HTML formatting (headings, images, links, and styling tags) and counting only the visible words a reader would actually see. That number is saved with the post and shown on the dashboard.
+Open the **blog detail page** to review the word count displayed with the SEO score. It describes the generated post's text, rather than the target used when planning it.
 
-You'll see it on the **blog detail page**, next to the SEO score, displayed as something like **1,850 words**. This is the true length of the published article - not an estimate - so it's the number to trust when you're checking whether a post is long enough.
+Use it to spot a draft that needs closer review, then read the relevant sections. A word count cannot tell you whether an explanation is accurate, whether important steps are missing, or whether the same advice appears several times.
 
-The same word count is also used as one of the inputs to your SEO score, so it does double duty: it tells you how long the post is, and it feeds into how well the post is rated.
+If you edit an article in your website's CMS after publishing, check that version separately. Do not assume the count shown in theStacc reflects changes made outside theStacc.
 
-## How length affects your SEO score
+## What a length suggestion means
 
-Every generated post receives an SEO score from 0 to 100. One of the things that score measures is **content length and depth**. Here's roughly how word count maps to that part of the score:
+The SEO analysis includes **content length and depth** among its checks. Read the suggestion shown for your post to understand which part needs attention. The product's scoring rules are editing guidance, not Google's ranking requirements.
 
-- **1,000 to 4,000 words** - the ideal range. Posts in this band get full marks for length.
-- **500 to 999 words** - decent, but the score nudges you to aim higher. You'll see a suggestion like "Aim for 1,000 to 4,000 words for better rankings."
-- **Over 4,000 words** - still scores well, but very long. The score may suggest splitting the topic into more than one focused article.
-- **300 to 499 words** - too thin. The score flags it and suggests aiming for at least 1,000 words.
-- **Under 300 words** - very short, and scored lowest for length.
+Google's [people-first content guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content#avoid) says Google has no preferred word count. Do not treat a numerical length recommendation as a requirement to add filler or as a promise of better rankings.
 
-Length isn't the whole story. The depth portion of the score also looks at how many subheadings you have (it likes 5 or more H2 and H3 headings) and how well your paragraphs are sized, so a long post that's just one big block of text won't score as well as a long post that's broken up into clear sections.
+For a breakdown of the product's checks, see [SEO Scoring Explained](/content-seo/seo-scoring). Review the underlying suggestion as well as the headline score. A draft may need a clearer structure or a missing explanation rather than more words throughout.
 
-### Some post types expect more
+> **Review for completeness:** A shorter draft is not automatically thin, and a longer draft is not automatically thorough. Check what the intended reader can understand or do after reading it.
 
-The score also checks whether a post delivers what its format promises. In-depth formats are held to a higher length bar. An **ultimate guide**, for example, is expected to have broad coverage - around **6 or more main sections (H2s) and 1,500+ words** - to earn full marks for matching its intent. A short, focused how-to is judged differently and doesn't need to be that long. So the "right" length depends partly on the kind of article you're publishing.
+## Decide whether to expand, shorten, or keep a draft
 
-## What this means for you
+Use the reader's task to choose the next edit. These are editorial decisions, not scoring thresholds.
 
-- You don't need to set a word count. theStacc picks a sensible target for each article automatically.
-- Check the **word count** shown on the blog detail page to confirm a post landed in a healthy range - roughly 1,000 to 4,000 words for most articles.
-- If a post comes back shorter than you'd like, the **SEO analysis panel** will tell you, with a specific suggestion. You can use **Regenerate** or **Generate more** to expand it.
-- For deeper formats like ultimate guides, aim higher - 1,500 words and up, with plenty of subheadings.
+<p id="word-count-targets-table-1-title" className="content-table-title">Choose the next edit by reader need</p>
+<div className="content-table-scroll" role="region" aria-labelledby="word-count-targets-table-1-title" tabIndex="0">
+<table aria-labelledby="word-count-targets-table-1-title">
+  <thead><tr><th scope="col">What you find</th><th scope="col">Useful next edit</th><th scope="col">What to avoid</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">A required step or explanation is missing</th><td>Add the information needed to complete the task, using verified business details or sources</td><td>Repeating the introduction to increase the count</td></tr>
+    <tr><th scope="row">The answer is complete, but the draft is shorter than a suggested target</th><td>Review the suggestion and confirm that no important question is unanswered</td><td>Padding a focused answer solely to reach a number</td></tr>
+    <tr><th scope="row">Several sections repeat the same advice</th><td>Combine overlapping sections and keep the clearest explanation</td><td>Preserving repetition because it adds length</td></tr>
+    <tr><th scope="row">One article tries to answer separate reader questions</th><td>Tighten its scope; consider a separate article only if it serves a distinct need</td><td>Splitting a useful guide at an arbitrary word count</td></tr>
+  </tbody>
+</table>
+</div>
+
+Before publishing:
+
+- Confirm that the title's promise is answered in the body.
+- Check prerequisites, important steps, examples, and limitations where the topic needs them.
+- Verify factual claims and business details added during expansion.
+- Remove repeated explanations and unrelated material.
+- Use headings that describe the sections, rather than adding headings to meet a quota.
+
+## Change an existing article
+
+Edit the draft directly when you know what needs to change. If you use [section regeneration](/content-seo/regenerating-content#regenerate-a-section), its length control can request a shorter or longer rewrite of the selected section. Review the result for accuracy and relevance before publishing.
+
+Save any wording you want to keep before regenerating: the [regeneration guide](/content-seo/regenerating-content#before-you-start) explains that regenerated content replaces the current version.
+
+**Generate More** creates additional blog plans. It does not expand the article you are reviewing. See [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs) if you need more posts rather than a longer existing post.
 
 ## Related
 
