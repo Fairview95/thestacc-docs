@@ -1,83 +1,81 @@
 ---
 title: "AI Error Recovery & Retries"
-description: "Writing a blog post means talking to an AI service that, like any busy service, sometimes gets overloaded for a few minutes."
+description: "Identify a busy-service failure, a stalled generation or missing images, then choose the retry that fits the saved post."
 ---
 
-Writing a blog post means talking to an AI service that, like any busy service, sometimes gets overloaded for a few minutes. theStacc is built so that those normal blips almost never reach you, and when they do, getting back on track is a single click. This page explains exactly what happens behind the scenes, what you'll see on screen, and the safeguards that make sure a post can never stay stuck forever.
+AI Error Recovery & Retries helps you choose a next step from the post's current status and saved content. If generation is still retrying, let it work. If it has failed, read the message before retrying. When text is saved and only images are missing, choose Retry images to avoid another writing request.
 
 ## When the AI is busy, theStacc waits for you
 
-The AI that writes your content occasionally returns a "high demand" or "too many requests" response. This is temporary and usually clears in seconds to minutes. theStacc treats these as something to wait out, not something to fail on.
+The article-writing service can return temporary overload or rate-limit errors. For full blog generation, the retry helper waits between attempts and can update the progress message to **AI service busy, retrying...**. That message means another attempt is being made; it does not confirm the next attempt will succeed.
 
-For a post being generated in the background (your scheduled posts and any post you kick off and walk away from), theStacc automatically retries on its own with escalating waits between attempts. It keeps trying for up to about **30 minutes** before it gives up. The vast majority of busy spells resolve well inside that window, so the retry is invisible to you - the post simply finishes a little later than usual.
+The background writer uses a retry allowance of up to **30 minutes per AI call**. A blog can involve more than one call, so this is not a promised completion time or one limit for the whole article. If the post remains in Generating with a retry message, avoid starting another full generation while that work is active.
 
-While this is happening, the post stays in the **Generating** state and the status message updates so you're not left staring at silence. You'll see a live message like:
+<span id="the-one-click-retry-badge" aria-hidden="true" style={{scrollMarginTop: "8rem"}}></span>
 
-> AI service busy, retrying... (attempt 2, 45s elapsed)
+## Use the retry shown for the failure
 
-That's theStacc telling you it's working through a temporary slowdown. There's nothing for you to do - just leave the post to finish.
+For a recorded overload or rate-limit failure, the post can show **AI service was busy** with **Try again**. If a retry-after hint is available, the button shows **Try again in ...s** until its countdown ends. Wait for the enabled button; the countdown is a suggested delay, not confirmation that the service has recovered.
 
-## The one-click retry badge
+A different Generation failed panel can show **Retry** instead. Both writing-retry buttons start full generation again. Before clicking, check whether useful text is already saved and whether the missing-image notice offers a narrower repair. Keep a copy of anything you want to retain.
 
-If the AI stays busy for the entire retry window and generation can't complete, the post moves to **Generation failed** and theStacc shows a clear, friendly panel instead of a scary error. For a busy-service failure, the panel reads **AI service was busy** with a short explanation such as "AI service is experiencing high demand. Please try again shortly," and a **Try again** button.
-
-Clicking **Try again** simply re-runs generation for that post - no settings to re-enter, no re-typing. Because high demand often comes in waves, the button respects a short cooldown: if theStacc has a suggested wait time, the button shows a live countdown (for example **Try again in 30s**) and only becomes clickable once the wait has passed. This stops you from hammering a service that's still catching its breath, and means your retry lands when it's most likely to succeed.
-
-The **Try again** button only appears for people with edit access to the project.
+Retry controls require project-edit access, and writing retries still check subscription eligibility and applicable generation limits. If the button is absent, disabled or refused, read the access or plan message rather than repeatedly sending the request.
 
 ## What's in an error, in plain terms
 
-When the AI returns a problem, theStacc records a tidy summary so the right message and the right button can be shown - on the post itself and in any pop-up notification. Each summary includes:
+A structured error from theStacc's writing service can include a code, message, retry-after hint and occurrence time. The codes `ai_overloaded` and `ai_rate_limited` select the busy-service panel. The occurrence time helps the countdown account for time that passed before you refreshed the page.
 
-- **An error code** - a stable label for the kind of problem, so the app knows which help to offer. The transient, retry-friendly ones are `ai_overloaded` (the service is at high demand) and `ai_rate_limited` (too many requests right now). Other codes cover non-transient issues like a service configuration problem (`ai_unavailable` and similar), where retrying on its own won't help.
-- **A plain-English message** - a safe, friendly sentence you actually see, like "AI service is experiencing high demand. Please try again shortly" or "AI service is busy right now. Please try again in a few minutes." theStacc deliberately never shows raw internal or billing details - those stay in our logs, not on your screen.
-- **A retry-after hint** - roughly how long to wait before trying again. This is what powers the countdown on the **Try again** button.
-- **A timestamp** - when the problem occurred, so the countdown and the wording stay accurate even if you reload the page partway through the wait.
+Other failures can have a different code or just a message. A generic **Retry** button is not proof that the problem is temporary. Read whether the message concerns access, a generation allowance, an invalid request or service availability. If repeating the same action produces the same failure, keep the message and ask support for help.
 
-The two retry-friendly codes (`ai_overloaded` and `ai_rate_limited`) are the only ones that get a **Try again** button, because those are the ones where trying again actually helps. Everything else gets a clear message so you know whether to wait, retry, or reach out to support.
+<span id="a-stuck-post-can-never-hang-forever" aria-hidden="true" style={{scrollMarginTop: "8rem"}}></span>
 
-## A stuck post can never hang forever
+## If a post stops making progress
 
-Very rarely, a post might stop making progress for reasons unrelated to the AI being busy - for example, a background worker being restarted mid-job during a deploy. To make sure a post never sits in **Generating** indefinitely, theStacc has a built-in safety net.
+Refresh or reopen the post before treating an unchanged progress display as a stuck job. Automatic status polling has a limited window, so a quiet display alone does not establish that background work stopped. Read the refreshed status and inspect any text or images already saved.
 
-Anything that has been stuck in **Generating** for more than **45 minutes** is automatically flipped to **Generation failed**, and the same **Try again** retry option appears. This happens two ways, so you're covered no matter what:
+The current recovery paths use a **45-minute** age threshold for some stalled generations, with a separate background sweep. The result can be Generation failed, a reviewable article with image failures, or a requeued attempt after a worker interruption. Recovery depends on the available job state and the checks running successfully; it is not a guarantee that every post changes status at exactly 45 minutes.
 
-- The moment you open or refresh a post that has been generating too long, theStacc notices and updates it on the spot.
-- A background sweep runs regularly on its own and clears out any over-age jobs even if nobody is looking at them.
-
-Either way, the outcome is the same: a post that genuinely got stuck becomes a one-click retry instead of a mystery that spins forever. (45 minutes is generous on purpose - it leaves room for the full ~30-minute busy-retry window plus normal writing and image time before a post is ever considered stuck.)
+If the refreshed post still makes no progress, note its title, project, status and displayed message when contacting support. Copy any useful saved writing before a full retry. Do not repeatedly replace a draft just because its progress display has stopped moving.
 
 ## When only the images failed, retry just the images
 
-Generating a blog post happens in two parts: the AI writes the article text, then images are generated for the post. Sometimes the text succeeds perfectly but one or more images fail.
+Use **Retry images** when the post records failed images and the writing is worth keeping. This action reuses the original image-plan entries and requests the failed images without calling the article writer again. It can fill successful results into the saved content while leaving re-failed entries flagged.
 
-When that happens, theStacc does NOT make you regenerate the whole post. Re-running the full pipeline would throw away your finished article and re-run the (paid) AI writing step for no reason. Instead, the post detail page shows a panel like **2 images failed to generate** with the reassurance that **"Your blog text is saved and ready. Only the images need a redo,"** and a **Retry images** button.
+The retry accepts **Generated, pending review** and **Generation failed** posts. It is blocked during active generation and after approval or publication. If there are no recorded failures, there may be nothing to retry. If an original plan entry is missing, another retry cannot reconstruct it from an instruction you entered for a separate image edit.
 
-Clicking **Retry images** re-runs image generation for only the placeholders that failed last time, using the original prompts. Successful retries drop straight into your article in the right spots; anything that still fails stays flagged so you can try again or edit it. Crucially, this path skips the AI writing step entirely - so retrying images costs no AI text generation and never rewrites the article you already have.
+Image-only retry skips article writing, but it still makes new image-generation requests and is not a free-retry promise. Review any account usage or billing message and inspect the recovered pictures, placeholders and featured image. See [Image Generation](/content-seo/image-generation) for other replacements when the original request remains unsuitable.
 
-theStacc also protects you from the expensive mistake automatically: if you try to fully re-generate a post whose text already succeeded and only images failed, theStacc steers you to **Retry images** instead, so you don't accidentally pay to rewrite work that's already done.
-
-The **Retry images** option is available both when the post is waiting for your review with a couple of missing images, and when an image-only problem pushed the post into **Generation failed**.
+A full-generation safeguard redirects an older Generation failed post with saved text and failed images to Retry images. It is specific to that state, rather than a universal promise that full generation can never overwrite a saved article.
 
 ## Retries while you're actively waiting
 
-There's a difference between a post generating in the background and an action you trigger live and watch - like regenerating a single section from the editor. For those live, in-the-moment actions, theStacc uses a much shorter retry budget (around a minute and a half rather than 30 minutes).
+A section rewrite uses a shorter retry allowance than full blog writing: the current writing-service call has a **90-second** retry budget. This is not a guaranteed response time for the whole action, and an image edit follows a different workflow. Wait for that action's result or error before deciding what to repeat.
 
-The reason is simple: when you've clicked a button and you're watching the screen, you don't want the app to appear frozen for half an hour during an outage. So live actions fail fast with a clear message and a retry option, keeping the interface responsive. Background work (your scheduled posts and full post generation you've stepped away from) gets the long, patient 30-minute budget instead, because patience there pays off and you're not sitting and waiting on it.
-
-If a live section regenerate does hit a busy service and can't complete in its short window, you'll get the same friendly "AI service is busy" message and can simply try again.
+For several selected sections, some rewrites can succeed while others fail, and successful replacements can be saved. Inspect the saved article before retrying failed sections so you do not repeat work you wanted to keep. See [Regenerating Content](/content-seo/regenerating-content) for section and image controls.
 
 ## What you actually need to do
 
-For almost every situation, the answer is the same and it's easy:
+Choose the next action from the refreshed post, rather than applying the same retry to every failure. The distinction that matters is whether useful text is already saved and which part of the work failed.
 
-1. If a post is **Generating** and shows a "retrying" message, leave it - theStacc is handling a temporary slowdown.
-2. If a post shows **AI service was busy** with a **Try again** button, click it (or wait for the countdown to finish, then click).
-3. If a post shows that only images failed, click **Retry images** - never a full regenerate.
-4. If a post shows a plain failure that isn't about the service being busy, the on-screen message tells you whether to retry or contact support.
+<p id="ai-error-recovery-action-table-title" className="content-table-title">Choose a recovery action from the current post</p>
+<div className="content-table-scroll" role="region" aria-labelledby="ai-error-recovery-action-table-title" tabIndex="0">
+<table aria-labelledby="ai-error-recovery-action-table-title">
+  <thead><tr><th scope="col">What you see</th><th scope="col">Next action</th><th scope="col">Check before repeating</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Generating with a retry message</th><td>Let the active attempt continue</td><td>Refresh the status if progress stops updating</td></tr>
+    <tr><th scope="row">AI service was busy</th><td>Wait for Try again to become enabled</td><td>The countdown, access and whether text is saved</td></tr>
+    <tr><th scope="row">Generation failed with Retry</th><td>Read the failure, then choose a suitable retry</td><td>Any saved material you want to retain</td></tr>
+    <tr><th scope="row">Saved text with failed images</th><td>Use Retry images</td><td>Original image plan, remaining placeholders and returned errors</td></tr>
+    <tr><th scope="row">Repeated failure or no refreshed progress</th><td>Contact support with the post details</td><td>Current status and message, without credentials</td></tr>
+  </tbody>
+</table>
+</div>
+
+A publishing failure is a separate problem from an AI generation failure. Use [Publishing Errors](/content-seo/publishing-errors) when the draft exists but delivery to your website failed. Use [Quota & Limits](/content-seo/quota-and-limits) for an allowance message. Retrying the article writer will not itself verify a live publication.
 
 ## Related articles
 
-- [Blog Generation & Regenerating Content](/content-seo/blog-generation) - the full generation pipeline, plus how to regenerate a whole post, a single section, or just the images.
-- [How the content engine works](/how-it-works/content-engine) and [How the AI works](/how-it-works/how-the-ai-works) - the AI models and the multi-step generation pipeline behind every post.
-- [Content SEO Overview](/content-seo/overview) - what each blog status (Generating, Pending Review, Generation failed, and more) means on your dashboard.
+- [Blog Generation](/content-seo/blog-generation): prepare a plan, start writing and review the saved draft.
+- [Regenerating Content](/content-seo/regenerating-content): choose a section, image or plan change.
+- [How the content engine works](/how-it-works/content-engine) and [How the AI works](/how-it-works/how-the-ai-works): the wider content workflow.
+- [Content SEO Overview](/content-seo/overview) and [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): find the post and interpret its status.
