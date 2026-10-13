@@ -1,111 +1,118 @@
 ---
 title: "Preferences"
-description: "Preferences control the look, voice, and rules that theStacc applies to every blog it writes for a project. Set them once and the AI follows them on every post."
+description: "Choose writing, image and content preferences for your project, understand how changes save, and review what they guide."
 ---
 
-Preferences control the look, voice, and rules that theStacc applies to every blog it writes for a project. Set them once and the AI follows them on every post.
+Preferences guide the writing, images and optional content in blogs for the selected project. Open **Preferences**, choose the **Writing**, **Images** or **Content** tab, and check how each control saves. Saved settings influence future generation; they do not guarantee tone, length, image appearance or factual accuracy.
 
-Find them under **Content SEO \> Settings \> Preferences**. The page has three tabs: **Writing**, **Images**, and **Content**. Changes save automatically the moment you pick an option or toggle a switch — there is no separate "Save" button on the style choices.
+Choose the correct project before editing. Project editors can change these settings; viewers have read-only controls. Changing a preference does not rewrite an article that already exists.
 
-> Preferences are per project. If you run more than one website, switch projects first (top-left project picker), then set preferences for the one you want. Only project editors can change these settings; viewers see them but can't edit.
+## How changes save
+
+Style tiles and content toggles send an update when you select them. Fields with their own buttons need a separate action. Typing into a form alone does not save its contents.
+
+<p id="preferences-save-table-title" className="content-table-title">How to save each preference</p>
+<div className="content-table-scroll" role="region" aria-labelledby="preferences-save-table-title" tabIndex="0">
+<table aria-labelledby="preferences-save-table-title">
+  <thead><tr><th scope="col">Control</th><th scope="col">Save action</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Writing style, Article Length, image style and content toggles</th><td>Select the option or toggle. Wait for the update to finish.</td></tr>
+    <tr><th scope="row">CTA link or website page</th><td>Use Add Link, Save Changes or Add Page, as shown in the form.</td></tr>
+    <tr><th scope="row">YouTube channel or locked footer</th><td>Use Save for the channel and Save footer for the footer.</td></tr>
+  </tbody>
+</table>
+</div>
+
+If you see **Failed to update preferences**, check the displayed values and retry. The view can change while an update is pending, so a changed selection alone is not confirmation that it saved. Reopen the page after a failed or interrupted update to check the saved state.
 
 ## Writing tab: writing style and tone
 
-Pick the voice the AI writes in. There are 12 styles, and the choice applies consistently across every blog in the project:
+Choose a general writing style in **Writing Style & Tone**. The selected tile shows a checkmark. **Professional** is shown when no style has been saved.
 
-- **Informative** — fact-driven, educational content
-- **Simple & Clear** — easy to read, jargon-free
-- **Formal** — polished, corporate tone
-- **Casual** — relaxed, everyday language
-- **Enthusiastic** — energetic and excited
-- **Persuasive** — convincing, action-oriented
-- **Professional** — business-appropriate, trustworthy *(default)*
-- **Friendly** — warm, approachable tone
-- **Entertaining** — fun, engaging to read
-- **Inspirational** — motivating and uplifting
-- **Analytical** — data-driven, logical approach
-- **Narrative** — story-driven, immersive
+The available labels are **Informative**, **Simple & Clear**, **Formal**, **Casual**, **Enthusiastic**, **Persuasive**, **Professional**, **Friendly**, **Entertaining**, **Inspirational**, **Analytical** and **Narrative**. Use the tile descriptions to choose the tone closest to your intended audience.
 
-New projects start on **Professional**. Click any tile to switch; the selected style shows a checkmark.
+For guidance drawn from your own writing, use **Business Info > Sources > Brand voice**. The writer is instructed to favor an analyzed voice profile over the generic writing-style label when they conflict. Review the generated draft to check the tone and terminology. See [Sources & Brand Voice](/content-seo/sources-brand-voice) for the sample and analysis workflow.
 
-If you'd rather not pick a label, theStacc can learn your voice from real examples instead. Add a few of your own published articles as **example articles** (under **Content SEO \> Settings \> Content Details**) and the AI matches their tone for more consistent branding. See [Sources & Brand Voice](/content-seo/sources-brand-voice) for how that works.
+The Writing tab also has **Article Length**. See [the length targets below](#a-note-on-article-length) before choosing a target solely to make a draft longer.
 
 ## Images tab: image style
 
-Choose the visual style for the AI-generated images in your posts. This style applies to every image in every article. There are 6 options:
+Select an **Image Style** to guide the prompts for generated blog images. **Photorealistic** is shown when no image style has been saved. The other options are **Flat Illustration**, **Cinematic**, **Watercolor**, **Sketch** and **Brand & Text**.
 
-- **Photorealistic** — natural photography look *(default)*
-- **Flat Illustration** — clean 2D vector style
-- **Cinematic** — dramatic, movie-like feel
-- **Watercolor** — soft, painterly textures
-- **Sketch** — hand-drawn line art
-- **Brand & Text** — photo with a branded text overlay
+The thumbnails illustrate the style choices. They are not live previews of the images that will appear in your article. Check the generated image for the intended look, readable text and accurate business details before publishing. Selecting Brand & Text alone does not confirm that your logo or an exact brand font will appear.
 
-New projects start on **Photorealistic**. Each option shows a live preview thumbnail so you can see the look before you commit.
+See [Image Generation](/content-seo/image-generation) for reviewing images, and **Sources > Brand images** for the separate image and logo controls.
 
 ## Content tab: what goes inside each post
 
-The **Content** tab is where you turn whole features on or off and add the links, videos, and rules the AI should follow.
+Use the Content tab for inclusion preferences, link inputs, topics to avoid and a locked footer.
 
 ### Content options (toggles)
 
-Four switches decide what types of content the AI is allowed to add. Their defaults are:
+The inclusion options are **Include YouTube Videos**, **Include CTAs**, **Include Internal Links** and **Include Competitor Links**. With no saved setting, the first three default to on and competitor links default to off.
 
-- **Include YouTube Videos** — embed relevant YouTube videos in posts. *(On by default)*
-- **Include CTAs** — add call-to-action sections in content. *(On by default)*
-- **Include Internal Links** — link to other pages on your website. *(On by default)*
-- **Include Competitor Links** — link to competitor sites when they're mentioned in content. *(Off by default)*
-
-Each toggle also acts as a show/hide control. When a toggle is **on**, its configuration section appears lower on the tab; when you turn it **off**, that section is hidden (and the AI stops using it). So if you don't see the CTA, internal-links, or YouTube section, check that the matching toggle is on.
+The YouTube, CTA and internal-link toggles also show or hide their configuration sections. Turning one off hides its form without deleting the saved inputs. It does not remove content from a post that has already been generated.
 
 ### YouTube channel
 
-Visible when **Include YouTube Videos** is on. Add your **YouTube channel URL** and the blog generator will find and embed relevant videos from your channel inside your posts.
+With **Include YouTube Videos** on, use **Add Channel URL** or **Edit** to enter your channel address, then click **Save**. The form trims surrounding whitespace and accepts an empty value to clear it. A nonempty address must start with `http://` or `https://`.
 
-The URL must start with `http://` or `https://` (for example, `https://youtube.com/@yourchannel`). If you paste something without one of those, theStacc asks you to fix it before saving.
+Check the saved address after editing. Saving a channel address does not guarantee that a relevant video from that channel will be included in a generated post. Review any embedded video for relevance and the intended source.
 
 ### CTA Links
 
-Visible when **Include CTAs** is on. These are the links you want woven into your blog posts — the AI places them naturally in the content rather than dropping a generic button at the end. Add as many as you need. Each CTA link has:
+With **Include CTAs** on, click **Add CTA Link**. Enter a **Label** and **URL**, choose **Primary**, **Secondary**, **Social** or **YouTube** as the type, and add optional **Notes**. Use **Add Link** for a new entry or **Save Changes** when editing one. **Cancel** discards the unsaved form.
 
-- **Label** *(required)* — the clickable text, e.g. "Get Started Free"
-- **URL** *(required)* — where the link points
-- **Type** — **Primary**, **Secondary**, **Social**, or **YouTube**. This is a tag that helps you organize links (for example, your main offer vs. a supporting one); it's shown as a colored badge on each link.
-- **Notes** *(optional)* — a hint for the AI, e.g. "Use in conclusion"
+The current add/edit form accepts a URL beginning with `http://`, `https://`, `mailto:` or `tel:`. It trims the label, address and notes. Older saved links can use forms accepted elsewhere, including a relative path or anchor; the current form may reject those when you edit them. Use a supported address and check the saved link.
 
-**Allowed link addresses.** A CTA URL must start with one of these:
+CTA types and notes give placement guidance. Check the finished article for the links and placement you intended. If saving fails because a destination is missing, fix the address and confirm the saved list before generating.
 
-- `http://` or `https://` — a full web address (`https://yoursite.com/signup`)
-- `mailto:` — an email link (`mailto:hello@yoursite.com`)
+### Your Website Pages
 
-Visible when **Include Internal Links** is on. Add pages from your own site — Pricing, About, key service pages — and the blog generator links to them naturally when they're relevant to the post. Each entry is a **page title** plus a **URL**. The URL should start with `http://`, `https://`, or `/`.
+With **Include Internal Links** on, add a page title and URL under **Your Website Pages**, then click **Add Page**. The form accepts addresses starting with `http://`, `https://` or `/`. If you leave the title blank, it uses the address as the title.
 
-Good internal links help readers (and search engines) move through your site, which supports your SEO.
+Use pages that are useful to the intended reader, and check that the generated links reach the right destination. See [Internal Linking](/content-seo/internal-linking) for how the available pages and blog links are used.
+
+### Locked blog footer
+
+Use **Locked blog footer** for fixed text or simple HTML, such as a standard link. Click **Save footer** and wait for **Blog footer saved**. **Reset** restores the saved value in the form; it does not save a blank footer.
+
+The editor has a **10,000-character** limit. The backend trims and cleans the saved HTML, so review the saved value and the rendered footer. Keep markup simple. A footer is separate from an AI-written CTA and does not establish that a disclaimer meets your professional requirements.
 
 ## Topics to avoid
 
-Lower on the **Content** tab is a **Topics to avoid** list — subjects you never want the AI to write about or mention. Use it for competitors' names, sensitive subjects, or anything off-limits for your brand.
+Enter a topic and press **Enter** or click **Add**. Remove a saved topic with the × on its chip. The form ignores a case-insensitive duplicate and waits for an in-progress update before accepting another change.
 
-- Type a topic and press **Enter** or **Add** to include it; remove one with the × on its chip.
-- It's free text — add up to **50** topics, and each one can be up to about **120 characters**. If you try to add a 51st, theStacc tells you you've hit the cap and keeps your text so nothing is lost.
-- This list is **soft-steered**, not a hard block. The AI treats it as strong guidance to steer away from those subjects rather than a guaranteed filter, so it's best for tone and topic direction — not for legal or compliance-critical exclusions.
+You can add up to **50 topics**. Saving trims each entry and retains at most **120 characters** per topic. Keep a topic concise and check the saved chip after adding long text. At the list limit, the form keeps your unadded input and shows an error.
+
+The writer receives these topics as guidance to avoid discussing them. This is not a guaranteed filter. Review the draft for excluded subjects, especially when an omission matters for a regulated claim or a sensitive business detail. See [Content Safety & Integrity Guardrails](/content-seo/content-safety-guardrails) for the separate safeguards and their limits.
 
 ## A note on article length
 
-There is no per-project "target word count" slider in Preferences. By default theStacc aims for substantial, in-depth posts — its built-in quality standard targets roughly **1,500–3,500 words** with strong heading structure — because longer, well-structured articles tend to rank better. The actual word count of each finished post is shown on that blog's detail page.
+**Article Length** in the Writing tab offers the following targets. **Standard** is shown when no length has been saved. Selecting a tile saves the preference, which the generation flow passes to the writer as a target range.
+
+<p id="preferences-length-table-title" className="content-table-title">Article Length targets shown in Preferences</p>
+<div className="content-table-scroll" role="region" aria-labelledby="preferences-length-table-title" tabIndex="0">
+<table aria-labelledby="preferences-length-table-title">
+  <thead><tr><th scope="col">Choice</th><th scope="col">Target words</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Concise</th><td>About 2,000 to 2,500</td></tr>
+    <tr><th scope="row">Standard</th><td>About 2,500 to 3,500</td></tr>
+    <tr><th scope="row">In-depth</th><td>About 3,500 to 4,500</td></tr>
+  </tbody>
+</table>
+</div>
+
+These are generation instructions, not an enforced final count or evidence of better rankings. Choose the target that fits the reader's task, then check the finished article for missing explanations or repetition. See [Word Count Targets](/content-seo/word-count-targets) for reviewing draft length.
+
+Preferences also does not replace the keyword selected for a post. Use [Content Plans & Keywords](/content-seo/content-plans) for topics and keywords, and [User Direction](/content-seo/user-direction) for instructions specific to one post.
 
 ## Advanced and stored brand settings
 
-A few brand fields are stored on your project and used by the AI even though not all of them have a dedicated control on the Preferences page yet:
-
-- **Brand tone** — an extra free-text description of your voice
-- **Brand colors** and **brand fonts** — used to keep branded visuals on-brand
-- **Thumbnail style** and **infographic style** — defaults that shape specific image types
-
-These are saved with your other preferences and will get more surfaced controls over time. For now, the **Writing** and **Images** tabs are the main levers, and example articles are the most reliable way to lock in a consistent brand voice.
+Review your business's brand information in [Business Info](/content-seo/business-setup). Preferences shows the Writing and Images choices described above. A stored thumbnail, infographic or font value does not establish that a separate control is available here.
 
 ## Related
 
-- [Sources & Brand Voice](/content-seo/sources-brand-voice) — sitemap, blog address, and example articles that teach the AI your voice
-- [Competitors & Audiences](/content-seo/competitors-audiences) — who content targets and how it sets you apart
-- [Business Setup](/content-seo/business-setup) — the core business details behind every post
+- [Sources & Brand Voice](/content-seo/sources-brand-voice): factual material and analyzed writing samples.
+- [Competitors & Audiences](/content-seo/competitors-audiences): the people and alternatives relevant to your business.
+- [Business Setup](/content-seo/business-setup): business facts to review before generating content.
