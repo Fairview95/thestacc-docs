@@ -1,75 +1,74 @@
 ---
 title: "User Direction"
-description: "Sometimes you know exactly what you want a particular post to do - lead with budget tips, skip the jargon, mention a specific customer, or steer clear of…"
+description: "Save per-post writing instructions, understand the character limit, and review how the AI uses your guidance."
 ---
 
-Sometimes you know exactly what you want a particular post to do - lead with budget tips, skip the jargon, mention a specific customer, or steer clear of pricing talk. **User Direction** is the box where you tell the AI that, in plain language, for one post only.
-
-Think of it as a sticky note you hand the writer right before they start: "For this one, focus on X and don't mention Y." It doesn't change your project settings or any other post - just the single blog you're about to generate.
+User Direction lets you save writing instructions for one blog before generating its content. Use it to specify the audience, emphasis or details to avoid. Save the instruction before starting generation, then check the resulting draft: a saved instruction guides the AI, but does not guarantee that every request appears exactly as intended.
 
 ## Where to find it
 
-Open any blog from your **Content SEO** dashboard that hasn't been generated yet. On the blog detail page you'll see a field labeled **Your instructions for this post**, marked **Optional**.
+Open a blog in **Content SEO**. On its detail page, look for **Your instructions for this post**, marked **Optional**. The current editor shows this field to project editors when the plan is ready and the blog has no content. It is hidden while generation is running and after content exists. A rejected status alone does not determine whether it appears.
 
-The field only appears before a post has content - that is, while it's still waiting to be generated (or after it was rejected and is ready to try again). Once the post has been written, the box disappears so it doesn't clutter the editing view. Your saved instruction is kept on the post either way.
+The instruction stays in that blog's saved generation settings. Hiding the field after generation does not clear it; the writer can reuse the saved direction on a later generation.
 
 ## How to use it
 
-1. Open the blog you want to guide from the **Content SEO** dashboard.
-2. In **Your instructions for this post**, type what you want the AI to know before it writes. A few examples:
+Save User Direction on the blog detail page before starting generation. Confirm the planned topic, enter a focused request, click **Save** and wait for the confirmation. Review the generated draft against that request before publishing. Use **Cancel** if you want to restore the last saved instruction.
 
-- *Focus on budget-conscious strategies.*
+1. Open the correct blog and confirm its title, keyword and planned angle.
+2. Enter a focused instruction in **Your instructions for this post**.
+3. Click **Save** and wait for the **Saved** confirmation.
+4. Start generation using the available blog action.
+5. Review the draft against your instruction before approving or publishing it.
 
-- *Emphasize automation over manual steps.*
+Typing does not save the direction. **Cancel** restores the last saved value. The editor trims surrounding whitespace when saving; Save and Cancel appear when the text differs from the saved instruction after trimming. If saving fails, resolve the displayed error before generating.
 
-- *Mention our partnership with Acme Corp and keep the tone practical, not salesy.*
+<p id="direction-examples-title" className="content-table-title">Example instructions for a single post</p>
+<div className="content-table-scroll" role="region" tabIndex="0" aria-labelledby="direction-examples-title">
+  <table aria-labelledby="direction-examples-title">
+    <thead><tr><th scope="col">Goal</th><th scope="col">Example instruction</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Choose an audience</th><td>Write for a small practice owner who handles marketing without a dedicated team.</td></tr>
+      <tr><th scope="row">Set the emphasis</th><td>Explain which tasks the owner needs to review before using automation.</td></tr>
+      <tr><th scope="row">Exclude a subject</th><td>Focus on the workflow and leave pricing out of this article.</td></tr>
+    </tbody>
+  </table>
+</div>
 
-- *Don't talk about pricing.*
-
-1. Click **Save**. A small green **Saved** note confirms it's stored.
-2. Generate the post as usual. The AI reads your instruction and writes to it.
-
-If you change your mind before saving, click **Cancel** to revert the box to whatever was last saved. Saving requires a click - nothing is stored as you type.
+These examples illustrate how to write an instruction. They do not describe a customer, an observed generated result or a promised outcome.
 
 ## What it actually does
 
-When you generate the post, your text is added to the writing prompt as a dedicated **Additional Direction from User** block, and the AI is told to treat it as the highest-priority steering signal for that specific post. In practice that means it overrides the AI's default assumptions about:
+During blog generation, the writer receives the saved text in an **Additional Direction from User** prompt section. The writing instructions tell the AI to give this direction priority over its default angle and the earlier excerpt, while retaining content-integrity rules. This is a prompt instruction, so review the output rather than assuming the model followed it perfectly.
 
-- **The angle** - how the post is framed and who it's written for.
-- **Examples** - what gets referenced and what to weave in concretely.
-- **Emphasis** - what to lead with and dwell on.
-- **Avoidance** - what to leave out entirely. "Don't mention pricing" means no pricing language anywhere; "avoid the word 'leverage'" means that word never appears.
-
-Your direction also wins over the post's auto-generated description if the two ever conflict - the description was written earlier, your instruction is your current intent. Standard SEO structure still applies (heading hierarchy, natural keyword use), but the AI won't ignore an explicit instruction in the name of SEO best practices.
-
-The more specific you are, the better. "Reference our 2024 launch" or "frame this for in-house teams, not executives" gives the AI something concrete to work with.
+Direction can ask the writer to change the audience, examples or emphasis, or to omit a subject. Saving it does not rewrite an article that already exists. It also does not change other posts or your project-wide preferences. Use [Sources & Brand Voice](/content-seo/sources-brand-voice) for supporting material and recurring brand guidance.
 
 ## The one thing it can't override
 
-User Direction steers tone, angle, and emphasis - it cannot turn off theStacc's content-integrity protections. These guardrails exist to keep you out of legal and trust trouble, so they hold no matter what you type.
+User Direction does not authorize invented facts. The system prompt tells the writer not to fabricate statistics, testimonials, certifications, partnerships or promotions. Supply relevant evidence for any factual detail you want included, and check that the finished article supports it.
 
-The clearest example: if you write *"include promo code SAVE20"* or *"mention our 30% off sale"*, theStacc treats that as a direction to **discuss promotions in general** - not a license to print the exact code or percentage. Unless that specific code or discount is part of your verified business information, the post uses hedging language like "ask about our current promotions" instead of writing a number it can't confirm.
+Promotion handling needs particular care. One system instruction allows specific promotional details from verified business context, while a separate user-prompt rule prohibits specific discount percentages. User Direction is therefore not a reliable way to insert an exact discount or code, even when you provide it. Review promotional wording manually and ask support about a conflict before publishing.
 
-The same applies to invented statistics, fake testimonials or customer quotes, and made-up certifications - User Direction can't authorize any of them. For the full list of what's protected and why, see [AI Content Safety & Integrity Guardrails](/how-it-works/quality-safety).
+The [Content Safety & Integrity Guardrails](/content-seo/content-safety-guardrails) guide explains the safeguards and their limits. These instructions help constrain generation; they do not certify that a draft is factually correct or meets your professional obligations.
 
 ## Clearing your direction
 
-To remove an instruction, delete the text from the box so it's empty and click **Save**. An empty value clears the saved direction, and the next generation runs with no special instruction - just the post's plan, description, and your project context.
+Delete the field's contents and click **Save** to store an empty direction. The saved field then supplies no special per-post guidance. The generation executor has a separate fallback for direction supplied through another request path, so clearing the field should not be treated as removing every possible instruction from every generation path.
 
 ## Length limit
 
-User Direction holds up to **2,000 characters** - roughly a few short paragraphs, which is plenty for a focused instruction. A live counter under the box shows how much you've used.
+The editor displays a **2,000-character** limit and a live counter. Its textarea prevents further input at that limit. The save endpoint trims surrounding whitespace and keeps at most 2,000 characters; the generator also trims and caps a nonempty saved direction before passing it to the writer.
 
-The box stops accepting input once you hit 2,000 characters. As a safety net, if a longer instruction ever reaches the writer (for example, pasted in through another path), anything past 2,000 characters is silently trimmed before the AI sees it - so keep your most important guidance near the start.
+Keep your main request near the beginning and check the saved text after pasting. Character counting can differ for some characters between the browser and backend, so a message near the limit deserves a quick review. The limit applies to the saved direction, not to the length of the resulting article.
 
 ## A few tips
 
-- **One idea per instruction works best.** "Focus on budget-conscious strategies" lands more cleanly than a paragraph trying to do five things at once.
-- **Be concrete about names and angles.** The AI weaves in specifics like a customer name or a particular perspective far better than vague hints.
-- **Use it to subtract, too.** Telling the AI what to avoid is just as powerful as telling it what to include.
-- **It's per-post.** For preferences you want on *every* post (brand voice, banned words, default tone), set those in your project settings instead - User Direction is for the one-offs.
+Ask for a clear audience and a specific emphasis rather than stacking unrelated requests. If you mention a customer or partnership, provide the evidence and permission needed to use that detail. A name in an instruction is not proof of the relationship.
+
+Use the field for one-off guidance. Keep recurring voice rules and factual source material in your project settings. After generation, check the introduction, examples and call to action against the instruction; edit any missed request before the article goes live.
 
 ## Related
 
-- [Blog Generation](/content-seo/blog-generation) - how a post is written end to end, and where your direction fits in.
-- [AI Content Safety & Integrity Guardrails](/how-it-works/quality-safety) - the protections that User Direction can't switch off.
+- [Blog Generation](/content-seo/blog-generation): how a planned blog becomes a draft.
+- [Sources & Brand Voice](/content-seo/sources-brand-voice): recurring guidance and supporting material.
+- [Content Safety & Integrity Guardrails](/content-seo/content-safety-guardrails): what the safeguards check and what still needs review.
