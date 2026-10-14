@@ -3,19 +3,17 @@ title: "Existing Website Authors"
 description: "Return your site's existing authors for selection in theStacc."
 ---
 
-A custom webhook website can provide a public author directory for selection in the blog author form. Each entry identifies a site author by ID, display name and `Person` or `Organization` type. Selecting an entry fills a draft; saving stores it in theStacc. Your receiver still needs to apply that author when publication or Sync sends the article.
-
-Sites without a directory can use a manually entered person or editorial-team name. The directory supplies identities for your existing website authors; it does not create staff accounts or update a public byline by itself.
+A custom website can provide an optional author directory. theStacc then shows its authors in the blog's author settings. Sites without a directory keep manual person or editorial-team names.
 
 ## Configure the endpoint
 
-In **Publishing**, edit the **Custom Webhook** integration and enter **Author-list URL**. Use a public HTTPS endpoint that responds to GET. The URL must not include embedded credentials or a fragment. Leave the field blank to use manual author names instead of directory lookup.
+In **Publishing**, edit the **Custom Webhook** integration and enter **Author-list URL**. Use a public HTTPS GET endpoint. Leave the field blank to use manual names.
 
-The lookup does not forward your publishing secret or custom webhook headers. Return only public author IDs, display names and types, without emails, credentials or private staff details. The directory is separate from the article receiver and its signature verification.
+The directory request does not include your publishing secret or custom webhook headers. Publish only the public author IDs, display names, and types needed for selection; do not return emails, credentials, or private staff information.
 
 ## Return the authors
 
-Return HTTP 200 with uncompressed JSON. This illustrative response contains an editorial team and a person:
+Return HTTP 200 with uncompressed JSON:
 
 ```json
 {
@@ -26,33 +24,23 @@ Return HTTP 200 with uncompressed JSON. This illustrative response contains an e
 }
 ```
 
-<p id="author-directory-fields" className="content-table-title">Author-directory fields and validation</p>
-<div role="region" aria-labelledby="author-directory-fields" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="author-directory-fields">
-<thead><tr><th scope="col">Field</th><th scope="col">Directory design</th><th scope="col">Receiver responsibility</th></tr></thead>
-<tbody>
-<tr><th scope="row"><code style={{ whiteSpace: "nowrap" }}>id</code></th><td>Unique, nonblank string up to 200 characters, without surrounding whitespace or control characters</td><td>Keep the ID stable and resolve it to the intended CMS author rather than relying only on a display name.</td></tr>
-<tr><th scope="row"><code style={{ whiteSpace: "nowrap" }}>name</code></th><td>Nonblank display name up to 200 characters</td><td>Validate and escape the name according to your site's byline model.</td></tr>
-<tr><th scope="row"><code style={{ whiteSpace: "nowrap" }}>type</code></th><td><code>Person</code> or <code>Organization</code></td><td>Keep the visible byline consistent with the final article schema.</td></tr>
-</tbody>
-</table>
-</div>
+| Field | Requirements |
+| --- | --- |
+| `id` | Unique stable string, 1–200 characters, without surrounding whitespace or control characters |
+| `name` | Nonblank display name, up to 200 characters |
+| `type` | `Person` or `Organization` |
 
-The response may contain at most **500 authors** and **128 KiB** of uncompressed data. An empty `{"authors":[]}` directory is valid. Invalid JSON, duplicate IDs, invalid entries, oversized responses and compressed responses are rejected; redirects are not followed. The lookup validates destination addresses and rejects private or other blocked addresses.
-
-The lookup is configured with a **10-second total deadline** across DNS, connection and streaming work. If it fails, correct the endpoint or use manual author entry; the blog form offers **Retry authors** for another lookup. These directory limits are separate from limits your CMS applies when saving an article.
+Return at most 500 authors and 128 KiB. `{"authors":[]}` is a valid empty directory. Redirects, private addresses, compressed responses, invalid JSON, duplicate IDs, and responses exceeding the request deadline are rejected.
 
 ## Select or enter an author
 
-Open a blog with article content for your webhook destination, outside article-editing mode. Use **Existing website author** to choose an entry, then click **Save author**. Selecting an entry fills its name, type and ID without saving; the save checks the returned article record before reporting success. Viewers cannot use the editing controls.
+Open a blog in Content Hub and use **Existing website author**. Selecting an entry fills its name and type; click **Save author** to store it.
 
-An empty or unavailable directory permits manual name entry. Changing the name or author type clears the directory ID. If a saved ID disappears from the directory, the form keeps the saved selection and warns you to choose another author or enter a name manually. Directory refresh does not replace a locally edited draft.
-
-To clear a saved explicit author, click **Use website default**, then **Save author**. The first button clears the local fields; saving persists the null reset. Saving stores the selection in theStacc. It does not publish an author-only update to your website.
+If the directory is empty or unavailable, enter a name manually or retry the lookup. A removed author remains visible as a saved selection until the user chooses another author, edits it manually, or selects **Use website default** and saves. A directory refresh does not replace the saved byline or a typed draft.
 
 ## Handle publish and update events
 
-Publication and Sync include the selected author. This illustrative author fragment includes a site identifier:
+An ID-selected author is included in `blog.published` and `blog.updated`:
 
 ```json
 "author": {
@@ -62,14 +50,14 @@ Publication and Sync include the selected author. This illustrative author fragm
 }
 ```
 
-Resolve the ID against your directory. If it no longer exists, return a clear error or apply a fallback that your team has explicitly agreed. Do not silently map it to an unrelated author. Manual names are sent without a directory ID, so validate that shape separately rather than rejecting it just because it lacks a directory identity.
+Resolve the ID against your own directory. Handle removed IDs with a clear error or an explicitly defined fallback; do not silently assign an unrelated author. Keep accepting manual authors without an ID:
 
-When no explicit author setting exists, `author` is omitted. A saved website-default reset sends `"author": null`; an explicit selection sends the author object. Your receiver should preserve its existing byline on an omitted update and apply its default for a null reset. The [field reference and author checklist](/developers/webhooks/field-reference#blog-author) explain the payload and receiver mapping.
+```json
+"author": {"name": "Editorial Team", "type": "Organization"}
+```
 
-After publishing or syncing, verify the stored author, visible byline and article structured data. Scheduled `jsonld` uses the explicit author's name and `Person` or `Organization` type; with no explicit author, it falls back to organization naming. Manual publishing and Sync omit that generated graph, so the receiving site must maintain its own byline and structured data. A delivery acknowledgement alone does not prove the public page was updated.
+An omitted `author` preserves your existing behavior. An explicit `"author": null` requests your default. Saving an author in theStacc does not change the website byline until you handle the next publish or sync/update event. See the [author receiver checklist](/developers/webhooks/field-reference#blog-author).
 
 ## Platform-specific authors
 
-Keep custom-webhook author mapping separate from direct CMS connectors. A site author ID, a staff account ID and a public byline name can refer to different concepts. Confirm the destination's supported author field before mapping an ID or creating an account; a public directory entry does not require you to create a login.
-
-Use the destination's supported connector contract for WordPress, PublishPress, Shopify or Webflow author mappings. For the custom receiver, review the [response contract](/developers/webhooks/response-contract) and confirm the public result after delivery.
+WordPress keeps its existing user/PublishPress picker. This custom directory is for webhook sites. Shopify author names/staff IDs and Webflow text/reference fields need their own mappings; connecting those platforms does not enable this webhook directory.

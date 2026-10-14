@@ -1,69 +1,36 @@
 ---
 title: "Sources & Brand Voice"
-description: "Upload or paste factual material and writing samples, review extracted text, and analyze or clear your project's brand voice profile."
+description: "Add reference material and writing samples for your content."
 ---
 
-Sources & Brand Voice separates factual material from writing samples for your selected project. Upload or paste facts under **Source material**, analyze your own writing under **Brand voice**, and review both before generating. The saved inputs guide generation; you still need to check the draft for accuracy and the intended tone.
-
-Open **Business Info** in the sidebar, then choose **Sources**. The shared view has **Source material**, **Brand voice** and **Brand images** tabs. Editing needs project-editor access. Uploads or analysis can be blocked by project access or subscription checks. If either action fails, read the displayed error before retrying.
-
-<p id="sources-purpose-table-title" className="content-table-title">Choose the right input for facts or voice</p>
-<div className="content-table-scroll" role="region" aria-labelledby="sources-purpose-table-title" tabIndex="0">
-<table aria-labelledby="sources-purpose-table-title">
-  <thead><tr><th scope="col">Input</th><th scope="col">Use it for</th><th scope="col">Review after adding</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">Source material</th><td>Current product details, service information, approved research or a factual brief.</td><td>Check the extracted text and resolve outdated or conflicting claims.</td></tr>
-    <tr><th scope="row">Brand voice writing samples</th><td>Your own articles or posts that represent the tone and wording you want.</td><td>Analyze the samples, then check the resulting voice profile.</td></tr>
-    <tr><th scope="row">Brand images</th><td>Photos, screenshots or diagrams for the separate visual workflow.</td><td>Review the image description and any image controls you use.</td></tr>
-  </tbody>
-</table>
-</div>
+Open **Business Info** in the sidebar, then choose **Sources**. Add reference material for facts and writing samples for your brand voice.
 
 ## Source material
 
-Choose **Source material**, then use **Upload files** or **Paste text**. The shared view's file control lists **PDF, DOCX, TXT or Markdown**, up to **50 MB per file**. Use readable text; a file extension alone does not confirm that its contents can be extracted.
+Choose **Source material**, then add what your content should draw from:
 
-For pasted material, enter the text and an optional title, then click **Add text**. Surrounding whitespace is trimmed. Use a title that lets you recognize the material later. Uploading or adding text saves that source separately from the **Business info** tab's **Save changes** action.
+- **Upload files:** Add PDF, DOCX, TXT, or Markdown documents, up to 50 MB each.
+- **Add link:** Add a website page to import reference material.
+- **Paste text:** Add product details, notes, a brief, or other information, with a title you can recognize later.
 
-After adding a source:
+Open a saved source to check its extracted text. Keep the material accurate and remove outdated sources. Use the **Use in content** controls to choose which content types should use it.
 
-1. Open its card under **Your sources** to view the extracted text.
-2. Check names, amounts, dates and any tables against the original material.
-3. If the transcript is empty or incomplete, use readable text instead of assuming the upload succeeded fully.
-4. Remove outdated material with the card's × control, then add the corrected source.
-
-The first source card is marked **Primary**. The writer is instructed to prioritize eligible factual sources, with the first included source given priority. Keep that material current and resolve contradictions before generating. A saved card or its badge does not prove that its text reached a particular draft.
-
-Long documents and the combined material sent to the writer can be shortened or omitted to fit the prompt. Check any important claim in the finished draft against its source. Uploading a complete document does not mean every passage was used.
-
-**Illustrative workflow:** Put an approved service description under Source material and one of your own articles under Brand voice. This separates the facts you want referenced from the style you want analyzed. It is an example of organizing inputs, not a generated result or a customer story.
+Review generated content before publishing. Reference material helps ground the writing, but you should still check names, figures, and claims.
 
 ## Brand voice
 
-Choose **Brand voice** and add your own writing under **Your samples**, using the upload or paste controls. Use at least one sample with **100 or more characters after trimming**. A short snippet can be saved in the list while still being too short for voice analysis.
+Choose **Brand voice** and add examples of your own writing. Use complete paragraphs or articles that represent the tone you want.
 
-Use paragraphs or articles that represent how you want to write now. Writing samples are used to derive style guidance; factual material belongs under Source material.
+Click **Analyze my writing**, then review the resulting profile. Add newer samples and use **Re-analyze** when your style changes. **Clear** removes the profile while keeping your samples.
 
-1. Add suitable writing samples.
-2. Click **Analyze my writing**. The button is unavailable until the view has a sample.
-3. Wait for **Voice profile updated**, then read the profile.
-4. Check the displayed **Tone**, **Vocabulary**, **Signature patterns**, **Words they use** and **Words they avoid**, where present.
-5. After changing the sample set, use **Re-analyze** to update the profile.
-
-Adding or removing a sample changes the sample list; it does not automatically re-analyze the saved profile. If analysis fails, review the error and the available sample text. If the profile cannot load, use **Retry** rather than treating an empty view as confirmation that no profile is saved.
-
-The profile gives the writer instructions about tone, vocabulary and recurring patterns. It is instructed to favor the analyzed voice over the generic writing-style choice in [Preferences](/content-seo/preferences) when they conflict. This is guidance to the model, so check the resulting draft for the intended wording and tone.
-
-Use **Clear** to clear the profile while retaining your writing samples. Wait for **Voice profile cleared**, then check the view again. Clearing or changing a profile does not rewrite existing articles. Review future drafts rather than assuming the profile controls every sentence.
+Writing samples guide tone and style. Add factual information under **Source material** instead.
 
 ## Photos, videos, and product images
 
-For blog photos, screenshots or diagrams, the Sources view also has **Brand images**. Review their descriptions before using them as writing context or visual inputs. See [Image Generation](/content-seo/image-generation) for checking images in a draft.
-
-Use [Library](/getting-started/library) for the broader media workflow. Source documents and writing samples stay in their respective Sources tabs.
+Open [Library](/getting-started/library) in the sidebar to manage your media. Source documents and brand voice stay under **Business Info > Sources**.
 
 ## Related
 
-- [Business Info](/content-seo/business-setup): keep the business profile current.
-- [Preferences](/content-seo/preferences): choose generic writing, image and inclusion settings.
-- [Blog generation](/content-seo/blog-generation): generate and review a planned post.
+- [Business Info](/content-seo/business-setup)
+- [Preferences](/content-seo/preferences)
+- [Blog generation](/content-seo/blog-generation)

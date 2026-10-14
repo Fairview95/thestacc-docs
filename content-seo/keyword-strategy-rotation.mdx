@@ -1,138 +1,141 @@
 ---
 title: "Keyword Strategy & Rotation"
-description: "Choose useful topics, manage keyword status and priority, and understand how theStacc selects eligible keywords for your content calendar."
+description: "Keywords are the single biggest lever you have over what theStacc writes about."
 ---
 
-Your keyword pool supplies topics for theStacc's content planning. Choose phrases that describe questions your business can answer, then review the resulting plan before generating articles. A saved keyword does not guarantee a particular publication date, search position or amount of traffic.
+Keywords are the single biggest lever you have over what theStacc writes about. This page explains what a good keyword looks like, the keyword-shapes to avoid, and how theStacc automatically rotates your keyword pool so the same topic never gets written twice in a row.
 
-Open **Content SEO > Settings > Keywords** to manage the pool. Adding, renaming and other changes can require project editor access; some actions also require an active Content SEO subscription.
+You manage all of this under **Content SEO \> Settings \> Keywords**.
 
 ## What a good keyword looks like
 
-A useful keyword connects a reader's task with something your business actually offers or can explain. Start with the service, problem or decision, then add an audience or location when it changes the answer.
+The best keywords are the messy, specific phrases a real customer types into Google at 11pm when they are stuck on a problem they need to solve tonight. They are not the polished phrases a marketing team would put on a slide.
 
-For example, *bookkeeping for Shopify sellers* describes a different task from *bookkeeping*. The modifier helps define the article; it does not establish search demand or make the phrase easy to rank for. Check your customer questions and available search evidence before adding it.
+A keyword that works for a small site is:
 
-Ask three questions:
+- **Long-tail** - usually 3 to 7 words. For example, *how to hire in germany without entity*, *best crm for solar installers*, or *single invoice multiple recruitment vendors*.
+- **Frustration-driven and specific** - it names a concrete service, audience, location, number, or use-case, not a bare category. *crm for roofing contractors* beats *crm*.
+- **Real search intent** - someone with a problem or a budget would actually type it, not browse-y industry jargon.
+- **Winnable** - long-tail phrases with a modifier are something a small site can realistically rank for. One-word head terms are owned by giants and are effectively unwinnable.
+- **On-business** - it maps to a pain point you solve, a feature or service you offer, or an audience segment you serve. A great SEO phrase about something you do not actually do is still off-target.
 
-1. What would the reader need to know or do after finding this page?
-2. Can our business provide an accurate, useful answer?
-3. Does an existing page already answer the same question?
+A simple test: would two competitors in your niche both obviously publish the exact same keyword? If yes, it is too generic - add a sharper modifier (audience, use-case, constraint, number, or location).
 
 ### Patterns that tend to work
 
-These are illustrative ways to make a topic more specific:
-
-- **Service and audience:** bookkeeping for Shopify sellers.
-- **Task and constraint:** choosing a CRM for a two-person sales team.
-- **Comparison and use case:** Stripe vs Square for salon payments.
-- **Service and place:** emergency AC repair in Phoenix.
-
-Use a place only when your business serves it. Use a year only when the information needs a dated comparison or update.
+- **\[service\] for \[specific audience\]** - *bookkeeping for shopify sellers*
+- **how to \[task\] \[constraint\]** - *how to deduct home office without audit*
+- **best \[thing\] for \[use-case\] \[year\]** - *best pos for food trucks 2026*
+- **\[X\] vs \[Y\] for \[audience\]** - *stripe vs square for salons*
+- **\[problem\] \[audience or location\]** - *payroll tax filing for remote teams*
+- **\[service\] + \[city or region\]** - *emergency ac repair phoenix*
 
 ## Keyword shapes to avoid
 
-Rewrite phrases that do not explain a reader's task, such as *next-generation growth solutions*. Avoid strings of repeated modifiers, such as *best top cheap CRM software tool*.
+theStacc's AI is trained to reject these shapes when it generates or expands your plan, and you should avoid them too when you add keywords by hand:
 
-A short keyword can still describe a legitimate topic. Length alone does not establish whether a topic is worth covering. The planning prompts encourage specific, business-relevant phrases, but you should still inspect suggested keywords rather than assuming the AI rejects every weak idea.
+- **One or two-word head terms** - *marketing*, *seo services*, *software*. Too broad to win, and they produce generic content.
+- **Vague abstractions** - *digital transformation*, *growth strategies*, *best practices*. Nobody searches these with buying intent.
+- **Sales-deck phrasing** - *end-to-end platform*, *AI-powered solutions*, *next-gen workforce optimization*. Real buyers do not type marketing language.
+- **Keyword-stuffed mashups** - *best top cheap crm software tool app*. Stuffing words together does not help you rank and reads as spam.
 
-When adding keywords, keep each phrase within **80 characters**. The current input parser omits empty or overlong entries, so review what was actually added instead of assuming every pasted line was saved.
+If a phrase reads like it belongs in a pitch deck, rewrite it into what a frustrated practitioner would actually type.
+
+Keywords can be up to 80 characters long.
 
 ## Targeting more than one location
 
-Keep your service areas accurate under **Content SEO > Settings > Business Details**. See [Business Info](/content-seo/business-setup).
+If your business serves several places, theStacc spreads your keywords across them instead of defaulting everything to your main location. Set your service areas under **Content SEO \> Settings \> Business Details** (see [Business Setup](/content-seo/business-setup)).
 
-The planning prompts ask for coverage across listed locations. For three or more locations, they include instructions about non-primary locations and geographic variety. These are generation instructions, rather than a guarantee that every returned calendar meets a fixed distribution.
+When you list **3 or more target locations**, theStacc applies a hard rule when it builds your plan:
 
-Inspect the plan for places you actually serve, missing important areas and unnecessary city variations. Separate pages should provide useful differences for readers; changing a city name alone does not create a distinct topic.
+- **At least 2 of every 5 days target a specific non-primary location by name** - for example Germany, Japan, or UAE, not a vague word like "international."
+- Across the calendar, at least 3 distinct locations should show up in your keywords, mixing your primary and secondary areas.
+
+This keeps every city or region you serve getting its own dedicated, locally-relevant content rather than all the attention going to your home base. When a keyword is location-aware, theStacc puts the city, region, or country directly in the phrase - *emergency ac repair phoenix* targets a real local search, where a generic phrase would not.
 
 ## How keywords are stored: normalization and no duplicates
 
-The storage normalizer lowercases keywords and trims spaces at the beginning and end. *Germany* and *germany* therefore produce the same stored text. Existing matching text is reported as a duplicate when you add keywords.
+When you add a keyword, theStacc stores a clean, canonical version of it:
 
-This check compares normalized text. It does not prove that two differently worded keywords serve different search intents, or that a topic can never appear again in a future plan. Review related phrases against your existing articles.
+- **Case-insensitive** - *Germany* and *germany* are treated as the same keyword.
+- **Trimmed** - leading and trailing spaces are removed.
 
-The pool has capacity checks. If adding keywords is blocked by an active-keyword or pool limit, read the returned message before retrying. Disabling a keyword and removing it are different actions; disabling does not necessarily free capacity for stored entries.
+Because of this, each keyword is stored once per project. If you try to add a keyword that already exists (in any capitalization), theStacc recognizes it as a duplicate and does not create a second copy - you will see it counted as a duplicate when you bulk-add. This de-duplication is what guarantees the same keyword is never scheduled twice on your calendar.
 
 ## The rotation pool: how theStacc picks each day's keyword
 
-The rotation engine first checks whether a keyword is eligible. It must be enabled, free from an upcoming or in-progress article that occupies it, and outside its cooldown unless it is Always-On.
+Your keywords live in a pool you curate. theStacc owns the scheduling - you do not assign keywords to specific dates yourself. Each time a calendar slot needs filling, the rotation engine claims the freshest eligible keyword from your pool, in this order of preference:
 
-Among eligible keywords, selection prefers:
+1. **Always-On keywords** first (see below).
+2. Then keywords that have **never been used**.
+3. Then the keyword whose last use was **longest ago**.
+4. Then, to break ties, the keyword you **added earliest**.
 
-1. Always-On keywords.
-2. Keywords that have not been used.
-3. Keywords with the oldest recorded use.
-4. The earliest-added keyword when the earlier criteria tie.
-
-Always-On changes priority and cooldown eligibility. It does not let a keyword bypass an article already occupying it. Planning can also check topic overlap before accepting a selected phrase, so the selection order is not a promise that a particular keyword will appear next.
+A keyword is eligible only if it is **enabled**, is **not already attached to an upcoming or in-progress blog**, and is **out of its cooldown window** (or is Always-On). The claim is atomic - even when many blogs are scheduled at once (for example during onboarding), no two of them can grab the same keyword.
 
 ### When the pool runs dry
 
-If no eligible keyword can be claimed, planning can fall back to AI-suggested topics. That fallback can also occur when selection fails. It does not guarantee that a calendar gap will be filled successfully.
-
-Check disabled, cooling and active keywords before adding more. Then review any suggested topic for business relevance and overlap with published content. See [Content Plans & Keywords](/content-seo/content-plans).
+If every keyword in your pool is disabled, cooling down, or already in use, theStacc does not leave a gap in your calendar. It falls back to inventing a fresh, on-business keyword with AI for that slot so your publishing schedule keeps running. The fix is to add more keywords (or enable more of the ones you have) so the engine always has real, curated topics to choose from.
 
 ## Cooldown: resting a keyword before reusing it
 
-The default cooldown in the current configuration is **60 days**. Keyword use is recorded when generated content consumes generation allowance; it is not tied only to successful publication. A keyword can therefore start resting while its article still needs review.
+To stop the same topic from being written over and over, a keyword that has produced a blog goes into a **cooldown** period. By default that is **60 days** - during this window the keyword is skipped by the rotation engine and shows a **Cooling** badge on the Keywords page.
 
-After the configured cooldown, an otherwise eligible keyword can return to rotation. Eligibility does not guarantee immediate selection. Check the keyword's status and recorded use rather than counting from the day an article went live.
+Once the cooldown passes, the keyword becomes eligible again automatically and rotates back into the schedule when it is the freshest option.
+
+This is why your pool should hold more keywords than you publish per month - it gives the engine enough fresh topics to rotate through while recently-used ones rest.
 
 ### Always-On keywords skip the cooldown
 
-Star a keyword to mark it **Always-On**. It becomes exempt from the resting period and receives selection priority, while the active-article exclusion still applies.
+For your most important topics, you can star a keyword to make it **Always-On**. An Always-On keyword:
 
-Use this for topics that need continued attention. If an existing article already answers the question, improving that article may be more useful than commissioning another with the same intent.
+- Is **exempt from the cooldown** - it never has to rest.
+- Is **picked first** by the rotation engine, ahead of everything else.
+
+Use this sparingly for a handful of core topics you always want to be ranking for. Because an Always-On keyword skips the resting period, it can be written about more often - so follow the best-practice limit below to avoid over-repetition.
 
 ## Best practice: don't over-repeat a keyword
 
-Review the purpose of a new article before repeating a keyword. A pricing page, setup guide and comparison can serve different tasks; several pages giving the same answer can confuse navigation and content planning.
+Writing too many blogs on the exact same keyword in a short window can backfire. Your own posts start competing with each other for the same Google result, and search engines can penalize obvious over-repetition.
 
-There is no universal Google rule allowing exactly two or three articles per keyword each month. Choose an update or a distinct new page based on the reader's task and your existing inventory, rather than treating a monthly count as a safe ranking threshold.
+**Aim for at most 2 to 3 blogs per month on the same keyword, spread across the month.** theStacc's default 60-day cooldown keeps you well within this for normal keywords - the rule matters most when you mark keywords as Always-On, since those skip the cooldown. theStacc shows a quiet reminder about this whenever you have Always-On keywords active.
 
 ## Lifecycle badges on the Keywords page
 
-<p id="keyword-status-table-title" className="content-table-title">Read keyword status separately from priority</p>
-<div className="content-table-scroll" role="region" aria-labelledby="keyword-status-table-title" tabIndex="0">
-<table aria-labelledby="keyword-status-table-title">
-  <thead><tr><th scope="col">Badge</th><th scope="col">Meaning</th><th scope="col">What to check</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">Active</th><td>Associated with a scheduled or in-progress article.</td><td>Open the linked article before trying to change the topic.</td></tr>
-    <tr><th scope="row">Queued</th><td>Enabled and currently eligible for selection.</td><td>Eligibility does not reserve a particular calendar date.</td></tr>
-    <tr><th scope="row">Cooling</th><td>Resting after recorded generation use.</td><td>Check its last use and the configured cooldown.</td></tr>
-    <tr><th scope="row">Off</th><td>Disabled for rotation.</td><td>Enable it when you want it considered again.</td></tr>
-  </tbody>
-</table>
-</div>
+Each keyword in your pool shows one status badge so you can see what it is doing at a glance:
 
-Always-On is a separate priority flag. A starred keyword can still be Active; the star does not mean it is available for another article immediately.
+- **Active** - currently scheduled or in the generation pipeline.
+- **Queued** - enabled, idle, and eligible to be picked next.
+- **Cooling** - used recently and resting inside its 60-day cooldown.
+- **Off** - disabled, so it will never be rotated in.
+
+Each row also shows how many blogs the keyword has produced and when it was last used.
 
 ## Managing your pool
 
-Paste keywords one per line or separated by commas, then select **Add to pool**. Check the response for added entries, duplicates, failures or entries left in the pool. An accepted addition does not prove that an article has been generated.
+Under **Content SEO \> Settings \> Keywords** you can:
 
-**Generate keywords** requests an AI-suggested batch after your website has been analyzed. Current configuration defaults allow five generation requests per project per UTC calendar month and request 12 candidates per batch. Duplicate filtering or unsuccessful saves can leave fewer than 12 new keywords. Check the displayed number added and remaining requests; deployed settings and availability can differ.
-
-Search by text or filter by status and Always-On. Turn a keyword off to exclude it from selection, or star it to change priority. Review the article calendar after changes so the pool and planned content make sense together.
+- **Add keywords** - paste one per line or comma-separated into the box and click **Add to pool**. The pool is unlimited.
+- **Generate keywords** - let theStacc's AI suggest a batch of on-business, long-tail keywords straight into your pool. This is rate-limited as a cost guard: up to **5 generations per project per month**, and each click produces **12 keywords**.
+- **Search and filter** - find keywords by text or filter by status (Active, Queued, Cooling, Off, or Always-On).
+- **Enable or disable a single keyword** - turn it off to exclude it from rotation without deleting it (and your history).
+- **Star a keyword Always-On** - mark a core topic as priority so it skips the cooldown and is picked first.
 
 ### Bulk manage
 
-Select rows to enable, disable or delete them. Each action can succeed or fail independently. Check the response rather than assuming the entire selection changed; locked or in-use keywords may be refused.
-
-Deleting a keyword is not the same as removing a published article from your website. Check the linked article separately before making changes to live content.
+Select several keywords with the checkboxes to act on them at once. From the bulk action bar you can **Enable**, **Disable**, or **Delete** the whole selection in one step. Keywords that are locked or in use will be skipped, and theStacc tells you how many could not be changed.
 
 ### Renaming a keyword
 
-Rename an unused keyword inline, then check the response and any linked planned article. The current rename path can refresh the title, description and category of a planned article, but a successful rename does not guarantee that its separate plan refresh succeeded.
+You can rename a keyword by editing it inline - but only while it is safe to do so:
 
-Renaming is blocked while related content is generating, ready for review, approved, scheduled or published. Follow the message for the article's actual state. You may need to wait for generation, discard a draft, remove approval or cancel a schedule; a live article's keyword cannot be changed through this action.
+- **Before any content is generated**, a rename is allowed. theStacc immediately re-aligns the planned blog's title, description, and category to match the new keyword text, so you never see a keyword-vs-title mismatch.
+- **Once a keyword's blog has content** - it is generating, has a draft awaiting review, is approved, scheduled, or already published - **renaming is blocked**. This protects you from a confusing mismatch between a keyword and content that has already been written or shipped.
 
-Keep the existing content if it still serves readers. Re-adding a keyword does not erase published material or establish that another article is needed.
+If you need to change the keyword on a blog that already has content, discard that draft from the blog's page first, then re-add the keyword fresh. theStacc's message will tell you the exact next step (for example, "Discard the draft from the blog page first" or "Un-approve the blog from its detail page first").
 
 ## Related
 
-- [Content Plans & Keywords](/content-seo/content-plans): inspect the topics and schedule produced from your settings.
-- [Scheduling & Missed Posts](/content-seo/scheduling-missed-posts): review planned dates and publishing behavior.
-- [Quota & Limits](/content-seo/quota-and-limits): distinguish planning from consumed generation allowance.
-- [Quality & safety](/how-it-works/quality-safety): review content before publication.
+- [Content Plans & Keywords](/content-seo/content-plans) - how your keywords map into a content plan and publishing schedule.
+- [Quality & safety](/how-it-works/quality-safety) - the checks theStacc runs so the content built on these keywords stays accurate and on-brand.
