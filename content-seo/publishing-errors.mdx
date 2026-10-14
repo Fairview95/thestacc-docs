@@ -11,9 +11,9 @@ Start with the affected blog's detail page. Identify whether you are publishing 
 
 ### Temporary problems - theStacc retries for you
 
-The scheduled publishing worker treats server errors, rate limits, and network failures as reasons for a bounded retry. Its current limit is **five total attempts**, including the initial attempt. The waits between attempts increase and include a random delay; scanning and queue timing also affect when the next request runs.
+The scheduled publishing worker retries failures classified as temporary. Its fast tier includes the first five attempts, with increasing waits and random jitter. If transient failures continue, a slow tier schedules further attempts after configured waits of **1 hour, 3 hours and 12 hours**. Once those delays are exhausted, another transient failure is marked failed.
 
-Do not interpret that limit as five additional retries or a guaranteed completion window. A successful request can end the retry sequence early; repeated failures can leave the blog in **Publish Failed**. A rate-limit response is a signal to slow down, not proof that waiting alone will resolve the issue.
+Those waits are eligibility delays, not a completion window: scanning and queue timing can make a request run later. A successful request can end the retry sequence early; repeated failures can leave the blog in **Publish Failed**. A rate-limit response is a signal to slow down, not proof that waiting alone will resolve the issue.
 
 An action you trigger manually can instead return an error directly. Do not assume every failed **Publish Now** or **Sync Changes** request has been placed in the scheduled retry queue. Inspect the resulting status and message.
 

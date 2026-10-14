@@ -73,7 +73,7 @@ Identify the action that failed and inspect the receiving website before retryin
 
 ### Temporary problems are retried
 
-The scheduled worker retries failures classified as temporary, with increasing waits and a random delay. Its limit is five total attempts, including the initial attempt. A manually triggered publish or sync can instead return an error directly; it does not always enter that scheduled retry sequence.
+The scheduled worker retries failures classified as temporary. Its fast tier includes the first five attempts, with increasing waits and random jitter. If transient failures continue, a slow tier schedules further attempts after configured waits of 1 hour, 3 hours and 12 hours. Once those delays are exhausted, another transient failure is marked failed. These are eligibility delays; scanning and queue timing can make requests run later. A manually triggered publish or sync can instead return an error directly and does not always enter that scheduled retry sequence.
 
 Some connectors check for an earlier remote post before repeating a request. The matching rules differ, so inspect an uncertain result before retrying again. These checks reduce duplicate risk without guaranteeing duplicate-free delivery.
 
