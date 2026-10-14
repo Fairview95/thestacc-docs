@@ -1,452 +1,496 @@
 ---
 title: "MCP Tools Reference"
-description: "Every tool in the theStacc MCP, grouped by area, with the permission each one needs, what you can pass, and the limits."
+description: "Look up theStacc MCP tools by area, permission and input. Find status checks, upload limits and steps for interrupted requests."
 ---
 
-This page lists every tool your AI tool (Claude, Cursor, or another MCP client) can use once it is connected to theStacc. You don't call these yourself. You ask in plain words, like *"show me this week's social posts"* or *"draft a Google post about our weekend offer"*, and the agent picks the right tool.
-
-To connect first, see [theStacc MCP Server](/developers/mcp/overview).
+Use tool names and inputs to inspect what your MCP client is requesting. If you need to connect first, start with [theStacc MCP Server](/developers/mcp/overview). This reference separates accepted inputs from server-side eligibility and a completed result.
 
 ## Before you start
 
-- **One MCP for everything.** The same connection covers Blog, SEO and analytics, Site audit, Keywords, Social and Google Business. There are 56 tools in total, including `get_permissions`.
-- **One project per connection.** Every key (and every sign-in) is locked to one project. The agent never picks a project; every tool works on that project only.
-- **The agent only sees what you allowed.** Each tool needs one permission (shown next to its name below). Tools the key has no permission for are left out of the agent's list. If a call still reaches theStacc without the permission, it fails with `missing_scope`. See [Permissions](/developers/agent-keys-mcp#permissions).
-- **A person approves, always.** Agents can draft, edit and prepare content. Only a person can approve it, in the theStacc app. Agents can publish only what a person approved, and only if it has not changed since. See [Safety rules](/developers/agent-keys-mcp#safety-rules).
-- **Long jobs run in the background.** Some tools start work and return straight away. The agent then checks progress with a status tool. Each section below says which tools work this way and how to check.
-- **Nothing waits more than a minute.** A tool waits up to 55 seconds for theStacc (60 seconds for quick reads). A slow job (an image redraw, a Google Business post, publishing) keeps running after that: the tool answers `status: "still_running"` with `check_with`, the tool to check it with. The agent checks there instead of starting the job again.
-- **Every tool is labelled.** Each tool has a title and says whether it only reads, creates something new, changes existing content or publishes. Most AI tools run read-only tools without asking you each time.
-- **Big lists come in pages.** List tools take `limit` and `offset` and return `next_offset` when there is more. Very large results are cut with a note saying how to ask for less.
-- **Text from the web is marked as data.** Page titles, search queries and post copy are wrapped in `untrusted-data` tags so the agent does not follow instructions hidden inside them.
+Use this reference to check a requested tool, its inputs and the next status check. Availability in your client depends on the connection and permissions. Input ranges and defaults below describe MCP validation; server-side eligibility, plan limits and destination checks can still reject a valid input.
+
+- **Check the project and item.** Get identifiers from the relevant list tool and confirm the intended project or location before changing anything.
+- **Inspect permissions.** A displayed tool is not proof that its next call is authorized. Permission discovery can be unavailable or cached. Use `get_permissions` and the returned `missing_scope` detail; see [Permissions](/developers/agent-keys-mcp#permissions).
+- **Separate access from approval.** A publish scope does not approve an individual blog. Resolve approval or compliance errors in the app; see [Safety rules](/developers/agent-keys-mcp#safety-rules).
+- **Check an interrupted operation before retrying.** Some calls return an ID to follow. Some long calls report `still_running` after a backend timeout. That message is a recovery instruction, not proof that the job started or will succeed.
+- **Use the tool's own paging fields.** Some lists use `limit` and `offset`, others use `page` and `page_size`. Do not assume every response includes `next_offset`. Follow truncation notes when a result is too large.
+- **Treat returned content as data.** Selected text results are wrapped in an untrusted-data boundary. That annotation is not a guarantee that an AI client will ignore every embedded instruction.
+
+Tools using the long-call wrapper configure a **55-second backend-request timeout**. Other request timeouts follow client configuration; the AI client's wait is separate. Neither setting is a completion-time promise. Read-only and idempotent annotations are hints, not blanket guarantees about cost, side effects or client confirmation controls.
 
 ## Permissions
 
-| Tool | Needs |
-| --- | --- |
-| `get_permissions` | nothing (always available) |
+<p id="mcp-permission-reference" className="content-table-title">Inspect the connection before requesting work</p>
+<div role="region" aria-labelledby="mcp-permission-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-permission-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>get_permissions</code></th><td>No tool scope</td><td>Inspect connection and scopes</td></tr>
+</tbody>
+</table>
+</div>
 
 ### get\_permissions
 
-Tells the agent who it is: the project the key belongs to, the permissions it has, which theStacc modules (blog, social, Google Business) are turned on for the project, which permissions are missing, and the tools available in this session. The agent should call it when a tool it expects is missing, or when a call fails with `missing_scope`. It reads the permissions live, so a change you just made shows up here. It also says whether this is an older key from before permissions existed.
+No input arguments. A valid connection is still required.
+
+The handler requests current project context and reports `project`, `scopes`, `legacy_key`, `modules`, `missing_scopes`, `tools` and `tool_scopes`. The scope report comes from that context request; the `tools` array describes tools registered for the session. If the displayed list and reported access differ, refresh discovery or reconnect rather than assuming a listed tool must work. Backend authorization still applies to the next call.
 
 ## Blog
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `review_content_plan` | `blog:read` | Planned and draft blogs plus plan details. Start here |
-| `get_blog` | `blog:read` | One blog in full |
-| `generation_status` | `blog:read` | Progress of a blog that is being written |
-| `generate_blog` | `blog:write` | Write a planned blog |
-| `cancel_generation` | `blog:write` | Stop a blog that is being written |
-| `generate_more` | `blog:write` | Add 1 to 10 new planned blogs |
-| `draft_from_abstract` | `blog:write` | Start a new blog from your own brief |
-| `set_scheduled_date` | `blog:write` | Pick the publish date for a blog waiting for one |
-| `edit_blog` | `blog:write` | Change text and SEO fields |
-| `regenerate_section` | `blog:write` | Rewrite one section |
-| `regenerate_image` | `blog:write` | Make a new image or edit the current one |
-| `retry_failed_images` | `blog:write` | Re-run only the images that failed |
-| `upload_image` | `blog:write` | Put your own image into a blog |
-| `publish_blog` | `blog:publish` | Publish a blog a person approved |
+<p id="mcp-blog-reference" className="content-table-title">Blog reading, draft changes and publication requests</p>
+<div role="region" aria-labelledby="mcp-blog-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-blog-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>review_content_plan</code></th><td><code>blog:read</code></td><td>Review the blog content plan</td></tr>
+<tr><th scope="row"><code>get_blog</code></th><td><code>blog:read</code></td><td>Get a blog</td></tr>
+<tr><th scope="row"><code>generation_status</code></th><td><code>blog:read</code></td><td>Check blog generation progress</td></tr>
+<tr><th scope="row"><code>generate_blog</code></th><td><code>blog:write</code></td><td>Generate a planned blog</td></tr>
+<tr><th scope="row"><code>cancel_generation</code></th><td><code>blog:write</code></td><td>Request blog generation cancellation</td></tr>
+<tr><th scope="row"><code>generate_more</code></th><td><code>blog:write</code></td><td>Add planned blog slots</td></tr>
+<tr><th scope="row"><code>draft_from_abstract</code></th><td><code>blog:write</code></td><td>Write a new blog from your brief</td></tr>
+<tr><th scope="row"><code>set_scheduled_date</code></th><td><code>blog:write</code></td><td>Set a blog&#x27;s publish date</td></tr>
+<tr><th scope="row"><code>edit_blog</code></th><td><code>blog:write</code></td><td>Edit a blog</td></tr>
+<tr><th scope="row"><code>regenerate_section</code></th><td><code>blog:write</code></td><td>Rewrite a blog section</td></tr>
+<tr><th scope="row"><code>regenerate_image</code></th><td><code>blog:write</code></td><td>Regenerate a blog image</td></tr>
+<tr><th scope="row"><code>retry_failed_images</code></th><td><code>blog:write</code></td><td>Retry a blog&#x27;s failed images</td></tr>
+<tr><th scope="row"><code>upload_image</code></th><td><code>blog:write</code></td><td>Upload your own image to a blog</td></tr>
+<tr><th scope="row"><code>publish_blog</code></th><td><code>blog:publish</code></td><td>Request blog publication</td></tr>
+</tbody>
+</table>
+</div>
 
 ### review\_content\_plan
 
-Returns the blog list (id, title, status, scheduled date for planned and draft blogs) and the plan summary (dates, expiry, whether a new plan can start). If the plan summary can't be loaded, you still get the blog list.
+Read the blog list and a best-effort plan summary. A failure to load the summary does not discard a successfully loaded list.
 
-- **status** (optional): only blogs in this status, for example `generated_pending_review` or `approved`.
-- **limit** (1 to 200, default 50) and **offset**. `total` and `next_offset` say whether there are more.
+- `status`: optional string, up to 40 characters.
+- `limit`: integer from 1 to 200, default 50.
+- `offset`: non-negative integer, default 0.
+
+The wrapper reports `blogs`, `total`, `offset` and `next_offset`. Continue with the returned offset when there is another page.
 
 ### generate\_blog
 
-Writes a blog that is already in your plan.
+Request generation for an existing planned blog.
 
-- **blog\_id** (required)
-- **additional\_direction** (optional, up to 2,000 characters): extra steering, like "lead with a customer story".
+- `blog_id`: required UUID.
+- `additional_direction`: optional, up to 2,000 characters.
 
-Returns at once with status `generating`. Poll `generation_status` until the blog reaches **Pending Review**. A blog still waiting for a publish date can't be generated: set the date first with `set_scheduled_date`.
+Read the returned state and follow `generation_status`. If generation is refused because the blog is awaiting a date, use `set_scheduled_date` for that state. Do not interpret a lost response as permission to start another generation.
 
 ### generation\_status
 
-- **blog\_id** (required)
-
-Returns the status, a short status message, word count, images done out of the total, and any error.
+`blog_id` is a required UUID. Use this read to inspect the reported generation state and any available progress or error details. A failed state needs investigation; polling does not guarantee that the blog will eventually reach review.
 
 ### cancel\_generation
 
-Stops a blog that is `generating` or `text_ready_images_pending`.
-
-- **blog\_id** (required)
-
-If text was already written, it is kept and the blog moves to Pending Review. Otherwise it goes back to `to_be_generated`. It is not picked up again automatically for its scheduled date; start it again with `generate_blog`.
+`blog_id` is a required UUID. This sends a cancellation request for the blog's generation. Read the response and inspect the resulting blog with `get_blog`; do not assume an acknowledgement proves every background step stopped immediately.
 
 ### generate\_more
 
-Adds new planned blogs with AI-picked titles and keywords.
-
-- **count** (required, 1 to 10)
-
-New blogs land in **Awaiting Date** and are not written until each has a publish date. The agent can set one with `set_scheduled_date`, or you can pick it in the dashboard. Your plan's remaining capacity still applies. See [Generate more (bonus blogs)](/content-seo/generate-more-bonus-blogs).
+`count` is a required integer from 1 to 10. The tool requests additional planned blogs for the current project. Inspect the returned slots and plan limits; adding a slot is separate from completing its topic, assigning a date and generating its article. See [Generate more](/content-seo/generate-more-bonus-blogs).
 
 ### draft\_from\_abstract
 
-Starts a brand-new blog from the agent's own brief instead of the plan.
+Create a blog request from your own brief.
 
-- **abstract** (required, 10 to 4,000 characters): what the article should cover.
-- **blog\_type** (optional): for example `how_to`.
+- `abstract`: required, from 10 to 4,000 characters.
+- `blog_type`: optional string, such as `how_to`.
 
-Returns a blog id that is already generating. Poll `generation_status`. It counts against your plan's article allowance like any other blog.
+When the response identifies a new blog, follow it with `generation_status`. After a timeout or unclear response, check `review_content_plan` before calling again: a repeated creation request can create another item.
 
 ### set\_scheduled\_date
 
-Picks the publish date for a blog in **Awaiting Date** (for example one added by `generate_more`).
+Assign a date to a blog in `awaiting_user_date`.
 
-- **blog\_id** (required)
-- **scheduled\_date** (required, `YYYY-MM-DD`): today or later. Yesterday is accepted and treated as today, to allow for time zones.
+- `blog_id`: required UUID.
+- `scheduled_date`: required `YYYY-MM-DD` string.
 
-The blog moves to `to_be_generated` and is written on that date. If its topic was never planned, it is planned now and the response includes the new title. This only works for blogs in Awaiting Date. To move any other blog's date, use the dashboard.
+The date endpoint checks a real calendar date. It accepts today or a future date; yesterday in UTC is coerced to today as a time-zone grace rule. Other past dates are refused. If topic planning is unfinished, the endpoint attempts planning before committing the date and status change. Read any planning or conflict error before retrying. This tool is not a general rescheduler for every blog state.
 
 ### get\_blog
 
-- **blog\_id** (required)
-- **include\_config** (optional): also return the generator's full working data. Rarely needed.
+- `blog_id`: required UUID.
+- `include_config`: boolean, default false.
 
-Returns the full content, title, excerpt, meta title and description, status, scheduled date and image regeneration state. The agent should read the latest version before editing.
+Read the latest content before editing. By default, the wrapper keeps image-regeneration fields but removes other generator working data from `ai_generation_config`. Set `include_config` to true only when you need the full returned configuration.
 
 ### edit\_blog
 
-Saves changes to a blog. Only the fields sent are changed.
+- `blog_id`: required UUID.
+- `title`, `content`, `excerpt`, `meta_title`, `meta_description`: optional strings.
+- `allow_image_removal`: optional boolean, for an intentional removal.
 
-- **blog\_id** (required)
-- **title**, **content**, **excerpt**, **meta\_title**, **meta\_description** (all optional)
-- **allow\_image\_removal** (optional): set to true only when the edit is meant to remove images.
-
-What happens to the status:
-
-- Editing the content of a blog in **Pending Review** moves it to **Modified - Pending Review**.
-- An **Approved** or **Scheduled** blog keeps its status, but after a content edit a person must approve it again before it can be published.
-- Editing a **Published** blog marks it to sync. The live site does not change until it is synced.
-
-When sending content, the agent must keep every image from the current version. An edit that would drop images is refused with `images_would_be_removed` unless `allow_image_removal` is true. See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle).
+Only supplied edit fields are sent. Keep the images and content you intend to retain, then verify the saved result. The blog edit endpoint can refuse silent image removal. This tool's input schema does not expose an expected-version argument, so do not rely on a universal concurrent-edit safeguard. Review current approval and sync requirements after changing a draft or published article; see [Blog Status Lifecycle](/content-seo/blog-status-lifecycle).
 
 ### regenerate\_section
 
-Rewrites one section of a blog.
+Rewrite a supplied HTML section.
 
-- **blog\_id** (required)
-- **section\_html** (required, up to 100,000 characters): the exact HTML of the section.
-- **tone** (0 to 100, default 50): 0 is formal, 100 is casual.
-- **length** (0 to 100, default 50): 0 is shorter, 100 is longer.
-- **additional\_prompt** (optional, up to 1,000 characters)
-- **persist** (default true): saves the rewrite into the blog. Set false to preview only.
+- `blog_id`: required UUID.
+- `section_html`: required, up to 100,000 characters.
+- `tone` and `length`: integers from 0 to 100, default 50.
+- `additional_prompt`: optional, up to 1,000 characters.
+- `persist`: boolean, default true. Set false for a rewrite without requesting a save.
 
-The response's `persisted` field confirms the save. If it is false, the section no longer matched the blog: the agent should read the blog again and place the returned HTML with `edit_blog`.
+Check `success` and `persisted`. A successful rewrite is not necessarily a saved edit. With persistence requested, the endpoint reports false when the original snippet no longer matches the blog. Re-read it before placing the returned HTML; do not replace unrelated content to force a match.
 
 ### regenerate\_image
 
-Makes a new version of one image in a blog. **Runs in the background.**
+Request a replacement for a particular blog image.
 
-- **blog\_id** (required)
-- **image\_src** (required, up to 2,000 characters): the current image address, exactly as in the content.
-- **image\_alt** (required, up to 500 characters)
-- **mode**: `create` makes a new image (steered by `custom_prompt` if given). `edit` changes the current image as described in `custom_prompt` and keeps its composition. Required whenever `custom_prompt` is sent, and `edit` always needs a `custom_prompt`.
-- **custom\_prompt** (optional, up to 1,000 characters)
-- **style** (0 to 100, default 50): 0 is modern, 50 is abstract, 100 is realistic.
-- **image\_type** (optional): `photo`, `diagram`, `infographic`, `illustration` or `brand_text`. Diagrams and infographics may carry text labels; the others are kept text-free.
-- **image\_occurrence** and **image\_occurrence\_of** (optional, send both): only when the same image appears more than once.
+- `blog_id`: required UUID.
+- `image_src`: required, 1 to 2,000 characters, matching the current image source.
+- `image_alt`: required, up to 500 characters.
+- `style`: integer from 0 to 100, default 50.
+- `custom_prompt`: optional, up to 1,000 characters.
+- `mode`: optional `create` or `edit`. A non-empty prompt requires a mode; `edit` requires a non-empty prompt.
+- `image_type`: optional `photo`, `diagram`, `infographic`, `illustration` or `brand_text`.
+- `image_occurrence`: optional integer from 0 to 100, paired with `image_occurrence_of`, an integer from 1 to 100.
 
-Returns at once with status `regenerating`. The new image is swapped in 1 to 2 minutes later. Poll `get_blog` until `ai_generation_config.image_regen_status` is `success` (the new address is in `image_regen_new_url`) or `failed` (the reason is in `image_regen_error`).
+Follow the image-regeneration fields returned by `get_blog`, such as `image_regen_status`, `image_regen_new_url` and `image_regen_error`. Verify the chosen image in the content before publishing. Use the reported image state to decide the next step.
 
 ### retry\_failed\_images
 
-Re-runs image generation for **only** the images that failed in a blog, using their original prompts.
+`blog_id` is a required UUID. Request another attempt for failed blog images, then inspect the returned details and blog state.
 
-- **blog\_id** (required)
-
-Works when the blog is `generated_pending_review`, `modified_pending_review`, `generation_failed` or `unpublished`. It can take several minutes (the tool waits up to 5). The response lists what was retried, what succeeded, what still failed, and the new status. If it times out, the work may still finish: check `get_blog` before retrying.
+This handler uses the 55-second long-call request setting. If it reports `still_running`, check `get_blog` before repeating the request. A timeout does not establish which images, if any, were retried. Inspect the current blog before another attempt.
 
 ### upload\_image
 
-Puts your own image (a product photo, a screenshot) into a blog instead of an AI image. It is stored in the project's asset library and converted to WebP.
+Upload a supplied image and request its placement.
 
-- **blog\_id** (required)
-- **image\_base64** and **filename**: the image as base64 plus a file name like `photo.png`. Use this with the hosted MCP.
-- **file\_path**: a local file path. Only works with the local install, where the MCP runs on your own computer.
-- **alt\_text** (optional, up to 500 characters)
-- **placement** (default `replace`): `replace` swaps an existing image, `append` adds it at the end, `featured` sets it as the featured image (also used for social cards) without touching the body, `none` only stores it and returns an image snippet to place with `edit_blog`.
-- **image\_index** (default 0): which image to replace, counting from 0.
+- `blog_id`: required UUID.
+- `image_base64` with `filename`: inline image data. A filename is required for this input path.
+- `file_path`: optional local source, available only when local file reads are enabled for the MCP process. A hosted server cannot use a path on your laptop.
+- `alt_text`: optional, up to 500 characters.
+- `placement`: `replace`, `append`, `featured` or `none`, default `replace`.
+- `image_index`: non-negative integer, default 0, used for replacement.
 
-Limits: up to 15 MB. On the hosted MCP the image travels inside the request, and requests are capped at 8 MB, so keep hosted uploads under about 6 MB. Returns the asset id, the public address and a ready `<img>` snippet. Uploading into a published blog marks it to sync.
+The hosted server limits the **whole request body to 8 MiB**. Base64 data and the JSON envelope both consume that space. The blog destination also validates decoded image data and applies its own asset limit; respect both the transport body limit and the destination's asset limit. Check the returned asset and placement rather than treating storage as proof the image appears correctly in the public page.
 
 ### publish\_blog
 
-Publishes a blog to the site connected to the project.
+- `blog_id`: required UUID.
+- `integration_id`: optional string; otherwise the service selects the connection.
 
-- **blog\_id** (required)
-- **integration\_id** (optional): defaults to the active connection.
+The blog publishing gate checks human approval state and approval validity for non-human principals. Resolve `not_approved`, `approved_by_assistant` or `approval_stale` by reviewing the current draft in the app. Publication can also be refused by SEO or compliance checks; use the returned code and details instead of assuming an HTTP success means publication succeeded.
 
-Rules:
-
-- The blog must be **Approved** by a person in the dashboard, or the call fails with `not_approved`.
-- The approval must cover the exact text being published. If the blog changed after it was approved, the call fails with `approval_stale` and a person needs to approve it again.
-- A publish can be held by the SEO check (`seo_gate`) or a compliance check (`held_for_compliance`, `blocked_for_compliance`). The error lists what was found and says whether a person can override it in the app. An agent can never override a hold.
-
-On success it returns the published address.
+This handler uses the long-call wrapper with `get_blog` as its recovery read. Inspect the returned state and destination. A response is not a guarantee that a public URL is available or that media and page content are correct. See the [publishing guide](/content-seo/publishing).
 
 ## SEO and analytics
 
-All of these read data theStacc already synced from Google Search Console and Google Analytics 4. They are fast and free to call.
+<p id="mcp-analytics-reference" className="content-table-title">Project analytics and SEO reporting reads</p>
+<div role="region" aria-labelledby="mcp-analytics-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-analytics-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>get_analytics_status</code></th><td><code>seo:read</code></td><td>Check Search Console and GA4 connection</td></tr>
+<tr><th scope="row"><code>get_search_console_performance</code></th><td><code>seo:read</code></td><td>Search Console performance</td></tr>
+<tr><th scope="row"><code>get_seo_insights</code></th><td><code>seo:read</code></td><td>SEO insights and next actions</td></tr>
+<tr><th scope="row"><code>get_ga4_overview</code></th><td><code>seo:read</code></td><td>GA4 traffic overview</td></tr>
+<tr><th scope="row"><code>get_blog_performance</code></th><td><code>seo:read</code></td><td>Per-blog performance</td></tr>
+<tr><th scope="row"><code>get_monthly_seo_report</code></th><td><code>seo:read</code></td><td>Monthly SEO report</td></tr>
+</tbody>
+</table>
+</div>
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `get_analytics_status` | `seo:read` | Is Search Console / GA4 connected, last sync, reconnect needed |
-| `get_search_console_performance` | `seo:read` | Clicks, impressions, CTR, position, top queries and pages |
-| `get_seo_insights` | `seo:read` | Ranked to-do list: quick wins, CTR gaps, declining pages and more |
-| `get_ga4_overview` | `seo:read` | Sessions, users, engagement, conversions, channels, sources |
-| `get_blog_performance` | `seo:read` | Traffic and search results for each blog theStacc published |
-| `get_monthly_seo_report` | `seo:read` | The monthly SEO report |
+Reporting completeness depends on connected properties and available data. Check `get_analytics_status` when a report is unavailable; do not infer a connection problem from every `not_found` error.
 
-Parameters:
+- `get_search_console_performance` and `get_ga4_overview`: `days`, integer from 1 to 180, default 28.
+- `get_blog_performance`: `range`, either `28d` or `90d`, default `28d`.
+- `get_monthly_seo_report`: optional `month` matching `YYYY-MM`, with a month from 01 to 12.
+- `get_analytics_status` and `get_seo_insights`: no input arguments.
 
-- `get_search_console_performance` and `get_ga4_overview`: **days** (1 to 180, default 28). Search Console data is synced daily and Google finalizes it 2 to 3 days late.
-- `get_blog_performance`: **range** `28d` (default) or `90d`.
-- `get_monthly_seo_report`: **month** as `YYYY-MM` (optional; defaults to the latest complete month).
-
-If a Search Console or GA4 tool returns `not_found`, call `get_analytics_status` first: the property is probably not connected.
+Read the reported dates and synchronization state before interpreting the numbers. Available reporting periods and synchronization state matter more than an assumed refresh interval.
 
 ## Site audit
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `run_site_audit` | `seo:write` | Start a site audit |
-| `get_audit_status` | `seo:read` | Progress of an audit run |
-| `get_audit_dashboard` | `seo:read` | One-call health summary |
-| `get_audit_issues` | `seo:read` | Findings from the latest completed audit |
-| `get_audit_finding` | `seo:read` | Full detail for one finding |
-| `get_audit_pages` | `seo:read` | Crawled pages with per-page facts |
+<p id="mcp-audit-reference" className="content-table-title">Audit requests and result reads</p>
+<div role="region" aria-labelledby="mcp-audit-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-audit-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>run_site_audit</code></th><td><code>seo:write</code></td><td>Request an audit run</td></tr>
+<tr><th scope="row"><code>get_audit_status</code></th><td><code>seo:read</code></td><td>Site audit progress</td></tr>
+<tr><th scope="row"><code>get_audit_dashboard</code></th><td><code>seo:read</code></td><td>Site audit summary</td></tr>
+<tr><th scope="row"><code>get_audit_issues</code></th><td><code>seo:read</code></td><td>Site audit findings</td></tr>
+<tr><th scope="row"><code>get_audit_finding</code></th><td><code>seo:read</code></td><td>One site audit finding</td></tr>
+<tr><th scope="row"><code>get_audit_pages</code></th><td><code>seo:read</code></td><td>Crawled pages from the site audit</td></tr>
+</tbody>
+</table>
+</div>
 
 ### run\_site\_audit
 
-Starts a crawl of the project's website. **Runs in the background.** If a run is already going, you get that run instead of a second crawl. Each new run counts against the project's monthly audit allowance; `rate_limited` (HTTP 429) means it is used up. The agent should call `get_audit_status` first and not retry blindly. Poll `get_audit_status` until the status is `completed`, then read `get_audit_issues`.
+No input arguments. Request an audit for the selected project. Check the latest audit state first and inspect any allowance or eligibility error. If the response is lost, use `get_audit_status` before starting another run. Follow the reported run to a completed or failed outcome rather than repeatedly submitting the start request.
 
 ### Reading results
 
-- `get_audit_status`: **run\_id** (optional; defaults to the latest run). Returns the phase, pages crawled, and `nextPollSeconds`.
-- `get_audit_issues`: filter by **stage** (`availability`, `indexability`, `discoverability`, `page_understanding`, `search_relevance`, `experience`, `ai_retrieval`), **severity** (`critical`, `warning`, `info`), **status** (`open`, `regressed`, `verifying`, `resolved`) or **search** (up to 200 characters). **page** and **page\_size** (up to 200, default 50).
-- `get_audit_finding`: **finding\_id** (required).
-- `get_audit_pages`: **disposition** (for example `ok`, `blocked`, `broken`, `redirected`, `noindex`) and **limit** (up to 500, default 50).
+- `get_audit_status`: optional `run_id` UUID. Without it, the wrapper requests the most recent run; it can report that no run exists.
+- `get_audit_dashboard`: no input arguments.
+- `get_audit_issues`: optional `stage` from `availability`, `indexability`, `discoverability`, `page_understanding`, `search_relevance`, `experience`, `ai_retrieval`; `severity` from `critical`, `warning`, `info`; `status` from `open`, `regressed`, `verifying`, `resolved`; and `search` up to 200 characters. `page` is an integer from 1, default 1; `page_size` is 1 to 200, default 50.
+- `get_audit_finding`: required `finding_id` UUID.
+- `get_audit_pages`: optional `disposition` string, up to 40 characters; `limit` is 1 to 500, default 50. This schema has no offset field.
+
+Use the relevant finding or page read for details. Do not assume every paged tool uses the same response shape.
 
 ## Keywords
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `list_keywords` | `seo:read` | Keywords with volume, difficulty, intent and the blog for each (paged: `limit` up to 500, default 100, and `offset`) |
-| `add_keywords` | `keywords:write` | Add 1 to 50 keywords |
-| `generate_keywords` | `keywords:write` | Research and add a fresh batch |
+<p id="mcp-keyword-reference" className="content-table-title">Keyword-pool reads and changes</p>
+<div role="region" aria-labelledby="mcp-keyword-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-keyword-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>list_keywords</code></th><td><code>seo:read</code></td><td>List keywords</td></tr>
+<tr><th scope="row"><code>add_keywords</code></th><td><code>keywords:write</code></td><td>Add keywords</td></tr>
+<tr><th scope="row"><code>generate_keywords</code></th><td><code>keywords:write</code></td><td>Research new keywords</td></tr>
+</tbody>
+</table>
+</div>
 
-- `add_keywords`: **keywords** (1 to 50, each up to 80 characters). Up to your active limit they are scheduled with a placeholder blog; the rest wait in the pool. The response lists what was added, duplicates, pool overflow and failures. Needs an active blog plan.
-- `generate_keywords`: no parameters. Limited per month; the response says how many runs remain. New keywords go into the pool, not the schedule.
+- `list_keywords`: `limit` from 1 to 500, default 100; non-negative `offset`, default 0. The wrapper slices the returned keyword pool and reports `total`, `offset` and `next_offset`.
+- `add_keywords`: required `keywords` array with 1 to 50 strings, each 1 to 80 characters.
+- `generate_keywords`: no input arguments.
+
+Inspect the response for duplicates, rejected entries and plan limits. Adding or researching keywords does not establish that an article was scheduled, generated or ranked.
 
 ## Social
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `social_list_posts` | `social:read` | List posts. Start here |
-| `social_get_post` | `social:read` | One post in full |
-| `social_generation_status` | `social:read` | Caption and image progress |
-| `social_list_image_versions` | `social:read` | Image versions and the running edit |
-| `social_generate_post` | `social:write` | Create a new post from a topic, or generate a planned one now |
-| `social_edit_post` | `social:write` | Change copy or schedule |
-| `social_regenerate_caption` | `social:write` | Rewrite one platform's caption |
-| `social_regenerate_image` | `social:write` | Redraw the post's images |
-| `social_edit_image` | `social:write` | Edit an image with an instruction |
-| `social_use_image_version` | `social:write` | Make an image version the current one |
-| `social_publish` | `social:publish` | Publish or schedule an approved post |
+<p id="mcp-social-reference" className="content-table-title">Social post reads, edits and publication requests</p>
+<div role="region" aria-labelledby="mcp-social-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-social-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>social_list_posts</code></th><td><code>social:read</code></td><td>List social posts</td></tr>
+<tr><th scope="row"><code>social_get_post</code></th><td><code>social:read</code></td><td>Get a social post</td></tr>
+<tr><th scope="row"><code>social_generation_status</code></th><td><code>social:read</code></td><td>Check social post generation progress</td></tr>
+<tr><th scope="row"><code>social_generate_post</code></th><td><code>social:write</code></td><td>Create a social post draft</td></tr>
+<tr><th scope="row"><code>social_edit_post</code></th><td><code>social:write</code></td><td>Edit a social post</td></tr>
+<tr><th scope="row"><code>social_regenerate_caption</code></th><td><code>social:write</code></td><td>Rewrite a social caption</td></tr>
+<tr><th scope="row"><code>social_regenerate_image</code></th><td><code>social:write</code></td><td>Redraw a social post&#x27;s image</td></tr>
+<tr><th scope="row"><code>social_edit_image</code></th><td><code>social:write</code></td><td>Edit a social image with an instruction</td></tr>
+<tr><th scope="row"><code>social_list_image_versions</code></th><td><code>social:read</code></td><td>List a social post&#x27;s image versions</td></tr>
+<tr><th scope="row"><code>social_use_image_version</code></th><td><code>social:write</code></td><td>Use a social image version</td></tr>
+<tr><th scope="row"><code>social_publish</code></th><td><code>social:publish</code></td><td>Request social publication or scheduling</td></tr>
+</tbody>
+</table>
+</div>
 
-<Warning>
-A social post a person approved, or one that is already scheduled or live, is **locked** for agents. Every change fails with `approved_post_locked`. To let the agent change it, move the post back to review in theStacc first.
-</Warning>
+Read the post before sending an edit. Resolve approval, status or content-removal errors in the app or returned workflow; a write scope is not permission to ignore those checks.
 
 ### social\_list\_posts
 
-- **status** (optional): for example `pending_review`, `approved`, `scheduled`, `published`.
-- **content\_plan\_id** (optional)
-- **limit** (1 to 500, default 25) and **offset**
+- `status`: optional, up to 40 characters.
+- `content_plan_id`: optional UUID.
+- `limit`: integer from 1 to 500, default 25.
+- `offset`: non-negative integer, default 0.
+
+The wrapper returns the service's list response. Check its total and paging information rather than assuming it has the blog list's `next_offset` field.
 
 ### social\_generate\_post
 
-Creates a new social post with AI: caption, hashtags and image or images for the project's platforms, in your brand's style. **Runs in the background.**
+Choose one request path:
 
-- **topic** (3 to 500 characters): what the post is about, for example "our Diwali offer: 20% off until Nov 5". Creates a new post.
-- **post\_id** (instead of topic): generate a post that is already planned (status to be generated, failed, missed, rejected or cancelled) now.
-- **platforms** (optional, new post only): `linkedin`, `instagram`, `x`, `facebook`. Defaults to every connected platform.
-- **scheduled\_date** (optional, new post only, `YYYY-MM-DD`): the earliest date. The post takes the first day from there with no other post. Defaults to tomorrow.
-- **additional\_direction** (optional, up to 1,000 characters): extra steering, like "friendly tone, mention free parking".
+- **New post:** `topic`, 3 to 500 characters. Optional `platforms` is a non-empty array of `linkedin`, `instagram`, `x` or `facebook`; optional `scheduled_date` is `YYYY-MM-DD`.
+- **Existing planned post:** `post_id` UUID. Do not also send `topic`, `platforms` or `scheduled_date`.
+- **Either path:** optional `additional_direction`, up to 1,000 characters.
 
-Returns the **post\_id** with status `generating`. Poll `social_generation_status` until it is done (usually 1 to 3 minutes), then read it with `social_get_post`. The post lands in review: **you** approve it in theStacc before it is published. It counts against your plan's monthly post quota. If generation could not start (for example the plan is out of posts), the error names the post that was created so the agent does not create it twice.
+The existing-post path sends `only_if_unwritten`; it is not a request to overwrite a finished draft. On the new-post path, the wrapper first adds a topic and then requests generation. If that second request fails, its error includes the created post's ID when available. Inspect that item instead of creating it again. Follow `social_generation_status`, then read the post; there is no guaranteed generation duration.
 
 ### social\_get\_post and social\_generation\_status
 
-Both take **post\_id**. `social_get_post` returns the caption, per-platform captions, first comment, hashtags, images, platforms, schedule, status and compliance check. `social_generation_status` returns whether the caption and images are ready, the image generation and edit status, and the compliance check.
+Both require `post_id` as a UUID. Use `social_get_post` for the current content and `social_generation_status` for the reported generation or image state. Read any failure details before another write request.
 
 ### social\_edit\_post
 
-An agent can change **only** these fields:
+- `post_id`: required UUID.
+- `caption`: optional, up to 10,000 characters.
+- `platform_captions` and `first_comment`: optional maps of string keys to string values.
+- `hashtags`: optional array of up to 60 strings, each up to 100 characters.
+- `scheduled_date`: optional `YYYY-MM-DD`.
+- `scheduled_time`: optional local-time string matching hours and minutes, with optional seconds.
+- `allow_content_removal`: optional boolean for an intended removal.
 
-- **caption** (up to 10,000 characters)
-- **platform\_captions**: per-platform text, like `{ "linkedin": "...", "instagram": "..." }`
-- **first\_comment**: per platform
-- **hashtags** (up to 60)
-- **scheduled\_date** (`YYYY-MM-DD`) and **scheduled\_time** (local `HH:MM`, 24-hour)
-- **allow\_content\_removal** (optional)
-
-`platform_captions` and `first_comment` **replace the whole map**. The agent must send every platform's text (read the post first), or the others are deleted. An edit that would empty the caption or drop a platform's caption is refused with `content_would_be_removed` unless `allow_content_removal` is true. An agent can't approve, reject or change status (`approval_requires_person`), and other fields are refused with `field_not_editable_by_agent`.
+The wrapper forwards only these edit fields. Preserve all platform entries you still need rather than assuming a partial map will be merged. This schema has no status or approval field. Verify the saved content and schedule after the request.
 
 ### social\_regenerate\_caption
 
-Rewrites one platform's caption in about 5 seconds and saves it. The image and status don't change.
+- `post_id`: required UUID.
+- `platform`: required `linkedin`, `instagram`, `x` or `facebook`.
+- `additional_direction`: optional, up to 500 characters.
 
-- **post\_id** (required)
-- **platform** (required): `linkedin`, `instagram`, `x` or `facebook`
-- **additional\_direction** (optional, up to 500 characters)
+Request a rewrite for that platform, then read the saved post and any error. Check the updated post before another rewrite.
 
 ### social\_regenerate\_image
 
-Redraws the post's image or images from its saved design and keeps the caption.
+- `post_id`: required UUID.
+- `in_image_copy`: optional object. `headline`, `mechanism_line` and `outcome_line` are each optional strings up to 300 characters; `cta_text` is up to 100.
+- `slide_content`: optional array of up to 12 slide objects.
 
-- **post\_id** (required)
-- **in\_image\_copy** (optional): the words drawn on the image (`headline`, `cta_text`, `mechanism_line`, `outcome_line`). Leave out to keep the current words.
-- **slide\_content** (optional, carousels only, up to 12 slides)
-
-Takes **30 to 90 seconds** (longer for a carousel) and returns the new image addresses. If it takes longer than about a minute, the tool answers `still_running` while the redraw continues: poll `social_generation_status` until `image_generation_status` is `success` or `failed`, then read the post. A second request while one is running is refused with `regen_in_progress`.
+This handler uses the long-call wrapper and names `social_generation_status` for recovery. Check image state, then inspect the post. A delayed response does not prove the redraw finished or that another request would be harmless.
 
 ### social\_edit\_image
 
-Edits an image with an instruction, like "make the background navy". **Runs in the background.**
+- `post_id`: required UUID.
+- `instruction`: required, 1 to 4,096 characters.
+- `intent`: optional `scene` or `image`.
+- `slide_index`: optional integer from 0 to 11; `apply_all`: optional boolean.
+- `request_id`: optional UUID.
 
-- **post\_id** (required)
-- **instruction** (required, up to 4,096 characters)
-- **intent** (optional): `image` edits the picture itself, `scene` changes a carousel's layout or text.
-- **slide\_index** (optional, carousels, counting from 0) or **apply\_all** (optional, every slide)
+Keep the same explicit `request_id` when retrying the same intended edit. Without one, the wrapper tries to derive an ID from the post, current image revision and arguments. If that revision read fails, it falls back to a random ID. Do not treat retries as universally free or exactly once.
 
-- **request\_id** (optional): send the same one when retrying the same edit, so it runs and is paid for once. Without it, retrying the same edit on the same post version reuses the running job automatically.
-
-Returns at once with status `editing`. Poll `social_list_image_versions` until `job.state` is no longer `queued` or `running`. On success the new version's id is `candidate_revision_id`. The post's image does not change until the agent calls `social_use_image_version`.
+Check `social_list_image_versions` for the edit job and candidate version before requesting another edit. This handler sets a 55-second request deadline but does not use the `still_running` conversion wrapper. An `upstream_timeout` needs a state check too.
 
 ### social\_use\_image\_version
 
-Makes one image version the post's current image.
+- `post_id`: required UUID.
+- `revision_id`: required string, 1 to 100 characters.
+- `expected_updated_at`: optional string, up to 80 characters.
 
-- **post\_id** and **revision\_id** (required)
-- **expected\_updated\_at** (optional): guards against overwriting a newer change.
-
-The post goes back to review, so a person approves the new image before it is published.
+If the expected version is omitted, the wrapper first reads the current image-version data and supplies its `updated_at` when available. Resolve a conflict by re-reading the item rather than forcing an older version over a newer change. Verify the selected image and review state afterward.
 
 ### social\_publish
 
-Publishes or schedules a social post.
+- `post_id`: required UUID.
+- `publish_now`: required boolean.
+- `scheduled_for`: optional string, up to 40 characters, for the requested scheduling time.
+- `timezone`: optional string, up to 64 characters.
+- `platforms`: optional non-empty array of `linkedin`, `instagram`, `x` or `facebook`.
 
-- **post\_id** (required)
-- **publish\_now** (required): true sends it now, false schedules it.
-- **scheduled\_for** (optional, ISO 8601 date and time) and **timezone** (optional, for example `Asia/Kolkata`)
-- **platforms** (optional): only these platforms, which must already be on the post.
-
-Works only for a post a person approved **and** that has not changed since (`not_approved` or `approval_stale` otherwise). A person's approval already schedules the post for its date and time, so the agent usually doesn't need this tool.
+The request is subject to the service's approval, status, destination and publication checks. This handler uses the long-call wrapper with `social_get_post` for recovery. Inspect both the returned state and intended platforms; a scheduling acknowledgement is not proof the post appeared publicly.
 
 ## Google Business
 
-| Tool | Needs | What it does |
-| --- | --- | --- |
-| `gbp_list_locations` | `gbp:read` | List the project's locations. Start here |
-| `gbp_get_location` | `gbp:read` | One location's details |
-| `gbp_connection_status` | `gbp:read` | Is the Google profile connected for publishing |
-| `gbp_list_posts` | `gbp:read` | List a location's posts |
-| `gbp_get_post` | `gbp:read` | One post in full |
-| `gbp_content_plan` | `gbp:read` | When the plan expires and whether the next can start |
-| `gbp_publish_status` | `gbp:read` | Refresh a post's publish result |
-| `gbp_generate_post` | `gbp:write` | Write a new post |
-| `gbp_regenerate_post` | `gbp:write` | Rewrite a post's text |
-| `gbp_edit_post` | `gbp:write` | Change a post's fields |
-| `gbp_generate_image` | `gbp:write` | Generate and attach an AI photo |
-| `gbp_upload_image` | `gbp:write` | Attach your own photo |
-| `gbp_remove_image` | `gbp:write` | Remove the photo |
-| `gbp_publish` | `gbp:publish` | Publish an approved post to Google |
-| `gbp_retry_publish` | `gbp:publish` | Retry a failed publish |
+<p id="mcp-gbp-reference" className="content-table-title">Location-specific Google Business Profile tools</p>
+<div role="region" aria-labelledby="mcp-gbp-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-gbp-reference">
+<thead><tr><th scope="col">Tool</th><th scope="col">MCP scope</th><th scope="col">Use</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>gbp_list_locations</code></th><td><code>gbp:read</code></td><td>List Google Business Profile locations</td></tr>
+<tr><th scope="row"><code>gbp_get_location</code></th><td><code>gbp:read</code></td><td>Get a GBP location</td></tr>
+<tr><th scope="row"><code>gbp_connection_status</code></th><td><code>gbp:read</code></td><td>Check a GBP location&#x27;s connection</td></tr>
+<tr><th scope="row"><code>gbp_list_posts</code></th><td><code>gbp:read</code></td><td>List GBP posts</td></tr>
+<tr><th scope="row"><code>gbp_get_post</code></th><td><code>gbp:read</code></td><td>Get a GBP post</td></tr>
+<tr><th scope="row"><code>gbp_content_plan</code></th><td><code>gbp:read</code></td><td>GBP content plan</td></tr>
+<tr><th scope="row"><code>gbp_generate_post</code></th><td><code>gbp:write</code></td><td>Create a GBP post draft</td></tr>
+<tr><th scope="row"><code>gbp_regenerate_post</code></th><td><code>gbp:write</code></td><td>Rewrite a GBP post</td></tr>
+<tr><th scope="row"><code>gbp_edit_post</code></th><td><code>gbp:write</code></td><td>Edit a GBP post</td></tr>
+<tr><th scope="row"><code>gbp_generate_image</code></th><td><code>gbp:write</code></td><td>Generate a GBP post image</td></tr>
+<tr><th scope="row"><code>gbp_upload_image</code></th><td><code>gbp:write</code></td><td>Upload your own GBP post image</td></tr>
+<tr><th scope="row"><code>gbp_remove_image</code></th><td><code>gbp:write</code></td><td>Remove a GBP post&#x27;s image</td></tr>
+<tr><th scope="row"><code>gbp_publish</code></th><td><code>gbp:publish</code></td><td>Request publication to Google</td></tr>
+<tr><th scope="row"><code>gbp_retry_publish</code></th><td><code>gbp:publish</code></td><td>Retry a failed publication</td></tr>
+<tr><th scope="row"><code>gbp_publish_status</code></th><td><code>gbp:read</code></td><td>Request a publication-status refresh</td></tr>
+</tbody>
+</table>
+</div>
 
-Posts live under a location. Call `gbp_list_locations` first: every other tool needs a **location\_id**, and post tools also need a **post\_id**. `gbp_list_locations` always sends the key's project, so it lists only that project's locations.
-
-<Warning>
-A Google Business post that a person approved, or one that is publishing or published, is **locked** for agents (`approved_post_locked`). Any agent change to a post means a person has to approve it again before it can be published.
-</Warning>
+Start with `gbp_list_locations`, which supplies the connection's project ID when listing locations. Other GBP tools require `location_id` as a UUID; tools acting on a post also require a `post_id` UUID. Read the intended location and post before changing anything.
 
 ### Reading
 
-- `gbp_list_posts`: filter by **year**, **month** or **status** (`pending_content`, `generating`, `generated`, `generation_failed`, `copied`, `approved`, `publishing`, `published`, `publish_failed`, `rejected`). **limit** (up to 100, default 50) and **offset**.
-- `gbp_connection_status`: connecting a Google profile is a person's job in theStacc. If it isn't connected, publishing fails.
-- `gbp_publish_status`: refreshes the result from the publisher (`published`, `publishing` or `publish_failed` with the reason). It never sends anything to Google.
+- `gbp_get_location`, `gbp_connection_status` and `gbp_content_plan`: `location_id` UUID.
+- `gbp_list_posts`: `location_id`; optional integer `year` from 2000 to 2100, `month` from 1 to 12, and `status` up to 40 characters. `limit` is 1 to 100, default 50; `offset` is non-negative, default 0.
+- `gbp_get_post` and `gbp_publish_status`: both location and post UUIDs.
+
+`gbp_publish_status` requests a status refresh through the service's sync-status endpoint. Check its reported result. A read-style tool annotation is not a universal promise that no stored state is updated.
 
 ### gbp\_generate\_post
 
-Writes a new post with AI. Counts against the plan's post quota.
+- `location_id`: required UUID.
+- `post_type`: required `update`, `offer` or `event`.
+- `scheduled_date`: required `YYYY-MM-DD`.
+- `topic`: optional, up to 500 characters.
 
-- **post\_type** (required): `update`, `offer` or `event`
-- **scheduled\_date** (required, `YYYY-MM-DD`)
-- **topic** (optional, up to 500 characters)
+This creates a post request and uses the long-call wrapper with `gbp_list_posts` for recovery. Inspect the list after an unclear or timed-out response before creating another post.
 
 ### gbp\_regenerate\_post
 
-Rewrites an existing post's text. **user\_direction** (optional, up to 500 characters). A post that is already live or publishing can't be rewritten (`post_is_live`, `post_is_publishing`).
+Supply the location and post UUIDs, with optional `user_direction` up to 500 characters. The long-call wrapper names `gbp_get_post` for recovery. Check the current content, status and errors before repeating the rewrite.
 
 ### gbp\_edit\_post
 
-- **title** (up to 300 characters)
-- **content** (up to 1,500 characters, Google's limit)
-- **cta\_type**: `learn_more`, `book`, `order`, `shop`, `sign_up` or `call`
-- **cta\_url** (https), **offer\_code**, **offer\_terms**
-- **scheduled\_date** and **scheduled\_time** (local `HH:MM`; an empty value resets to the location's default time)
-- **allow\_content\_removal** (optional)
+Supply the location and post UUIDs, then only the fields you intend to change:
 
-An agent can't change status (`approval_requires_person`). Blanking the title or content is refused with `content_would_be_removed` unless `allow_content_removal` is true.
+- `title`: up to 300 characters; `content`: up to 1,500.
+- `cta_type`: string up to 20 characters; choose the service's supported action, such as `learn_more` or `book`.
+- `cta_url`: string up to 2,000 characters; use an appropriate secure destination.
+- `offer_code`: up to 100 characters; `offer_terms`: up to 5,000.
+- `scheduled_date`: `YYYY-MM-DD`; `scheduled_time`: string up to 5 characters, intended as local `HH:MM`. An empty value requests the location's default time.
+- `allow_content_removal`: optional boolean for an intended removal.
+
+The MCP schema's text limit is not a complete Google policy check. The wrapper forwards only these fields and does not expose a status or approval argument. Inspect validation and review requirements in the response.
 
 ### Images
 
-- `gbp_generate_image`: **additional\_direction** (optional, up to 500 characters). Replaces the current image. There is a daily image limit per project.
-- `gbp_upload_image`: your own **JPEG or PNG, up to 5 MB**. Send **image\_base64** with **filename** (hosted), or **file\_path** (local install only). Replaces the current image.
-- `gbp_remove_image`: needs **allow\_content\_removal: true**, so a photo is never removed by accident. The text can still be published without it.
+All three image tools require the location and post UUIDs.
+
+- `gbp_generate_image`: optional `additional_direction`, up to 500 characters. The long-call wrapper names `gbp_get_post` for recovery.
+- `gbp_upload_image`: inline `image_base64` with `filename`, or a supported local `file_path`. The wrapper rejects decoded data above **5 MiB**. It maps JPEG/PNG filename extensions to their MIME types; the receiving service still validates the image.
+- `gbp_remove_image`: `allow_content_removal` defaults to false. Set it to true only when removal is intended, and inspect the result.
+
+Hosted uploads also share the whole-request 8 MiB body limit. Check the resulting image and content; a size check is not a guarantee of format acceptance or successful publication.
 
 ### gbp\_publish and gbp\_retry\_publish
 
-`gbp_publish` sends an approved post to Google now. `gbp_retry_publish` retries a post whose publish failed (`publish_failed`). Both work only for a post a person approved **and** that has not changed since (`not_approved` or `approval_stale` otherwise). For offers and events the scheduled date counts as content, because Google shows it as the start date, so changing it also needs a new approval.
+Both require the location and post UUIDs. `gbp_publish` requests publication; `gbp_retry_publish` requests another attempt after a failed publication.
 
-`gbp_publish` returns once publishing starts (status `publishing`). Check the outcome with `gbp_publish_status`.
+Both use the long-call wrapper and name `gbp_publish_status` for recovery. Resolve returned approval, status or connection errors before retrying. Verify the destination and final publication state instead of treating `publishing` as a completed result.
 
 ## Tools that run in the background
 
-| Start with | Then check with | Done when |
-| --- | --- | --- |
-| `generate_blog`, `draft_from_abstract` | `generation_status` | the blog reaches Pending Review |
-| `social_generate_post` | `social_generation_status` | the caption and images are ready |
-| `regenerate_image` | `get_blog` | `ai_generation_config.image_regen_status` is `success` or `failed` |
-| `run_site_audit` | `get_audit_status` | status is `completed` |
-| `social_edit_image` | `social_list_image_versions` | `job.state` is no longer `queued` or `running` |
-| `social_regenerate_image` (if it answered `still_running`) | `social_generation_status` | `image_generation_status` is `success` or `failed` |
-| Any tool that answers `still_running` | the tool named in `check_with` | the result shows up there |
-| `gbp_publish` | `gbp_publish_status` | status is `published` or `publish_failed` |
+Use the read appropriate to the operation. A status tool can report failure as well as progress; do not poll indefinitely or start another paid request merely because a response was lost.
+
+<p id="mcp-recovery-reference" className="content-table-title">Reads to check before repeating an operation</p>
+<div role="region" aria-labelledby="mcp-recovery-reference" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-recovery-reference">
+<thead><tr><th scope="col">Operation</th><th scope="col">Recovery read</th><th scope="col">What to inspect</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>generate_blog</code>, <code>draft_from_abstract</code></th><td><code>generation_status</code></td><td>Reported blog state; check the plan for an unclear creation result.</td></tr>
+<tr><th scope="row"><code>regenerate_image</code>, <code>retry_failed_images</code>, <code>publish_blog</code></th><td><code>get_blog</code></td><td>Image state, saved content or publication result.</td></tr>
+<tr><th scope="row"><code>social_generate_post</code>, <code>social_regenerate_image</code></th><td><code>social_generation_status</code></td><td>Generation or image state, then read the post.</td></tr>
+<tr><th scope="row"><code>social_edit_image</code></th><td><code>social_list_image_versions</code></td><td>Job and candidate version before another edit.</td></tr>
+<tr><th scope="row"><code>social_publish</code></th><td><code>social_get_post</code></td><td>Requested platforms and reported publication state.</td></tr>
+<tr><th scope="row"><code>gbp_generate_post</code></th><td><code>gbp_list_posts</code></td><td>Whether a post was created before another create request.</td></tr>
+<tr><th scope="row"><code>gbp_regenerate_post</code>, <code>gbp_generate_image</code></th><td><code>gbp_get_post</code></td><td>Current content, image and reported errors.</td></tr>
+<tr><th scope="row"><code>gbp_publish</code>, <code>gbp_retry_publish</code></th><td><code>gbp_publish_status</code></td><td>Publication state after the request.</td></tr>
+<tr><th scope="row"><code>run_site_audit</code></th><td><code>get_audit_status</code></td><td>The latest or identified run, including any failure.</td></tr>
+</tbody>
+</table>
+</div>
+
+When a response supplies `check_with`, follow that read and inspect the actual state. The MCP's timeout-to-`still_running` conversion does not establish that the backend admitted or completed a job.
 
 ## A typical session
 
-1. `get_permissions` to see the project and what the key may do.
-2. `review_content_plan`, `social_list_posts` or `gbp_list_locations` to see what is waiting.
-3. Draft and refine: `generate_blog`, `edit_blog`, `social_generate_post`, `social_edit_post`, `gbp_generate_post`, and so on.
-4. **You** review and click **Approve** in theStacc.
-5. The agent publishes what you approved: `publish_blog`, `social_publish` or `gbp_publish`.
+1. Use `get_permissions` to inspect the project and reported access.
+2. List the relevant blogs, social posts or locations, then read the intended item.
+3. Request one bounded change and inspect the saved result.
+4. Review current content and approval requirements in theStacc before publication.
+5. After a publication request, check its state and the actual public destination.
+
+These steps are a review workflow, not a guarantee that every client asks for confirmation before each edit.
 
 ## Related
 
-- [theStacc MCP](/developers/agent-keys-mcp): connecting, permissions, safety rules and error messages
-- [theStacc MCP Server](/developers/mcp/overview): connect your AI tool, guided workflows
-- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): what each blog status means
-- [Social approval and review](/social-media/approval-review-workflow)
-- [Google Business posts calendar](/local-seo/gbp-posts-calendar)
+- [theStacc MCP](/developers/agent-keys-mcp): connection modes, scopes and access errors.
+- [theStacc MCP Server](/developers/mcp/overview): onboarding and client guides.
+- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): interpret blog states.
+- [Social approval and review](/social-media/approval-review-workflow): resolve social review steps.
+- [Google Business posts calendar](/local-seo/gbp-posts-calendar): location-specific planning.
 
 ## Guided workflows
 
-Ready-made prompts your AI tool shows as slash commands. Each is listed only when the connection has the permissions it needs: `weekly_content_review`, `seo_next_actions`, `create_social_post` (arguments `topic` and optional `date`) and `refresh_declining_post`. See [Guided workflows](/developers/mcp/overview#guided-workflows).
+The MCP also defines prompts. Client support determines how they are presented; they are not scheduled automations or guarantees that every requested step will complete.
+
+When permissions are known, prompt listing uses the scope checks below. If discovery is unavailable, a prompt can still be listed; authorization applies when its tools run.
+
+- `weekly_content_review`: offered when Blog, Social or GBP read access is present.
+- `seo_next_actions`: requires `seo:read`.
+- `create_social_post`: requires both `social:read` and `social:write`; `topic` is required and `date` is optional. Underlying tools still apply their own input limits.
+- `refresh_declining_post`: requires `seo:read`, `blog:read` and `blog:write`.
+
+Inspect the prompt's request before running it. See [Guided workflows](/developers/mcp/overview#guided-workflows) for the connection guide's workflow context.
