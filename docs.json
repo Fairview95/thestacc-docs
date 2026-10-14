@@ -36,6 +36,14 @@
             ]
           },
           {
+            "group": "theStacc Assistant",
+            "pages": [
+              "assistant/overview",
+              "assistant/what-it-can-do",
+              "assistant/tips"
+            ]
+          },
+          {
             "group": "How It Works",
             "pages": [
               "how-it-works/content-engine",
