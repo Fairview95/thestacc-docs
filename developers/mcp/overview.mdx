@@ -1,20 +1,14 @@
 ---
 title: "theStacc MCP Server"
 sidebarTitle: "Introduction"
-description: "Run your blog, SEO, social posts and Google Business Profile from Claude, Claude Code, Cursor or any MCP-compatible AI assistant."
+description: "Connect an AI client to one theStacc project. Choose hosted sign-in or an agent key, check permissions and review content before publishing."
 ---
 
 <Frame>
-  <img src="/images/docs/mcp/mcp-hero.webp" alt="theStacc MCP connects to AI assistants such as ChatGPT, Claude Code, Cursor, Codex, Antigravity and GitHub Copilot" />
+  <img src="/images/docs/mcp/mcp-hero.webp" alt="Illustration of theStacc MCP server alongside AI assistant client logos" />
 </Frame>
 
-The theStacc MCP (Model Context Protocol) server lets an AI assistant work on your theStacc project for you. Ask it to *"review my content plan and write the next blog"*, *"create a LinkedIn post about our Diwali offer"* or *"which pages lost Google clicks this month?"*. The assistant does the work. You approve what goes live.
-
-It is a hosted server with sign-in, at:
-
-```
-https://mcp.thestacc.com/mcp
-```
+theStacc MCP connects an AI client to a theStacc project for content and SEO work. Choose the project and permissions, then ask for a specific task, such as reviewing the content plan or drafting a post. Check the result in theStacc before requesting further edits or publication.
 
 ## Prerequisites
 
@@ -23,157 +17,127 @@ https://mcp.thestacc.com/mcp
     Sign up or log in to theStacc.
   </Card>
   <Card title="Owner or admin" icon="shield-check" href="/getting-started/accounts-workspaces">
-    Of the project you want to connect.
+    Required to authorize a connection or create a project agent key.
   </Card>
   <Card title="An MCP client" icon="message-bot" href="#connecting-to-thestacc-mcp">
-    Claude, Claude Code, Cursor, Codex CLI, Gemini CLI or another.
+    Choose the setup guide for your client.
   </Card>
 </CardGroup>
+
+Use a connection for the project you intend to work on. Check its reported project before asking the assistant to change content.
 
 ## Connecting to theStacc MCP
 
-The server uses the streamable HTTP transport with OAuth 2.1. Your AI tool handles the sign-in: you paste the address, sign in with theStacc in your browser, pick a project and approve. Pick your tool:
+For hosted sign-in, add this address through your client's remote MCP connection settings:
+
+```text
+https://mcp.thestacc.com/mcp
+```
+
+The hosted authorization flow signs you in and authorizes a project and permissions. Your client needs to support that flow. If you use a local MCP process instead, configure it with a private project agent key as described in [Agent keys and permissions](/developers/agent-keys-mcp#local-install-with-an-agent-key).
+
+Pick your tool:
 
 <CardGroup cols={3}>
   <Card title="Claude" icon="sparkles" href="/developers/mcp/claude">
-    claude.ai, desktop and mobile
+    Claude connection guide
   </Card>
   <Card title="Claude Code" icon="terminal" href="/developers/mcp/claude-code">
-    One command in your terminal
+    Terminal setup guide
   </Card>
   <Card title="Cursor" icon="arrow-pointer" href="/developers/mcp/cursor">
-    Add it to mcp.json
+    Cursor configuration guide
   </Card>
   <Card title="Codex CLI" icon="square-terminal" href="/developers/mcp/codex-cli">
-    OpenAI's terminal agent
+    Codex CLI setup guide
   </Card>
   <Card title="Gemini CLI" icon="gem" href="/developers/mcp/gemini-cli">
-    Google's terminal agent
+    Gemini CLI setup guide
   </Card>
   <Card title="Other clients" icon="plug" href="/developers/mcp/other-clients">
-    Local install with a key, or mcp-remote
+    Other connection options
   </Card>
 </CardGroup>
 
+Follow the guide for the client and version you use.
+
 ## Authentication
 
-There is no key to copy. When you connect, your AI tool opens theStacc in your browser:
+For hosted sign-in:
 
-1. Log in with your usual theStacc account.
-2. Pick **one project**. Each connection works on a single project.
-3. Choose what the assistant may do. Reading and drafting are ticked; **publishing is never pre-ticked**, so tick it only if you want the assistant to publish what you approved.
-4. Click **Approve**. You are sent back to your tool, connected.
+1. Sign in with your theStacc account.
+2. Select the project you can administer.
+3. Review the requested permissions and grant the access needed for your task.
+4. Complete authorization and check the connection in your client.
 
-The connection appears in theStacc under **Content SEO > Settings > Publishing > Agent access** as **MCP: \<tool name\>**. Revoke it there at any time; your tool then asks you to sign in again. See [Permissions](/developers/agent-keys-mcp#permissions) for the full list.
+Hosted sign-in creates a project-scoped agent credential through an authorization-code flow. Local setup supplies a key you created separately. Keep either credential private; do not paste it into public code or shared documents.
+
+Manage project agent access from Publishing settings. For scopes, key creation and revocation, see [Agent keys and permissions](/developers/agent-keys-mcp). If a connection reports that its credential is revoked or invalid, reconnect or replace the local key. Inspect pending work separately rather than assuming that reconnecting or revoking access resolves a job's status.
 
 ## Available tools
 
-56 tools across 7 areas. Your AI tool only sees the ones your connection's permissions allow. Read-only tools are marked as such, so most tools can run them without asking you each time. Full details in the [MCP Tools Reference](/developers/mcp-tools-reference).
+The catalogue covers the areas below. Use the [MCP Tools Reference](/developers/mcp-tools-reference) for individual inputs and limits. Request `get_permissions` to inspect the connection when a tool is missing or access is refused. A displayed tool is not proof that the backend will authorize its call.
 
 ### Blog
 
-| Tool | What it does |
-| --- | --- |
-| `review_content_plan` | The plan: planned and draft blogs with status and dates |
-| `get_blog`, `generation_status` | Read a blog, follow its progress |
-| `generate_blog`, `draft_from_abstract`, `generate_more` | Write a planned blog, write one from your brief, add blogs to the plan |
-| `edit_blog`, `regenerate_section`, `set_scheduled_date` | Edit text, rewrite one section, pick a date |
-| `regenerate_image`, `retry_failed_images`, `upload_image` | Redo, retry or upload images |
-| `cancel_generation` | Stop a blog that is being written |
-| `publish_blog` | Publish a blog you approved |
+Start with `review_content_plan` to inspect the plan. The blog catalogue includes reading blogs, generating drafts, editing text and images, and requesting publication. Keep drafting and publishing permissions separate; reviewing the plan does not approve its content.
 
 ### Social
 
-| Tool | What it does |
-| --- | --- |
-| `social_generate_post` | **Create a new post** from a topic (caption, hashtags, images), or generate a planned one now |
-| `social_list_posts`, `social_get_post`, `social_generation_status` | List, read and follow posts |
-| `social_edit_post`, `social_regenerate_caption` | Edit copy and schedule, rewrite one platform's caption |
-| `social_regenerate_image`, `social_edit_image`, `social_list_image_versions`, `social_use_image_version` | Redraw or edit images and pick a version |
-| `social_publish` | Publish or schedule a post you approved |
+Start with `social_list_posts` to inspect posts. The catalogue includes creating drafts, editing captions and images, and publication tools. Review the actual post and destination in the app before asking for publication.
 
 ### Google Business Profile
 
-| Tool | What it does |
-| --- | --- |
-| `gbp_list_locations`, `gbp_get_location`, `gbp_connection_status` | Your locations and whether they are connected |
-| `gbp_list_posts`, `gbp_get_post`, `gbp_content_plan` | Posts and the plan |
-| `gbp_generate_post`, `gbp_regenerate_post`, `gbp_edit_post` | Write, rewrite and edit posts |
-| `gbp_generate_image`, `gbp_upload_image`, `gbp_remove_image` | Post images |
-| `gbp_publish`, `gbp_retry_publish`, `gbp_publish_status` | Publish posts you approved and check the result |
+Start with `gbp_list_locations`, then inspect the relevant location's posts. The catalogue includes post drafts, images and publication tools. Identify the intended location and inspect the post's current status before requesting a change.
 
 ### SEO, site audit and keywords
 
-| Tool | What it does |
-| --- | --- |
-| `get_seo_insights` | Ranked next actions from Search Console and GA4 |
-| `get_search_console_performance`, `get_ga4_overview`, `get_blog_performance`, `get_monthly_seo_report`, `get_analytics_status` | Traffic and rankings |
-| `run_site_audit`, `get_audit_status`, `get_audit_dashboard`, `get_audit_issues`, `get_audit_finding`, `get_audit_pages` | Audit your site and read the findings |
-| `list_keywords`, `add_keywords`, `generate_keywords` | Your keyword pool |
+The catalogue includes Search Console and GA4 reports, SEO insights, site audit tools and keyword management. Start with `get_analytics_status` when you need to check the analytics connection, or inspect existing audit results before requesting another audit.
 
 ### Connection
 
-| Tool | What it does |
-| --- | --- |
-| `get_permissions` | The project, the permissions this connection has and the tools it can use |
+Use `get_permissions` to check the reported connection and access. For `missing_scope`, review the required permission and ask the project owner or admin to authorize suitable access. Do not repeatedly retry the same permission failure.
 
 ## Guided workflows
 
-Ready-made prompts your AI tool shows as slash commands (in Claude Code, Cursor, VS Code and Gemini CLI). Each appears only when your connection has the permissions it needs.
-
-| Prompt | What it does | Needs |
-| --- | --- | --- |
-| `weekly_content_review` | What is waiting for your approval, what goes out this week, and what failed | Any read permission |
-| `seo_next_actions` | Your top 5 SEO actions with the evidence and the exact fix | SEO read |
-| `create_social_post` | Drafts a social post on a topic (arguments: `topic`, optional `date`) | Social draft |
-| `refresh_declining_post` | Finds a blog losing traffic and proposes edits; edits only after you say yes | SEO read, Blog draft |
+Begin with a bounded request: identify the item, ask the assistant to read it, and decide what to change after reviewing the result. If your client offers saved prompts or workflow shortcuts, check what they request before running them. The client guides and tools reference cover setup and tool inputs; this page does not configure recurring automation.
 
 ## Example conversations
 
-**Blog**
-- *"Review my content plan and write the next blog."*
-- *"Rewrite the introduction of my latest draft to be shorter and friendlier."*
+These are examples of requests, not verified outputs:
 
-**Social**
-- *"Create an Instagram and LinkedIn post about our weekend workshop."*
-- *"Show me this week's social posts and tighten the LinkedIn captions."*
+- *"Show the blogs waiting for review, then suggest which draft I should read first."*
+- *"Read this social post and suggest a shorter LinkedIn caption before changing it."*
+- *"Check whether Search Console is connected, then show last month's available performance data."*
 
-**Google Business**
-- *"Draft a Google Business offer post for Saturday's sale."*
-
-**SEO**
-- *"Which of my blogs got the most Google clicks last month?"*
-- *"Run a site audit and tell me the three critical issues to fix first."*
-
-**End to end**
-- *"Every Monday: tell me what needs my approval, then publish whatever I approved."*
+Name the project or item when needed, inspect the response, and confirm the next operation instead of treating a proposed action as already completed.
 
 ## Important notes
 
 <Note>
-**You approve, the assistant does the work.** The assistant creates and edits drafts. It can never approve anything, and it can publish only what a person approved and nobody changed since.
+**Publishing permission does not approve a blog.** The blog publishing gate can reject content that lacks human approval or whose approval is stale. Review the current draft in theStacc and obtain fresh approval when the returned error requires it.
 </Note>
 
-- **Drafts land in review.** New blogs, social posts and Google Business posts wait for your approval in theStacc.
-- **Approved posts are locked.** An approved, scheduled or live social or Google Business post can't be changed by the assistant; move it back to review first.
-- **One project per connection.** Connect again to work on another project.
-- **Plan limits apply.** Generating posts, images and audits uses your plan's quota, the same as in the app.
-- **Long jobs keep running.** Some jobs take longer than a minute (image redraws, publishing). The tool then answers `still_running` and the assistant checks back instead of starting the job again.
-- **Web content is treated as data.** Text from your pages, search queries and posts is marked so the assistant does not follow instructions hidden in it.
+- **One project per connection.** Check the reported project and connect separately for another project.
+- **Review each operation.** Read-only tool annotations describe intent; check your client's confirmation controls before requesting changes.
+- **Check plan limits.** Generation, images and audits can use quota or credits. Check the applicable limits before requesting repeated work.
+- **Follow an unfinished job.** When a response says `still_running`, use the status tool named in `check_with` instead of starting the same operation again.
+- **Keep source text separate from instructions.** Review returned page and post content as data; do not let embedded instructions change your task or permissions.
+- **Verify publication.** Inspect the destination and public result after a publishing request. A tool acknowledgement does not establish that the published page is correct.
 
 ## Next steps
 
 <CardGroup cols={2}>
   <Card title="Permissions and safety" icon="lock" href="/developers/agent-keys-mcp">
-    What each permission allows, safety rules and error messages.
+    Connection modes, scopes and access errors.
   </Card>
   <Card title="MCP Tools Reference" icon="book" href="/developers/mcp-tools-reference">
-    Every tool and its parameters.
+    Individual tool inputs and limits.
   </Card>
   <Card title="Approval workflow" icon="circle-check" href="/content-seo/draft-approval-workflow">
-    How review and approval work in theStacc.
+    Review and approve blog content in theStacc.
   </Card>
   <Card title="Public Blog API" icon="code" href="/developers/public-blog-api">
-    Read your published blogs from your own site.
+    The separate API for reading published blogs.
   </Card>
 </CardGroup>
