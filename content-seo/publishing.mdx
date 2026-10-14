@@ -3,137 +3,137 @@ title: "Publishing"
 description: "Once content is generated, theStacc handles publishing to your website."
 ---
 
-Publishing sends a finished article through the project's configured destination. Check the selected project, review the draft and confirm the intended publishing setup before sending it. Afterward, inspect the public page or receiving build: a saved draft, approval or accepted request records a different step from the website displaying the article correctly.
-
-Open **Publishing** in the Content section of the sidebar. The page contains publishing presets and destination controls. The [Draft & Approval Workflow](/content-seo/draft-approval-workflow) explains the review decision before delivery.
+Once content is generated, theStacc handles publishing to your website. Configure your publishing mode and connections under **Content SEO \> Settings \> Publishing**.
 
 ## Publishing modes
 
-The current preset names are **Manual**, **Draft for me** and **Full autopilot**. A preset combines scheduled generation with the publishing mode. Check the saved setup and any existing queued posts when changing it; selecting Manual does not cancel every operation already underway.
+Every project has a publishing mode that decides what happens to a blog after it is generated and SEO-scored. Change it any time under **Content SEO \> Settings \> Publishing**.
 
 ### No auto publish
 
-**Manual** turns scheduled auto-generation off and selects manual publishing. Use the dashboard to decide which post to generate and when to send it. Publishing still needs an appropriate destination or supported API/build setup.
+Blogs are saved as drafts. You manually review, edit, and publish each one when you are ready. Best for maximum control over every piece of content.
 
 ### Requires approval
 
-**Draft for me** enables scheduled generation and approval-required publishing. Review the generated version before choosing **Approve** or **Reject**. Approval moves a draft toward publication; check its status and available publishing action afterward.
+Blogs enter a "Pending Review" state. You get a notification, review the post, make edits if needed, then approve or reject. Rejected posts can be regenerated. This is the best balance of control and convenience.
 
 ### Auto publish
 
-**Full autopilot** enables scheduled generation and automatic publishing without that separate approval action. The automated presets require an active destination in the settings screen. Access checks, configured holds and delivery failures can still stop a post.
+Blogs publish automatically after generation and SEO scoring, with no review step. You can still unpublish or edit after a post goes live. Auto publish requires an active publishing destination. Best for hands-off operation.
 
-Preset values save through separate requests, so a change can partially apply after an error. Reload and check the saved state before relying on a new workflow. Use [Publishing Modes & Autopilot](/content-seo/publishing-modes) for preset controls and their limits.
+For a deeper walkthrough of autopilot, daily auto-generation, and how the cron pipeline schedules and spaces out publishes, see [Publishing Modes & Autopilot](/content-seo/publishing-modes).
 
 ## Supported platforms
 
-The destination screen offers WordPress.com, self-hosted WordPress, Ghost, Webflow, Zepio, custom webhooks and Shopify, which is labeled Beta. Choose the setup that matches the actual website and account you intend to use. A listed platform does not establish that your credentials or content fields are ready.
+theStacc publishes to all of these. Connect one as your active destination under **Content SEO \> Settings \> Publishing**:
 
-Use [Connect Platforms](/integrations/overview) for each connector's setup. Static sites can also use the [Public Blog API](/developers/public-blog-api) with a [deploy hook](/developers/deploy-hooks); the receiving site must fetch the published content and complete its build.
+- **WordPress.com** - hosted WordPress sites, connected with a secure OAuth sign-in.
+- **WordPress.org (self-hosted)** - your own WordPress install, connected with a WordPress Application Password.
+- **Ghost** - connected with your Ghost site URL and an Admin API key.
+- **Webflow** - publishes blog posts as items in a Webflow CMS collection, connected with a Webflow API token.
+- **Zepio** - connected with a Zepio Developer API key.
+- **Custom Webhook** - sends each publish as JSON to any HTTP endpoint you control, for sites and CMSes not directly supported.
+- **Shopify (beta)** - publishes to your Shopify store's built-in blog, connected with a secure OAuth sign-in.
+
+For step-by-step setup of every platform, including screenshots and field mapping, see [Connect Platforms](/integrations/overview).
 
 ### One active destination at a time
 
-Configure the connection intended to receive posts and inspect which connection is active. The connection flows attempt to deactivate other connections when creating or activating one, but those changes are separate database operations. After a save error, verify the list instead of assuming every connection change was rolled back.
+A project publishes to exactly **one** destination at a time. Connecting a new platform automatically makes it the active one and deactivates whatever was active before, so a blog is never pushed to two places at once.
 
-The scheduled publisher looks for an active destination; it can fail when the stored destination is unavailable or inactive. Inspect the post's message and configured connection before enabling automation. Keep API/build publishing distinct from a saved CMS connection.
+You can keep several connections saved on a project, including more than one of the same type (for example, two different webhook endpoints). Only the one marked active receives publishes. To switch destinations, activate a different connection from the list and the previously active one is turned off automatically.
+
+Autopilot is strict about this: the auto-publish pipeline only ever uses the active connection. If you deactivate every connection, autopilot has nowhere to publish and the blog is held with a clear message asking you to re-enable a destination.
 
 ### Who can change connections
 
-Connection changes require project editor access in the connection API. Publishing presets require project admin access, and the current sidebar exposes Publishing to admins. If the controls are absent or a request is denied, ask the project admin to check access rather than assuming every workspace member can change the destination.
+Changing publishing connections (connecting, editing, activating, deactivating, testing, or disconnecting) requires **editor or admin** access to the project. On a project you own, any member of your workspace can make these changes; on a shared project, members with view-only access cannot.
 
-<h3 id="credentials-are-tested-before-they-are-saved">
-Check the connection before relying on it
-</h3>
+### Credentials are tested before they are saved
 
-Some connection flows validate credentials before creating the connection, including self-hosted WordPress, Ghost and Zepio. Checks differ by connector and action; do not apply a universal pre-save test or no-partial-save promise to every update.
+When you save a connection, theStacc tests the credentials against the platform first. If the test fails, nothing is saved and you get the exact reason (wrong URL, bad API key, a user role that cannot publish, and so on). There are no partial saves: a connection is only stored once it has proven it can reach your site.
 
-Use **Test Connection** where available and read its result. A previous Passed test is history, not confirmation that the next publish will succeed. Inspect saved values after an error and keep credentials out of support screenshots.
+The same test runs whenever you change a credential later, so a typo or a revoked token is caught at save time rather than at the next publish. You can also re-run the test any time from the connection's **Test** button.
 
 ## How content is prepared before it is sent
 
-Publishing preparation can remove duplicate title or featured-image markup and resolve internal references. The exact payload and supported behavior depend on the connector and publishing path. Review the resulting website as well as the editor.
+The blog you see in the editor is cleaned up at publish time so it renders correctly on your site no matter which platform you use:
 
-<p id="publishing-output-review-title" className="content-table-title">Check the content sent to the destination</p>
-<div className="content-table-scroll" role="region" aria-labelledby="publishing-output-review-title" tabIndex="0">
-<table aria-labelledby="publishing-output-review-title">
-  <thead><tr><th scope="col">Content</th><th scope="col">Relevant handling</th><th scope="col">What to inspect</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">Title and featured image</th><td>Preparation can separate the title and featured image from body markup.</td><td>The rendered heading, hero image and body images.</td></tr>
-    <tr><th scope="row">Excerpt</th><td>Webhook payloads distinguish the full excerpt from a shortened excerpt field.</td><td>Which field your receiver maps to its CMS summary.</td></tr>
-    <tr><th scope="row">Internal and relative links</th><td>Saved destinations resolve supported references; a valid website address supports root-relative URL expansion.</td><td>Every important destination, anchor and any unresolved reference.</td></tr>
-  </tbody>
-</table>
-</div>
+- **The hero image is removed from the body.** Your featured image is sent as a separate structured field that every platform renders at the top of the post. theStacc strips that same image out of the article body so it does not appear twice on the page.
+- **The excerpt is trimmed.** A short, clean excerpt (capped at 256 characters and trimmed at a word boundary) is sent alongside the post, so platforms with excerpt length limits accept it without error.
+- **Internal link placeholders are resolved.** While writing, the AI marks internal links as placeholders. At publish time these are matched to your configured internal links and turned into real URLs. Any placeholder with no match is removed and the visible link text is kept, so a broken link is never published. See [Internal Linking](/content-seo/internal-linking) for how to set up the link targets.
+- **Relative links are made absolute.** Call-to-action links entered as a path (like `/contact`) are rewritten to your full site URL (like `https://yoursite.com/contact`) so they work everywhere the post is shown, including the in-app preview.
 
-A resolved link is not a page-availability check. A valid website address is also needed to expand a root-relative path such as `/contact`. Follow [Internal Linking](/content-seo/internal-linking) to review saved destinations and unresolved references before publishing.
+The duplicate H1 is also removed, since platforms render your title as the page heading.
 
 ## When a publish fails
 
-Identify the action that failed and inspect the receiving website before retrying. A receiver can create or update an article even if the response never reaches theStacc. Read the post's current status and message rather than treating every error as proof that nothing happened.
+Not every publish succeeds on the first try, so theStacc tells the difference between a hiccup and a real problem.
 
 ### Temporary problems are retried
 
-The scheduled worker retries failures classified as temporary. Its fast tier includes the first five attempts, with increasing waits and random jitter. If transient failures continue, a slow tier schedules further attempts after configured waits of 1 hour, 3 hours and 12 hours. Once those delays are exhausted, another transient failure is marked failed. These are eligibility delays; scanning and queue timing can make requests run later. A manually triggered publish or sync can instead return an error directly and does not always enter that scheduled retry sequence.
+If a publish fails for a reason that is likely to clear up on its own (the platform returns a server error or a rate-limit, or the request times out), theStacc retries automatically with increasing delays: roughly 1, 2, 4, 8, then 16 minutes apart. It tries up to **5** times in total. If all 5 attempts fail, the blog is marked **publish failed** and you are shown the last error.
 
-Some connectors check for an earlier remote post before repeating a request. The matching rules differ, so inspect an uncertain result before retrying again. These checks reduce duplicate risk without guaranteeing duplicate-free delivery.
+On a retry, theStacc first checks your site to see whether the earlier attempt actually landed (the response can be lost in transit even when the post was created). If it finds the matching post, it counts that as success instead of creating a duplicate.
 
 ### Problems you need to fix are not retried
 
-The scheduled worker stops on failures classified as permanent, such as rejected credentials or invalid configuration. Correct the reported cause before requesting another attempt. A detail page in **Publish Failed** can offer **Retry Publish**; other states offer their own actions.
+Some failures will never fix themselves, the most common being an expired token or an invalid credential (a 401 or 403 from your platform, or a URL theStacc cannot reach). These point at something only you can change, so theStacc does not waste retries on them. The blog is marked publish failed immediately with a message telling you exactly what to fix, such as reconnecting your account or generating a fresh Application Password.
 
-Use [Publishing Errors & Retries](/content-seo/publishing-errors) for platform-specific recovery, manual-versus-scheduled differences and uncertain remote outcomes. An error message does not establish every cause or describe internal incident handling.
+Because these are expected user-configuration issues rather than bugs, they do not page the engineering on-call team. Once you have updated the connection, click **Re-Publish** on the blog to try again. For the full list of error messages and how to clear each one, see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 ## Custom webhook events
 
-A custom receiver handles the event and writes the article into the website or CMS. It must implement the appropriate create, update and removal behavior; accepting a request alone does not complete those jobs.
+If you publish through a custom webhook, your receiver gets a JSON request for each event. Branch on the `event` field:
 
-<p id="publishing-webhook-events-title" className="content-table-title">Webhook event responsibilities</p>
-<div className="content-table-scroll" role="region" aria-labelledby="publishing-webhook-events-title" tabIndex="0">
-<table aria-labelledby="publishing-webhook-events-title">
-  <thead><tr><th scope="col">Event</th><th scope="col">Receiver responsibility</th></tr></thead>
-  <tbody>
-    <tr><th scope="row"><code>test.ping</code></th><td>Handle a connection test without requiring article fields.</td></tr>
-    <tr><th scope="row"><code>blog.published</code></th><td>Create or reconcile the intended article. Sample Payload can also send this event.</td></tr>
-    <tr><th scope="row"><code>blog.updated</code></th><td>Update the existing article using stable identifiers.</td></tr>
-    <tr><th scope="row"><code>blog.unpublished</code></th><td>Apply the website's supported unpublish behavior.</td></tr>
-    <tr><th scope="row"><code>blog.deleted</code></th><td>Apply the intended deletion behavior without recreating the article.</td></tr>
-  </tbody>
-</table>
-</div>
+| Event | When it fires |
+| --- | --- |
+| `test.ping` | The **Test Connection** button. A liveness check only, with no blog fields. |
+| `blog.published` | The first successful publish of a blog (and the **Sample Payload** button, with a `preview-` prefixed `blog_id`). Carries the full blog payload. |
+| `blog.updated` | A re-publish of a blog that was already published. Same payload shape as `blog.published`. |
+| `blog.unpublished` | You unpublish a blog from theStacc. |
+| `blog.deleted` | You delete a published blog from theStacc. |
 
-Follow the [Webhook Reference](/developers/webhooks/overview) for payload, authentication and response handling. Return the public URL and stable CMS identifier when the receiving write supports them, and inspect the recorded result. A URL can also come from a configured template; it does not independently prove the page exists.
+Respond to publish events with a `2xx` status and a JSON body like `{"ok": true, "url": "<live-post-url>", "id": "<your-cms-id>"}` so theStacc can store the live URL and show a clickable **View live post** link. The `id` you return is remembered so later updates, unpublishes, and deletes can target the right record.
 
-Manual and scheduled paths differ in accepted responses and retry handling. For an asynchronous receiver or build process, check completion and the actual public page. Implement duplicate handling for repeated delivery instead of assuming a repeated request will create only one record.
+For the complete request and response contract, HMAC signature verification, timeouts, and ready-to-paste receiver examples, see [Connect Platforms - Custom Webhook](/integrations/overview) and the [Webhook Reference](/developers/webhooks/overview).
 
 ## Managing connections
 
-Inspect the active connection, saved destination and previous test result before sending a post. Use the available test or activation control deliberately, then check the resulting list and status. Re-test after relevant credential or destination changes rather than relying on an older successful test.
+Each saved connection shows:
 
-After publishing or syncing, use **View Live** when a URL is available and inspect the article. For API/build publishing, inspect the completed deployment as well. If delivery remains uncertain, use the error guide and share the blog, action and sanitized message with support.
+- **Status** - active, inactive, or disconnected
+- **Last test result** - whether the most recent connection test passed
+- **Test** - re-run the credential check at any time
+- **Active toggle** - make this the publishing destination (which deactivates the others)
+- **Disconnect** - remove the connection entirely
 
 ## Related articles
 
-- [Publishing Modes & Autopilot](/content-seo/publishing-modes): choose and verify the project preset.
-- [Connect Platforms](/integrations/overview): configure the intended connector.
-- [Publishing Errors & Retries](/content-seo/publishing-errors): investigate delivery and retry safely.
-- [Internal Linking](/content-seo/internal-linking): check saved link destinations and references.
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes) - control whether blogs publish automatically, wait for approval, or stay drafts.
+- [Connect Platforms](/integrations/overview) - step-by-step setup for every supported platform and the custom webhook.
+- [Publishing Errors & Retries](/content-seo/publishing-errors) - what each publish error means and how to fix it.
+- [Internal Linking](/content-seo/internal-linking) - set up the internal links that placeholders resolve to at publish time.
 
 ## Blog authors for custom sites
 
-<Frame caption="Existing custom-site author-setting example; confirm the controls available for your project.">
+<Frame caption="Set the blog author for a custom webhook destination.">
   <img src="/images/product/blog-author.jpg" alt="Blog author name, Editorial team or Person selection, and Save author" />
 </Frame>
 
-For a custom webhook site, agree with your developer how the website will store and display the byline. Confirm the author controls and outgoing field available in your project before relying on the example above. After changing author details, check the saved value and the public byline separately.
+In the Content Hub's blog review or Blog Studio, set **Blog author** to a team name (for example, `Editorial Team`) or a person's name. Choose **Editorial team** or **Person**, then click **Save author**. Leave the name blank and save to request your website's default. Saving confirms the author is stored in theStacc, not that your website has updated its byline. For an already-published article, sync the blog after saving.
 
-The [Author field and receiver checklist](/developers/webhooks/field-reference#blog-author) describes an optional author field and receiving-site responsibilities. Confirm that your receiver supports the actual payload and updates its visible byline and structured data. Do not use an author name to imply that someone wrote or reviewed content without their participation.
+This control is available for custom webhook destinations. WordPress uses its existing site-user author picker; it does not accept an arbitrary custom byline through this webhook field.
+
+Your website's developer must implement the optional `author` field on both `blog.published` and `blog.updated`. Receiving the field does not automatically make it visible on the website. See [Author field and receiver checklist](/developers/webhooks/field-reference#blog-author).
+
 
 ## Review the sources used
 
-<Frame caption="Existing sources-review example; availability depends on the post and controls offered in your project.">
+<Frame caption="Open the saved research pages and highlights before approving a blog.">
   <img src="/images/product/blog-sources.jpg" alt="Sources used popup showing research links, dates, and highlights" />
 </Frame>
 
-Where **Sources used** is offered, inspect the recorded links and relevant passages before approving the draft. If the control or records are unavailable, use the sources you supplied and verify important claims directly. A listed source does not establish that it supports every statement in the article.
+In a blog's Content Hub preview or Blog Studio, click **Sources used** to open the research pages given to the writer. The popup groups sources by the organization or fact they describe and includes links, dates, and saved highlights when available. Use it to check a claim before approving the article.
 
-Check business facts, quotations and offers against appropriate evidence, and arrange any required specialist review. Return to [Draft & Approval Workflow](/content-seo/draft-approval-workflow) when the reviewed version is ready for a decision.
+The control appears only when the blog has recorded research sources; older or unresearched posts can have none. If the sources cannot load, use **Try again**. Press Escape or **Close** to dismiss the popup and return to the blog.

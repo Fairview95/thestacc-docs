@@ -1,107 +1,118 @@
 ---
 title: "Quota & Limits"
-description: "Understand project usage, planning headroom, quota cycles, failed generation, and when Generate More is available in Content SEO."
+description: "Your plan comes with a set number of blogs you can generate."
 ---
 
-Content SEO has separate counts for **usage** and **planning headroom**. Usage tracks blogs that have consumed an allowance. Headroom tracks how many additional blogs can be planned for the current cycle. A queued placeholder can affect planning before it consumes generation quota, so these numbers need not match.
-
-Check the selected project's **Usage** indicator and any message returned by the action you are trying to complete. The applicable allowance and reset interval depend on the project's activation, configured plan features, and any valid override. A generic plan name is not enough to determine every limit.
+Your plan comes with a set number of blogs you can generate. This page explains exactly how that limit works so there are no surprises: how many blogs you get, what counts against the number, when it resets, and what to do when you run out.
 
 ## The short version
 
-- Check the correct project before interpreting its usage or remaining allowance.
-- Separate the quota cycle from the subscription's billing window.
-- Planning headroom is not the same as unused generation quota.
-- A hidden usage indicator or **Generate More** button does not, by itself, establish an unlimited plan.
+- Your quota is **per project** and resets every **billing period** (your renewal date), not on the 1st of the calendar month.
+- Every project gets the **full** plan quota. A 30-blog plan gives you 30 in *each* project, not 30 split across all of them.
+- The number you can still add right now is called your **headroom** (your quota minus what you have already planned for this period).
+- When you reach the limit, new generation pauses until your next period begins. Your account is never charged extra automatically.
 
 ## How quota is measured
 
 ### Per project, not per account
 
-Content SEO counts usage and planned blogs for the selected project. Another project's blog records do not enter that project's count. However, the applicable plan feature or override is resolved through the account and project activation; do not assume that creating another project automatically grants a new paid allowance.
+Each project carries its own subscription and its own quota. If you run three projects on a 30-blog plan, each project can generate up to 30 blogs in its period. They do not share a pool, and one busy project never eats into another project's allowance.
 
-Check that each project has the intended Content SEO access and configuration. For account-level billing controls, see [Billing](/account/billing).
+### Per billing period, not the calendar month
 
-<h3 id="per-billing-period-not-the-calendar-month">The billing period and quota cycle</h3>
+Your quota cycle is tied to your subscription, anchored to the day you activated, not to the first of the month. If you started on the 12th, each cycle runs from the 12th to the 12th. (If your start day does not exist in a shorter month, theStacc uses the last day of that month and then snaps back, so a billing day of the 31st becomes the 28th in February and returns to the 31st in March.)
 
-The **billing window** describes the subscription period. The **quota cycle** describes the interval used to count generation. The current implementation supports configurable intervals, including monthly, weekly, daily, and the subscription period. Consequently, a renewal date is not a universal explanation for every reset date.
+The usage indicator on your **Content SEO** dashboard always shows the current cycle's count and the date it resets, so you can see exactly where you stand.
 
-For a monthly anchored cycle, shorter months can use their last day when the anchor day is unavailable. The subsequent cycle retains the original anchor day. Check the reset or expiry information shown for your project rather than applying this monthly behavior to every plan.
+### Yearly plans are paced, not dumped all at once
 
-The Usage indicator can show **Resets** or **Expires**, depending on the resolved cycle. It can also be absent while loading or when quota information is unavailable. If the information does not load, investigate the error rather than interpreting a missing bar as unlimited access.
+If you pay annually, you are still billed once a year, but your blogs are **paced monthly**. A yearly 30 plan gives you 30 blogs in each monthly cycle across the year, not 360 to spend in one go. The per-cycle cap is your plan number (for example 30), and it refreshes every month until your annual renewal. This keeps your publishing steady and matches how the plan is priced.
 
-<h3 id="yearly-plans-are-paced-not-dumped-all-at-once">Check a yearly plan's usage interval</h3>
+There are two separate timelines here, and it helps to keep them apart:
 
-Annual payment and a monthly generation allowance are different settings. A yearly subscription can use a configured monthly quota cycle, but the current code does not establish that every yearly or longer-term plan has the same monthly allowance.
-
-Check the project's actual allowance, interval, and expiry. Do not multiply a plan label into an annual pool or assume the full subscription allowance can be generated at once without confirming its configuration.
+- **Billing window** - when you are charged (monthly, every 6 months, or yearly). This is what you see on **Settings \> Billing**.
+- **Quota cycle** - when your blog counter resets. For paced plans this is monthly, regardless of how often you are billed.
 
 ## What each plan includes
 
-Use the selected project's current allowance and [Plans & Pricing](/account/plans-pricing) controls to understand its access. This page does not quote a universal software tier allowance: current plan-feature and account-override values are required to establish that number.
+| Plan | Blogs per cycle | How it resets |
+| --- | --- | --- |
+| Trial | A small fixed allowance for the trial window | Once, over the whole trial period (no monthly reset) |
+| Monthly 30 / 50 / 80 | 30 / 50 / 80 | Every monthly cycle |
+| Yearly 30 / 50 / 80 | 30 / 50 / 80 | Every monthly cycle, across the year |
+| 6-month 30 / 50 / 80 | 30 / 50 / 80 | Every monthly cycle |
+| Unlimited | No cap | n/a - shown as **unlimited** |
 
-<p id="quota-counter-table-title" className="content-table-title">Generation usage and planning headroom</p>
-<div className="content-table-scroll" role="region" aria-labelledby="quota-counter-table-title" tabIndex={0}>
-  <table aria-labelledby="quota-counter-table-title">
-    <thead><tr><th scope="col">Count</th><th scope="col">What it measures</th><th scope="col">How to use it</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Usage</th><td>Blogs with a consumption timestamp inside the quota cycle</td><td>Check the generation allowance already consumed</td></tr>
-      <tr><th scope="row">Planning headroom</th><td>Allowance minus counted blogs scheduled in the cycle</td><td>Check room for additional planned blogs</td></tr>
-      <tr><th scope="row">Reset or expiry</th><td>The resolved cycle's end</td><td>Check when that window ends, separately from eligibility to continue</td></tr>
-    </tbody>
-  </table>
-</div>
+A few notes:
+
+- **Trial** plans give a small fixed number of blogs spread across the whole trial window. The trial allowance does not refill each month - it is a one-time amount for the trial, and the trial also ends on its own expiry date.
+- **Yearly** and **6-month** plans use the same per-cycle number as their monthly equivalents (a yearly 30 behaves like 30 per month). You simply pay for the longer term up front.
+- **Unlimited** plans have no blog cap. The usage indicator and the **Generate More** button are hidden for these projects because there is nothing to count - your quota shows as **unlimited**.
+
+Your exact plan and renewal date are always visible on the [Billing & Plans](/account/billing) page.
 
 ## What counts toward your period
 
-Usage is based on a consumption timestamp, not a blog's current calendar date. The quota migration defines that timestamp as a one-time record when a blog reaches a qualifying state after waiting or generating. Rescheduling the blog does not move that recorded consumption into another cycle.
+What fills up your headroom is everything you have **planned** for the current cycle - the blogs scheduled to land on a date inside this period. That includes:
 
-Planning headroom uses scheduled dates inside the cycle and excludes blogs currently marked **Missed** or **Generation Failed**. Placeholders and other counted statuses can therefore occupy planning space before generation has consumed an allowance.
+- Placeholders waiting to be generated
+- Bonus blogs that are still waiting for you to pick a publish date
+- Blogs currently generating
+- Blogs in review, approved, scheduled, and published
 
-Failure needs context. A first generation that fails before reaching a qualifying state has no consumption timestamp under that rule. A blog that already consumed an allowance does not lose its timestamp simply because a later regeneration fails. Do not assume that every failure refunds a slot or that calendar changes erase prior usage.
+A blog only stops counting against your plan when it never represented real work. The following do **not** take up a slot:
 
-If a count looks wrong, identify the blog, its status, whether it was generated previously, and the cycle you are inspecting. Those details are more useful than comparing a calendar total with Usage as if they were identical counters.
+- **Missed** blogs (the date passed without generation)
+- **Generation failed** blogs (the AI run did not complete)
+
+If a generation fails because of a temporary hiccup, you are not charged a slot for it - the allowance returns to your headroom so you never lose a paid blog to an error outside your control. A blog only permanently consumes quota once it has been **successfully generated**. Anything still waiting in line - placeholders, bonus blogs awaiting a date, or a run that failed - has not consumed your quota yet.
 
 ## Headroom and the Generate More button
 
-Planning headroom is the configured allowance minus the blogs counted as planned in that cycle, with no negative headroom available for new requests. The **Generate More** flow checks this planning room before adding bonus blog placeholders.
+**Headroom** is simply:
 
-Positive headroom does not guarantee that the button is offered or a request will succeed. The current screen hides it for particular plan codes, unlimited configurations, no remaining headroom, or no remaining days. The server also checks access, plan eligibility, the requested count, and a separate request cap.
+> Headroom = your quota - what you have already planned this period
 
-After a successful request, check the result and choose dates for the added blogs. If title generation only partially succeeds, read the warning and inspect the placeholders instead of assuming every requested title is complete. See [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs) for the workflow.
+For example, on a 50-blog plan with 38 already scheduled, your headroom is 12.
+
+The **Generate more** button on your dashboard reads this number and lets you add up to that many bonus blogs in one go. When you request more, theStacc checks your headroom first and only accepts the request if you have room. If you ask for more than your headroom, it stops you with a clear message showing how many you have already scheduled and how many more you are allowed.
+
+The dialog shows your current headroom up front (for example, "You have 38 of 50 blogs scheduled. Add up to 12 more."). Each bonus blog you add gets a title and keyword generated automatically; you then pick a publish date for each one from the section that appears below.
+
+The **Generate more** button is hidden when there is nothing useful it could do - for instance on unlimited plans, when your headroom is already zero, or at the end of a cycle when no days remain. On 30-blog plans where onboarding has already filled all 30 slots for the cycle, the button stays hidden until the next cycle frees up room. To learn the full bonus-blog flow, see [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs).
 
 ## When you reach the limit
 
-A manual generation request can be blocked when its applicable generation allowance is exhausted. The scheduled worker can defer a quota-exhausted blog to a later cycle, but continued generation still depends on eligible access and the project's automation settings.
+When a project hits its cap for the period, new generation is **paused** until the next cycle begins - both for blogs you trigger yourself and for the automated daily run described in [Automated Generation (Cron)](/content-seo/automated-generation). You will see a message telling you the cap was reached and the date it resets (for example, "Plan limit reached: 30 blogs this month. Resets on the 12th.").
 
-A reset is therefore not a promise that every queued post will generate or publish automatically. Expired access, missing plan features, lookup errors, and publishing configuration can require separate action.
+Nothing breaks and nothing is lost. Your scheduled and published blogs stay exactly as they are. When your period rolls over, your full quota is available again and generation resumes automatically.
 
-Read the specific error and the project's reset or expiry date. If considering an upgrade, confirm the resulting allowance and billing terms in the actual account controls before accepting a change. This quota page does not establish automatic charges, refunds, or an immediate increase for every upgrade.
+If you regularly run out before the cycle ends, that is usually a sign to move up a tier - upgrading raises your per-cycle number. See [Billing & Plans](/account/billing) for how to change your plan.
 
 ## Temporary quota boosts (overrides)
 
-The implementation supports account feature overrides. A valid override can take precedence over a configured plan feature, and **Custom** can appear in the Usage indicator. An override can have an expiry; an expired or invalid expiry value is not treated as an indefinitely valid boost.
+For special cases - a launch month, a one-off campaign, or to make something right - theStacc support can apply a **temporary override** to your account. An override raises your effective quota above your plan number for a set window, and it can carry an expiry date. While it is active, your headroom and usage indicator reflect the higher number (marked **Custom** on the dashboard), and the override takes priority over your normal plan limit. Once it expires, your quota simply returns to your plan's standard number.
 
-Do not assume an override always increases the allowance, applies only to one project, or lasts until renewal. Ask support to confirm the affected feature, effective value, scope, and expiry when investigating a custom allowance. Override support in the code is not a promise that every requested increase will be approved.
+Overrides are applied by the team, not self-serve. If you need a temporary boost, contact support and let them know how many extra blogs and over what window.
 
 ## Quick answers
 
-**Why didn't my quota reset at the start of the month?**
+**My quota didn't reset on the 1st - is something wrong?**
 
-Check the configured interval and displayed reset or expiry date. Monthly anchored cycles need not begin on the first day; other intervals follow their own rules.
+No. Quota resets on your billing anniversary, not the calendar month. Check the reset date shown on your dashboard usage indicator.
 
-**Does every project receive a fresh copy of my plan's allowance?**
+**I have two projects. Do they share my 30 blogs?**
 
-Counts are project-scoped, but access and the applicable allowance must be established for that project. Creating a project alone does not establish a new paid entitlement.
+No. Each project gets its own 30. The number is per project.
 
-**Did a failed generation use an allowance?**
+**I'm on a yearly plan - why can't I generate all my blogs at once?**
 
-Check whether that blog had already consumed quota. A later failure does not clear an existing consumption timestamp.
+Yearly plans are paced monthly. You get your per-cycle number (for example 30) each month across the year, not the annual total in one batch.
 
-**Why is Usage different from planning headroom?**
+**A blog failed to generate. Did it use up one of my blogs?**
 
-Usage counts consumption in the cycle. Headroom counts scheduled planning space in the cycle. A pending placeholder or rescheduled completed blog can make them differ.
+No. Failed and missed blogs do not consume a slot. A blog only counts once it has been successfully generated.
 
-**Why is my usage indicator hidden?**
+**Why is my usage bar hidden?**
 
-An unlimited configuration is one possible reason. Loading, unavailable quota data, or a missing period can also hide it. Check the project's actual access and error state.
+You are on an unlimited plan, so there is no count to display. Your quota shows as unlimited.

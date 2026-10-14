@@ -3,65 +3,40 @@ title: "Idempotency & retries"
 description: "How retries behave depends on which path published the blog."
 ---
 
-An idempotent webhook receiver applies a repeated delivery without creating another article. It must also allow legitimate later edits to that article. Store `blog_id` as the article identity, and treat scheduled retry metadata as delivery information rather than a unique content revision. Manual and scheduled publishing handle failures differently.
+How retries behave depends on which path published the blog. Both paths fire the same events at the same URL — the difference is whether theStacc retries automatically.
 
 ## Manual publish (you click Publish)
 
-A manual webhook publish sends one request rather than entering the scheduled worker's automatic retry sequence. Its client has a configured **30-second timeout**. A timeout leaves the receiver's outcome uncertain: the article may have been saved before its response was lost. Inspect your stored article and delivery logs before trying again.
-
-Manual webhook publishing accepts **200, 201, 202 and 204**, then checks the response for an explicit rejection. For example, `{"ignored":true,"reason":"Unsupported event"}` is a failure even with HTTP `200`. Return a supported acknowledgement using the [response contract](/developers/webhooks/response-contract); do not report success for an event your receiver did not apply.
+A manual publish is **single-shot**. If your endpoint times out (the request budget is ~30 seconds) or returns a non-2xx status, the publish fails immediately and the user sees a "Failed to publish" notice. The user clicks **Republish** to try again. theStacc does not auto-retry a manual publish.
 
 ## Autopilot publish (theStacc publishes on a schedule)
 
-Scheduled publishing uses a fast retry tier followed by a slower tier for classified transient failures. The fast tier includes the first five attempts. If a transient failure continues, the configured slow delays are **1 hour, 3 hours and 12 hours**. Once those delays are exhausted, another transient failure is marked failed. A permanent error stops without entering that retry sequence.
-
-For scheduled webhooks, timeouts and network errors are transient. The initial HTTP classification treats `429`, `5xx` and redirects as transient, and other `4xx` responses as permanent. Redirects are not followed. The response body can change that classification: an explicit validation rejection can make a server error permanent, and an explicit rejection in a `2xx` body is classified by its reason. A successful status alone does not override a receiver saying it did not apply the change.
-
-The fast backoff doubles its base delay and adds random jitter. These are configured eligibility delays, not promised delivery times:
-
-<p id="webhook-retry-delays" className="content-table-title">Scheduled delay after a classified transient failure</p>
-<div role="region" aria-labelledby="webhook-retry-delays" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="webhook-retry-delays">
-<thead><tr><th scope="col">Failed attempt</th><th scope="col">Configured delay before the next attempt</th><th scope="col">Tier</th></tr></thead>
-<tbody>
-<tr><th scope="row">1</th><td>60–120 seconds</td><td>Fast</td></tr>
-<tr><th scope="row">2</th><td>120–180 seconds</td><td>Fast</td></tr>
-<tr><th scope="row">3</th><td>240–300 seconds</td><td>Fast</td></tr>
-<tr><th scope="row">4</th><td>480–540 seconds</td><td>Fast</td></tr>
-<tr><th scope="row">5</th><td>1 hour</td><td>Slow</td></tr>
-<tr><th scope="row">6</th><td>3 hours</td><td>Slow</td></tr>
-<tr><th scope="row">7</th><td>12 hours</td><td>Slow</td></tr>
-</tbody>
-</table>
-</div>
-
-The worker reschedules an eligible retry; scan and queue timing can make it run later than the delay shown. Fix a permanent configuration or payload error before requesting another publish. Use [Publishing Errors & Retries](/content-seo/publishing-errors) for recovery steps, and inspect the actual error rather than assuming every failure is temporary.
+Autopilot publishes **retry automatically** on transient failures (a timeout, a network error, or a `5xx` from your receiver). theStacc makes up to **5 attempts** with exponential backoff — roughly **60s, then 120s, 240s, 480s, and 960s**, a full retry window of about **30 minutes**. After 5 failed attempts the publish is marked failed. A `4xx` from your receiver is treated as permanent and is **not** retried (fix your receiver and re-publish). For the full failure-and-recovery story, see [Publishing Errors & Retries](/content-seo/publishing-errors).
 
 ## Why your receiver must be idempotent
 
-A receiver can save an article and then lose its response before the sender receives it. A retry may deliver that article again. Keep a unique `blog_id` mapping and use an upsert or equivalent transactional update. Do not create a fresh CMS record simply because another request arrived.
+Because autopilot retries, the same blog can arrive at your endpoint **more than once**. The classic case: theStacc POSTs, your CMS creates the post, but the response packet is lost in transit (a network blip), so theStacc sees a timeout and retries — and a naive receiver creates a **duplicate post**.
 
-Scheduled webhook payloads include `idempotency_key` and `publish_attempt`. The key combines the blog ID with the stored external post ID, or `new` before that external ID exists. It does not change just because the title or body changes. `publish_attempt` is an attempt counter, not a revision number. Manual publishing and **Sync** omit these retry fields in the paths described by the [field reference](/developers/webhooks/field-reference).
+Two fields on autopilot payloads exist specifically to defend against this:
 
-This illustrative pair shows why permanently discarding a previously seen key can lose a later edit:
+- **`idempotency_key`** — a string of the form `"{blog_id}:{lifecycle}"` that is **stable across every retry of a single publish** but **different across separate publish intents** (a fresh publish months later gets a different key). Persist the keys you've already processed and **short-circuit on a repeat** — that makes your receiver safe even if the same publish is delivered twice.
+- **`publish_attempt`** — an integer that is `1` on the first attempt and increments (`2`, `3`, ...) on each retry. It's primarily for your logs and observability: `publish_attempt > 1` tells you theStacc is retrying after a transient hiccup.
 
-```json
-[
-  {"event":"blog.updated","blog_id":"00000000-0000-0000-0000-000000000001","idempotency_key":"00000000-0000-0000-0000-000000000001:cms-42","title":"Original title"},
-  {"event":"blog.updated","blog_id":"00000000-0000-0000-0000-000000000001","idempotency_key":"00000000-0000-0000-0000-000000000001:cms-42","title":"Revised title"}
-]
-```
-
-Both requests refer to one article but ask for different writes. Record delivery metadata for diagnostics without using key equality alone to suppress every subsequent update. Serialize writes per article where needed, and define how repeated or out-of-order updates are handled. An upsert prevents duplicate article identities only when your storage constraints and write logic enforce that policy.
+Even without those fields, the simplest and most robust defense is to **UPSERT on `blog_id`** so duplicate deliveries (or a user clicking Republish twice) converge on the same row instead of creating two posts.
 
 ## How theStacc itself avoids duplicates (direct CMS integrations)
 
-Direct CMS connectors have their own recovery lookups. WordPress and Ghost retry paths can reuse a post found by slug when its title matches and its creation time falls inside the lookup window. The fast-tier window is **35 minutes**; it expands cumulatively for slow retries. These are conditional recovery checks, including a retry after a stale WordPress post ID, rather than a lookup before every ordinary update.
-
-Shopify checks recent articles by handle. Its collision fallback handle includes the blog ID; the plain-handle branch checks the title when supplied and rejects a parsed creation date older than **24 hours**. An inconclusive lookup does not prove the earlier write failed. Do not treat these heuristics as a duplicate-prevention guarantee or copy them as a webhook receiver contract. A stable `blog_id` mapping gives your receiver an explicit article identity.
+For theStacc's own direct integrations (WordPress, Webflow, Ghost, Shopify), before re-POSTing on a retry theStacc looks up the target CMS **by slug** and treats an existing post as "already published by us" only if it matches a **fingerprint**: the same title **and** a creation timestamp **within a ~35-minute window** (which comfortably covers the ~30-minute retry sequence plus headroom). If that fingerprint matches, theStacc reuses the existing post instead of creating a duplicate. You don't need to implement this for a webhook receiver — `idempotency_key` plus an UPSERT on `blog_id` is simpler and just as safe — but the `slug` field plus the ~35-minute window is the same idea you can mirror if your CMS lacks a stable id.
 
 ## Respond fast, do heavy work async
 
-If image processing or a rebuild would make the request slow, acknowledge after the article write or a durable handoff succeeds, then run the remaining work asynchronously. Persist the job and its article association before returning success. An in-memory task started after acknowledgement is not a durable handoff.
+If your CMS write involves image processing, search re-indexing, or CDN purging, run those in a background job **after** responding `2xx`. A slow synchronous write risks timing out theStacc's request.
 
-Define the job's failure policy: retry failed work, keep error logs, and avoid saying the public page is ready while a rebuild or media job is pending. Return the actual stored CMS ID and known public URL when available. A supported HTTP response acknowledges the request; it does not establish that the article, images or cache update appeared on the live website.
+```typescript
+export async function POST(request: Request) {
+  // ... verify signature, parse body ...
+  await db.thestaccBlog.upsert({ /* ... */ }); // fast — just writes the row
+  enqueueBackgroundJob('process-blog', body.blog_id); // image upload, ISR revalidate, search index
+  return Response.json({ ok: true, url, id });
+}
+```

@@ -1,103 +1,95 @@
 ---
 title: "Field reference"
-description: "Webhook article fields, nullable values, delivery-path differences and receiver mapping."
+description: "Every field theStacc sends in a blog.published or blog.updated event."
 ---
 
-A webhook receiver needs to distinguish a field that is missing from one that is present with `null` or an empty string. It also needs to accept different article payloads for manual publishing, scheduled publishing and **Sync**. Use the field map below to design validation and storage, then confirm your project's actual delivery shape before enabling writes.
+Every field theStacc sends in a `blog.published` / `blog.updated` event:
 
-The core article payload includes structured `ctas`. The optional `author` field depends on whether a byline has been configured or explicitly cleared. Confirm that your receiver supports those mappings before enabling them.
+| Field | Type | Always sent? | Practical limits | What it is |
+| --- | --- | --- | --- | --- |
+| `event` | string | Yes | enum: `blog.published` \| `blog.updated` \| `blog.unpublished` \| `blog.deleted` \| `test.ping` | Use this to route in your handler. |
+| `blog_id` | string (UUID) | Yes | 36 chars, or `preview-` + UUID for sample payloads | theStacc's stable identifier. Use as your dedup / foreign key. |
+| `author` | object \| `null` | Only when explicitly configured or cleared | `name`: 1–200 characters; `type`: `Person` or `Organization` | Optional blog byline. Omitted preserves the site default/current author; `null` resets to the site default. See below. |
+| `title` | string | Yes | typically 50–120 chars | Blog title. Not HTML-escaped — your receiver renders it. |
+| `slug` | string | Yes | typically up to ~50 chars, lowercase, hyphenated | URL-safe identifier. Stable across re-publishes unless the user edits it. |
+| `content` | string (HTML) | Yes | typically 4,000–15,000 chars | Full blog HTML. Includes `<h2>`, `<p>`, `<ul>`, `<a>`, `<img>`, etc. The duplicate hero `<img>` is stripped (see note below). |
+| `excerpt` | string \| `""` | Yes (may be empty) | typically 100–300 chars | Short summary, plain text. |
+| `excerpt_short` | string \| `""` | Yes (may be empty) | word-boundary trimmed to roughly 256 chars | A truncated copy of `excerpt`. Use this when forwarding to a CMS with a strict Excerpt cap — notably Webflow's default 256-char Excerpt field. |
+| `meta_title` | string \| `null` | Yes | up to ~70 chars (SEO best practice) | Optimized SEO title. May equal `title`. |
+| `meta_description` | string \| `null` | Yes | up to ~160 chars (SEO best practice) | Optimized SEO description. |
+| `featured_image_url` | string (URL) \| `null` | Yes | `https://cdn.thestacc.com/...` | Public CDN URL for the hero image. Separate from `images[]`. |
+| `categories` | string\[\] | Yes (may be `[]`) | typically 0–3 items | One blog can have multiple categories. |
+| `tags` | string\[\] | Yes (may be `[]`) | typically 0–10 items | Loose keywords. |
+| `keyword` | string \| `null` | Yes | typically 1–8 words | Focus keyword the blog targets. `null` when the blog has no focus keyword set. |
+| `published_at` | string (ISO 8601 UTC) | Yes | always Z-suffixed UTC | When theStacc finalized this publish. |
+| `images` | `{url, alt}[]` | Yes (may be `[]`) | typically 0–4 items | Every `<img>` URL embedded in the `content` body, in document order, deduped. Use it to self-host body images — see [Self-hosting images](/developers/webhooks/self-hosting-images). Does **not** include `featured_image_url`. |
+| `ctas` | `{label, url, type}[]` | Yes (may be `[]`) | typically 0–12 items | The project's **Recommended Resources** links (Content → Settings → CTAs) as structured data. `type` is `primary`, `secondary`, `youtube` or `social`. The same links are also rendered into `content` as a final `<section class="fairview-cta-resources">` block just before the locked footer, so a receiver that prints `content` as-is shows them; strip that section if you render `ctas` yourself. Empty when CTAs are switched off. |
+| `idempotency_key` | string | Autopilot publishes only | `"{blog_id}:{lifecycle}"` | Stable across all retries of a single publish; different across separate publish intents. Dedup on this. See [Idempotency & retries](/developers/webhooks/idempotency). |
+| `publish_attempt` | integer | Autopilot publishes only | `1` on the first try, then `2`, `3`, ... | The attempt counter for this publish lifecycle. `> 1` means theStacc is retrying after a transient failure. Useful for logging. |
 
-<p id="webhook-delivery-paths" className="content-table-title">Article fields that differ by delivery path</p>
-<div role="region" aria-labelledby="webhook-delivery-paths" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="webhook-delivery-paths">
-<thead><tr><th scope="col">Field group</th><th scope="col">Manual publish or republish</th><th scope="col">Scheduled publish</th><th scope="col">Sync</th></tr></thead>
-<tbody>
-<tr><th scope="row">Event</th><td><code>blog.published</code> for a new external post; <code>blog.updated</code> when an external post ID exists</td><td>The same external-ID distinction</td><td><code>blog.updated</code></td></tr>
-<tr><th scope="row">Core article fields</th><td>Included</td><td>Included</td><td>Included</td></tr>
-<tr><th scope="row"><code>excerpt_short</code>, <code>published_at</code>, <code>images</code></th><td>Included</td><td>Included</td><td>Not included</td></tr>
-<tr><th scope="row"><code>idempotency_key</code>, <code>publish_attempt</code></th><td>Not included</td><td>Included</td><td>Not included</td></tr>
-<tr><th scope="row"><code>jsonld</code></th><td>Not included</td><td>Included</td><td>Not included</td></tr>
-</tbody>
-</table>
-</div>
+> **The hero image is stripped from `content`.** Every generated blog carries its hero image both as `featured_image_url` and (originally) inlined as the first `<img>` in the body. theStacc removes that inline duplicate before sending, so `content` won't render the hero twice and `images[]` won't list the hero URL. Render the hero from `featured_image_url` and the body images from inside `content` (or mirror them via `images[]`).
 
-“Included” describes key presence, not a promise that the value is non-null. A sample publish has a `preview-` blog ID and illustrates article parsing; it does not exercise scheduled retry fields, generated JSON-LD or every update path. `test.ping` is a connection event, so do not require article fields to process it.
-
-<p id="webhook-core-fields" className="content-table-title">Core article fields for publishing and Sync</p>
-<div role="region" aria-labelledby="webhook-core-fields" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="webhook-core-fields">
-<thead><tr><th scope="col">Field</th><th scope="col">Value to handle</th><th scope="col">Receiver mapping</th></tr></thead>
-<tbody>
-<tr><th scope="row"><code>event</code></th><td>Event-name string</td><td>Route publication and update events separately from connection, unpublish and delete events.</td></tr>
-<tr><th scope="row"><code>blog_id</code></th><td>theStacc article identifier</td><td>Use it to associate updates with your stored article. Treat preview-prefixed sample IDs separately from real records.</td></tr>
-<tr><th scope="row"><code>title</code>, <code>slug</code></th><td>Article title and slug values</td><td>Validate the values required by your CMS. Do not use a mutable slug as the only article identity.</td></tr>
-<tr><th scope="row"><code>content</code></th><td>Prepared HTML body</td><td>Apply your site's HTML policy and storage requirements. Validate a usable body rather than treating key presence as sufficient.</td></tr>
-<tr><th scope="row"><code>excerpt</code></th><td>Reader-facing summary, empty string or <code>null</code></td><td>An explicit empty excerpt stays empty. A null excerpt falls back to the meta description; when both are null, the result is null. Recognized planning-brief text is replaced with a reader-facing summary before this fallback.</td></tr>
-<tr><th scope="row"><code>meta_title</code></th><td>Meta-title value, falling back to the article title when the meta title is empty or null</td><td>Map to the site's SEO-title field. Validate the resulting value for your destination.</td></tr>
-<tr><th scope="row"><code>meta_description</code></th><td>Description value, which can be null</td><td>Define how your site handles an absent description instead of rejecting every nullable value.</td></tr>
-<tr><th scope="row"><code>featured_image_url</code>, <code>featured_image_alt</code></th><td>Featured-image URL and companion alt-text value</td><td>Map the hero separately from body images. Do not assume a particular CDN hostname or that an image is present.</td></tr>
-<tr><th scope="row"><code>categories</code>, <code>tags</code></th><td>Stored values, usually arrays; scheduled publishing falls back to empty arrays</td><td>Manual and Sync constructors can preserve an explicit null. Normalize or reject according to your documented destination policy.</td></tr>
-<tr><th scope="row"><code>keyword</code></th><td>Focus-keyword value or null</td><td>Treat it as metadata; it is not a required article identity or byline.</td></tr>
-<tr><th scope="row"><code>ctas</code></th><td>List of resource links with <code>label</code>, <code>url</code> and <code>type</code>; empty when suppressed or no links are resolved</td><td>Choose either the prepared HTML resources section or your own structured-link rendering to avoid displaying the resources twice.</td></tr>
-<tr><th scope="row"><code>author</code></th><td>Optional object with <code>name</code>, <code>type</code> and optional <code>id</code>, or <code>null</code></td><td>Apply the byline mapping below. An omitted author is different from an explicit reset.</td></tr>
-</tbody>
-</table>
-</div>
-
-`excerpt_short` uses the reader-facing excerpt, then the meta description, then an empty string. It trims surrounding whitespace and limits the result to **256 characters**, including a trailing ellipsis when truncation is needed. It prefers a word boundary when one is sufficiently far into the text, but can cut a long unbroken value. Because an empty excerpt triggers its fallback, `excerpt_short` is not always a truncated copy of `excerpt`.
-
-Where present, `published_at` is a UTC publish-time value produced with an ISO-format timestamp. Accept an explicit UTC offset such as `+00:00`; do not require a literal `Z` suffix. On an update, decide whether this delivery timestamp belongs in a modification field. Do not overwrite the original publication date just because a publish or republish delivery contains a new timestamp. Sync does not supply this field in the path described here.
-
-Set limits from your CMS and receiver schema instead of treating typical content lengths as hard caps. Reject an unsupported value with a useful error, or document an intentional normalization policy rather than silently truncating it.
-
-The body preparation removes the **first** inline image matching the featured-image URL, allowing a query string or fragment on that URL. It leaves the body unchanged if no match exists or no featured-image URL is supplied. Consequently, do not rely on a blanket guarantee that the hero can never appear in the body.
-
-When supplied, `images` lists quoted `src` values extracted from the prepared body, in document order, deduplicated by the exact URL string. It does not extract lazy-loading `data-src` values. An absent alt attribute produces an empty alt string. Render or mirror the images your site needs using the [self-hosting images guide](/developers/webhooks/self-hosting-images); keep featured-image handling separate.
-
-Scheduled publishing adds `idempotency_key` and `publish_attempt`. The scheduled key described here combines the blog ID with the stored external post ID, or `new` before an external ID exists. Repeated updates to the same external ID can share a key, so it is not a unique identifier for every separate edit. Define retry deduplication without suppressing legitimate later updates; see [idempotency and retries](/developers/webhooks/idempotency).
+> **Field length is not enforced at the API level.** Postgres `TEXT` columns are unbounded, and theStacc-generated content stays well within the practical limits above. If you want hard caps in your database schema, the limits in the table are safe defaults.
 
 ## Blog author
 
-Manual publishing, scheduled publishing and Sync include the configured optional author. When no explicit author setting exists, the field is omitted. Saving a website-default reset sends `author: null`; a valid explicit selection sends its name and `Person` or `Organization` type, plus an ID when selected from the site directory. Your receiver must implement the corresponding byline update.
-
-This illustrative author fragment represents an organization byline:
+An explicitly configured byline is sent on first publication, republication, and **Sync**, including scheduled publishing:
 
 ```json
 {
+  "event": "blog.published",
+  "blog_id": "8f3e...",
   "author": {
-    "name": "Editorial Team",
+    "name": "Rian Air Editorial Team",
     "type": "Organization"
   }
 }
 ```
 
-<p id="webhook-author-patches" className="content-table-title">Receiver mapping for the optional author field</p>
-<div role="region" aria-labelledby="webhook-author-patches" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="webhook-author-patches">
-<thead><tr><th scope="col">Incoming value</th><th scope="col">Recommended behavior</th></tr></thead>
-<tbody>
-<tr><th scope="row"><code>author</code> omitted</th><td>Preserve the existing byline on updates; use the site's default on creation.</td></tr>
-<tr><th scope="row"><code>author: &#123;name, type&#125;</code></th><td>Validate and store the explicit name and supported type.</td></tr>
-<tr><th scope="row"><code>author: null</code></th><td>Clear the explicit selection and apply the documented site default.</td></tr>
-</tbody>
-</table>
-</div>
+The example shows only the author-related fields. The normal blog payload also includes the article fields documented above. For a personal byline, send `{"name": "Aditi Rao", "type": "Person"}`. This identifies the author; it does not change the article's blog format/category.
 
-Check property presence rather than truthiness so a deliberate null reset is handled. Author saves require a nonblank name of up to 200 characters and a `Person` or `Organization` type. A directory ID is optional; validate it against your own author records before assigning a byline.
+| Incoming value | Receiver behavior |
+| --- | --- |
+| `author` omitted | Keep the current author on updates; use your site's default on creation. |
+| `author: {name, type}` | Validate and store the explicit name and type. Replace any previously configured author. |
+| `author: null` | Clear the explicit author and fall back to the site's default. |
+
+Do not use a truthiness check such as `if (body.author)` to decide whether to update: that would ignore an explicit reset. Check property presence:
+
+```javascript
+const authorPatch = {};
+if (Object.hasOwn(body, 'author')) {
+  if (body.author === null) {
+    authorPatch.authorName = null;
+    authorPatch.authorType = null;
+  } else {
+    const author = body.author;
+    if (typeof author !== 'object' || typeof author.name !== 'string'
+        || !author.name.trim() || author.name.length > 200
+        || !['Person', 'Organization'].includes(author.type)) {
+      throw new Error('Invalid blog author');
+    }
+    authorPatch.authorName = author.name.trim();
+    authorPatch.authorType = author.type;
+  }
+}
+// Merge authorPatch into your existing validated article upsert, keyed by blog_id.
+// Use the same mapping for blog.published AND blog.updated.
+```
 
 ### Website receiver checklist
 
-1. Validate the event before validating article fields. Handle a connection test without inserting an article.
-2. Upsert publication and update events using the article identity, with a documented policy for missing, null and empty values.
-3. If optional author support is confirmed, map its ID or name into the site's byline model. Define what happens when an ID no longer exists.
-4. Render stored names as escaped text and keep visible bylines, listing cards and article structured data consistent.
-5. Refresh the relevant page or build caches after a successful update. Verify the public page instead of treating a delivery acknowledgement as proof of rendering.
-6. Test your handler locally with new, updated, missing-field, null-field and repeated-delivery fixtures. Keep the authentication and deduplication policies appropriate to your integration.
+1. Allow the optional field in your payload validator. Continue accepting older payloads without it and `test.ping` without article fields.
+2. Store nullable author name and type alongside the article, or map them to an existing CMS byline field. No separate author-account creation is required for a text byline.
+3. Handle both `blog.published` and `blog.updated` through the same article upsert by `blog_id`.
+4. Render the effective author name on article pages as escaped text. Use your configured default when no explicit author exists. Update listing cards too if they display authors.
+5. Set `BlogPosting.author` to `{"@type": "Person", "name": "Aditi Rao"}` or the corresponding `Organization`. The visible byline and structured data must agree. Escape `<` when embedding serialized JSON into an HTML script element.
+6. Refresh page/build caches after updates so author changes appear on the live page.
+7. Acknowledge only after the write succeeds, returning the existing CMS id and public URL. Never acknowledge an unsupported update as success.
+8. Verify first publish, an author-only update, clearing the author, an old payload without the field, and a repeated delivery. Preserve the existing raw-body signature verification and deduplication behavior.
 
-Scheduled payloads include generated `jsonld`, while the manual publishing and Sync paths described here omit it. An explicit author supplies the scheduled `BlogPosting` author name and `Person` or `Organization` type. Without an explicit author, the graph falls back to an `Organization` using project or website naming before the blog author and finally `Editorial Team`. Maintain the site's visible byline and structured data from the same stored record on every update.
+The scheduled publishing payload includes generated `jsonld`; its `BlogPosting` author follows this selection. Do not require `jsonld` on every delivery: manual and Sync payloads may omit it. Your site should maintain structured data from the stored author fields on every update.
 
 ## Select existing site authors
 
-Configure an optional author directory using **Author-list URL** in Custom Webhook settings. In the blog author form, selecting an **Existing website author** fills a draft; **Save author** stores the selection. Saving alone does not update the public website. The [existing website authors guide](/developers/webhooks/authors) covers directory limits, selection and receiver responsibilities.
-
-The `ctas` list is also rendered into the prepared HTML resources section, identified by `class="fairview-cta-resources"`, before the locked footer. If you render structured links separately, remove only that resources section rather than unrelated footer content. A successful response alone does not prove that your mapping was applied; use the [response contract](/developers/webhooks/response-contract) when designing acknowledgements.
+Provide an optional public HTTPS author-list endpoint to show your site's authors in a dropdown. Selected authors include an optional stable `author.id` alongside the existing `name` and `type`; manual names keep the previous shape. See [Existing website authors](/developers/webhooks/authors) for setup, response limits, and receiver handling.
