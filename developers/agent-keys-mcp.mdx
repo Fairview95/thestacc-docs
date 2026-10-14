@@ -1,170 +1,97 @@
 ---
 title: "theStacc MCP (Claude, Cursor and more)"
-description: "Connect Claude, Cursor or another AI tool to theStacc to work on your blog, SEO, social and Google Business posts. You approve, the agent does the work."
+description: "Connect an MCP client to one theStacc project. Compare hosted sign-in and local agent keys, manage permissions and troubleshoot access."
 ---
 
-theStacc MCP lets an AI tool such as Claude or Cursor work on your theStacc project for you. You can ask it to *"review my content plan and write the next blog"*, *"show me how my blogs did on Google last month"*, *"fix the caption on Friday's LinkedIn post"* or *"draft a Google Business post about our weekend offer"*. The agent does the work. You stay in charge of what gets approved and published.
+theStacc MCP connects an AI client to a theStacc project for content and SEO work. Choose the project and permissions before letting the assistant act. Reading a plan, generating a draft and publishing a post are different operations; grant only the access needed for the task and review the resulting content in theStacc.
 
-One connection covers everything:
-
-- **Blog**: plan, write, edit, add images, publish approved blogs
-- **SEO and analytics**: Search Console, Google Analytics 4, SEO insights, monthly report
-- **Site audit**: run an audit and read the findings
-- **Keywords**: see, add and research keywords
-- **Social**: create new posts from a topic, read, edit and redraw posts, publish approved posts
-- **Google Business**: write, edit and illustrate posts, publish approved posts
-
-There are 56 tools in total. The full list is in the [MCP Tools Reference](/developers/mcp-tools-reference).
+The tool catalogue covers blogs, social posts, Google Business Profile, keywords, analytics and site audits. Availability depends on permissions and the service response. Use the [MCP Tools Reference](/developers/mcp-tools-reference) for parameters and limits rather than relying on a fixed tool count.
 
 ## Two ways to connect
 
-| | **Sign in with theStacc** (recommended) | **Local install with an agent key** |
-| --- | --- | --- |
-| **Best for** | Claude, Cursor and other tools that support remote MCP servers | Tools that can only run a local MCP server |
-| **What you do** | Paste one address, sign in, approve | Create a key in theStacc and paste it into your tool's config |
-| **Needs** | Nothing to install | Node.js 18 or newer on your computer |
-| **Address** | `https://mcp.thestacc.com/mcp` | `npx @thestacc/mcp-server` |
+<p id="mcp-connection-options" className="content-table-title">Choose a hosted connection or a local MCP process</p>
+<div role="region" aria-labelledby="mcp-connection-options" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-connection-options">
+<thead><tr><th scope="col">Connection</th><th scope="col">What you configure</th><th scope="col">Where it runs</th></tr></thead>
+<tbody>
+<tr><th scope="row">Hosted sign-in</th><td>Add <code>https://mcp.thestacc.com/mcp</code>, sign in and authorize a project and permissions.</td><td>The hosted MCP server; the client handles the authorization flow.</td></tr>
+<tr><th scope="row">Local agent key</th><td>Configure the <code>@thestacc/mcp-server</code> package with your private <code>THESTACC_AGENT_KEY</code>.</td><td>A local MCP process launched by your client.</td></tr>
+</tbody>
+</table>
+</div>
 
-Both ways end up the same: a key locked to one project, with the permissions you chose, that you can revoke at any time.
+Hosted sign-in creates a scoped project agent key through the authorization-code flow. Local setup supplies a key you created separately. Check that your client supports the chosen transport and configuration format; these are two connection paths, not a promise that every client supports both.
 
 ## Sign in with theStacc
 
 <Steps>
   <Step title="Add theStacc to your AI tool">
-    Add `https://mcp.thestacc.com/mcp` as a remote (custom) MCP server or connector. Step-by-step instructions: [Claude](/developers/mcp/claude), [Claude Code](/developers/mcp/claude-code), [Cursor](/developers/mcp/cursor), [Codex CLI](/developers/mcp/codex-cli), [Gemini CLI](/developers/mcp/gemini-cli) and [other clients](/developers/mcp/other-clients).
+    Add `https://mcp.thestacc.com/mcp` as the hosted MCP server. Follow the guide for your client: [Claude](/developers/mcp/claude), [Claude Code](/developers/mcp/claude-code), [Cursor](/developers/mcp/cursor), [Codex CLI](/developers/mcp/codex-cli), [Gemini CLI](/developers/mcp/gemini-cli) or [other clients](/developers/mcp/other-clients).
   </Step>
   <Step title="Sign in">
-    Your tool opens a theStacc page in your browser. Log in with your usual theStacc account.
+    Complete the theStacc sign-in opened by your client. Use the account with access to the intended project.
   </Step>
   <Step title="Pick one project">
-    You see the projects you own or are an admin of. Pick the one this tool should work on.
+    Choose an eligible project. The consent endpoint requires owner or admin access to grant a connection for that project.
   </Step>
   <Step title="Choose what it can do">
-    You see the permissions the tool asked for. Reading and drafting are ticked; publishing is never pre-ticked, so tick **Publish approved posts** only if you want the tool to publish what you approved. Untick anything you don't want to allow.
+    Review the permissions before authorizing. Grant publishing only when you intend the connection to use publishing tools. Do not assume client defaults match the access you want.
   </Step>
   <Step title="Approve">
-    Click **Approve**. You are sent back to your tool, connected. Click **Deny** to cancel.
+    Authorize the connection or deny the request. Authorizing an MCP connection is separate from approving an article for publication.
   </Step>
 </Steps>
 
-The sign-in page is valid for 10 minutes. If it expires, start connecting again from your tool to get a fresh link.
+Pending consent requests expire after the configured **10 minutes**. If the link expires or was already answered, start a new connection request from the client. The authorization code issued after consent has its own expiry; an expired or reused code is not a reusable login link.
 
-Behind the scenes, theStacc creates an agent key with exactly the project and permissions you picked. It shows up in your key list as **MCP: \<app name\>** (for example "MCP: Claude"), and you can revoke it there. The connection lasts until you revoke it; after that, the tool asks you to sign in again.
+The resulting key is labelled `MCP: <client name>` in the key records. The token response does not issue a refresh token. Reconnect when the client reports that the connection is invalid or revoked; do not assume an open chat proves the next operation remains authorized.
 
 ## Connect from the terminal
 
-Copy-paste setups for tools that support remote MCP servers with sign-in. Each one opens the theStacc sign-in page described above.
+Use the existing [Claude Code](/developers/mcp/claude-code), [Codex CLI](/developers/mcp/codex-cli) and [Gemini CLI](/developers/mcp/gemini-cli) setup pages for client commands. Use the [Cursor guide](/developers/mcp/cursor) for its configuration entry. Client versions and configuration formats can differ, so follow the instructions appropriate to the client you installed.
 
-**Claude Code**
-
-```bash
-claude mcp add --transport http thestacc https://mcp.thestacc.com/mcp
-```
-
-Then run `/mcp` inside Claude Code, choose **thestacc** and sign in. To make theStacc available in every project, not just the current folder, add `--scope user`:
-
-```bash
-claude mcp add --transport http --scope user thestacc https://mcp.thestacc.com/mcp
-```
-
-**Cursor**: add this to `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (one project):
-
-```json
-{
-  "mcpServers": {
-    "thestacc": {
-      "url": "https://mcp.thestacc.com/mcp"
-    }
-  }
-}
-```
-
-**Codex CLI**
-
-```bash
-codex mcp add thestacc --url https://mcp.thestacc.com/mcp
-codex mcp login thestacc
-```
-
-**Gemini CLI**
-
-```bash
-gemini mcp add --transport http thestacc https://mcp.thestacc.com/mcp
-```
-
-Then run `/mcp auth thestacc` inside Gemini CLI to sign in.
-
-**Tools without remote sign-in**: use the [local install](#local-install-with-an-agent-key) with an agent key, or bridge the hosted server through `mcp-remote` (needs Node.js 18 or newer), which handles the sign-in in your browser:
-
-```json
-{
-  "mcpServers": {
-    "thestacc": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.thestacc.com/mcp"]
-    }
-  }
-}
-```
+If the client cannot use hosted sign-in, consider the local agent-key route below. Keep the key out of command history, shared configuration and public repositories. Check the reported connection and project before requesting a generation or publication operation.
 
 ## Permissions
 
-Every key carries permissions that decide what the agent can do. You choose them when you create a key in theStacc or when you approve a sign-in. The agent only sees the tools its permissions allow. If it tries something it isn't allowed to do, the call fails with `missing_scope` and the agent should tell you which permission is missing.
+Scopes distinguish reading, writing and publishing. A scope permits the corresponding type of API access; it does not approve a post, remove plan limits or bypass publication checks.
 
-| Area | Permission (as shown in theStacc) | Technical name | What it allows |
-| --- | --- | --- | --- |
-| Blog | **Read posts** | `blog:read` | See the plan, blogs and progress |
-| Blog | **Draft and edit** | `blog:write` | Write, edit, add images, set dates |
-| Blog | **Publish approved posts** | `blog:publish` | Publish blogs a person approved |
-| Social | **Read posts** | `social:read` | See posts, progress and image versions |
-| Social | **Draft and edit** | `social:write` | Create new posts, edit copy and schedule, rewrite captions, redraw and edit images |
-| Social | **Publish approved posts** | `social:publish` | Publish or schedule posts a person approved |
-| Google Business | **Read posts** | `gbp:read` | See locations, posts, plan and connection |
-| Google Business | **Draft and edit** | `gbp:write` | Write, edit and illustrate posts |
-| Google Business | **Publish approved posts** | `gbp:publish` | Publish posts a person approved |
-| SEO and keywords | **Read SEO scores and keywords** | `seo:read` | Search Console, GA4, insights, reports, audit results, keyword list |
-| SEO and keywords | **Fix SEO issues** | `seo:write` | Start a site audit |
-| SEO and keywords | **Change target keywords** | `keywords:write` | Add keywords and research new ones |
+<p id="mcp-scope-groups" className="content-table-title">Permission names by area</p>
+<div role="region" aria-labelledby="mcp-scope-groups" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-scope-groups">
+<thead><tr><th scope="col">Area</th><th scope="col">Read</th><th scope="col">Write or publish</th></tr></thead>
+<tbody>
+<tr><th scope="row">Blog</th><td><code>blog:read</code></td><td><code>blog:write</code>, <code>blog:publish</code></td></tr>
+<tr><th scope="row">Social</th><td><code>social:read</code></td><td><code>social:write</code>, <code>social:publish</code></td></tr>
+<tr><th scope="row">Google Business Profile</th><td><code>gbp:read</code></td><td><code>gbp:write</code>, <code>gbp:publish</code></td></tr>
+<tr><th scope="row">SEO and keywords</th><td><code>seo:read</code></td><td><code>seo:write</code>, <code>keywords:write</code></td></tr>
+</tbody>
+</table>
+</div>
 
-Ticking a permission also ticks the ones it depends on. For example, **Publish approved posts** also ticks **Draft and edit** and **Read posts** for that area.
+Choose the scopes needed for your task. Do not infer that a publishing scope automatically grants writing or reading: review the actual granted set. For a missing permission, inspect the reported `missing_scope` detail and ask the project owner or admin to authorize an appropriate connection.
 
-Three presets sit above the list:
+`get_permissions` reports connection information when available. Tool discovery is not proof of authorization: when permission discovery is unavailable, the MCP can list tools while the backend still decides whether their calls are allowed. An expected tool can also be absent because of the connection's reported scopes.
 
-- **Read only**: read access to Blog, Social, Google Business and SEO. Nothing can change.
-- **Draft (no publishing)**: everything except the three publish permissions. **This is the default for a new key.**
-- **Full access**: everything, including publishing approved posts.
+Hosted permission discovery uses a cache with a default **5-minute** lifetime. The visible tool list can therefore lag a change. Backend validation and cached discovery are separate; a rejected call matters even if the client still displays the tool. Reconnect or refresh the client when needed, rather than repeatedly retrying a permission failure.
 
-**Older keys.** Keys created before permissions existed are labelled **Blog + SEO (older key)** in the key list. They keep exactly what they always had: Blog, SEO and keywords, with no Social or Google Business access. To give an agent Social or Google Business access, create a new key or sign in again, then revoke the old key.
-
-Permission changes reach the hosted MCP within about 5 minutes. With the local install, restart your AI tool to refresh the tool list.
+Keys whose stored scopes are null use the legacy Blog, SEO and keyword scope set, without Social or Google Business scopes. Explicit permission-aware key creation can fail when the service cannot store scopes. If setup reports that permissions are unavailable, ask for help rather than treating an older broad key as an equivalent substitute.
 
 ## One project per key
 
-Every key, including the ones created by signing in, is locked to one project. The agent can't see or change any other project. If you run several businesses in theStacc, connect each project separately.
+A key record identifies one project, and the agent principal carries that project ID. Connect separately for each project and check the reported project before writing. A key's account association is not an instruction to work across all the account's projects.
 
 ## Agent keys
 
-You need an agent key for the local install. Keys created by signing in appear in the same list.
+The Publishing settings page includes **Agent access**. Key creation, listing and revocation require owner or admin access to the project. For local setup, create a key with an appropriate label and scopes, save its secret privately, then add it to your client's configuration.
 
-Manage keys in **Content SEO > Settings > Publishing > Agent access** (marked **Beta**). Only a project owner or admin can create, see or revoke keys.
+Creation returns the plaintext key, beginning with `sk_agent_`. The stored key row contains a SHA-256 hash and display prefix; the list endpoint returns metadata rather than the secret. If you lose the key, revoke it and create another instead of expecting the list to reveal it.
 
-1. Type a **Key name** (optional, up to 120 characters), for example "Cursor on my laptop".
-2. Under **What this key can do**, pick a preset or tick permissions.
-3. Click **Generate agent key**.
-4. Copy the key (it starts with `sk_agent_`) and the config snippet. **The key is shown only once.**
-5. Click **I've saved it**.
-
-Good to know:
-
-- **Shown once.** theStacc stores only a one-way hash of the key, so it can never show it again. If you lose it, revoke it and create a new one.
-- **The list** shows each key's first characters (for example `sk_agent_AbC123••••`), its name, when it was last used, and badges for its permissions, like "Blog: read, draft, publish".
-- **Revoke** stops every agent using that key straight away. It can't be undone.
+Revocation marks the key record as revoked; subsequent backend key validation rejects that record. This is not proof that cached connection metadata disappeared or that work already started was cancelled. Inspect pending jobs separately and confirm the revocation result. Keep a separate key for each connection you need to revoke independently.
 
 ## Local install with an agent key
 
-The local install runs the MCP on your own computer with `npx`. Nothing is installed globally, but you need **Node.js 18 or newer**.
-
-In **Claude Desktop**, open **Settings > Developer > Edit Config**. In **Cursor**, use `~/.cursor/mcp.json` or `.cursor/mcp.json`. Add:
+The local package declares **Node.js 18 or newer** as its minimum. Use a maintained compatible Node release and check the client and package requirements before setup. This illustrative entry is for clients that accept a `mcpServers` configuration; replace the placeholder with your generated private key:
 
 ```json
 {
@@ -173,98 +100,68 @@ In **Claude Desktop**, open **Settings > Developer > Edit Config**. In **Cursor*
       "command": "npx",
       "args": ["-y", "@thestacc/mcp-server"],
       "env": {
-        "THESTACC_AGENT_KEY": "sk_agent_your-key-here"
+        "THESTACC_AGENT_KEY": "sk_agent_REPLACE_WITH_YOUR_KEY"
       }
     }
   }
 }
 ```
 
-Restart the tool and ask: *"What can you do with thestacc?"* If the key is wrong or revoked, you get an `unauthorized` error.
+Restart or refresh the client after changing its local configuration. Inspect the connection with `get_permissions` before requesting work. A rejected key or failed API request needs investigation; a process starting successfully does not establish that the connection is authorized.
 
-Settings (environment variables):
-
-| Variable | Required | What it does |
-| --- | --- | --- |
-| `THESTACC_AGENT_KEY` | Yes | Your agent key (`sk_agent_...`) |
-| `THESTACC_API_ROOT` | No | API root for every service. Default `https://api.thestacc.com` |
-| `THESTACC_API_URL` | No | The original blog address setting, still honoured. Default `https://api.thestacc.com/blog`. Social and Google Business use the same root, so older configs keep working |
-| `THESTACC_TIMEOUT_MS` | No | Request timeout in milliseconds. Default 60000 (60 seconds) |
-
-You almost never need anything except the key.
+`THESTACC_API_ROOT` and the older `THESTACC_API_URL` are optional service-address overrides. Leave them unchanged unless you have a reason to use another environment. `THESTACC_TIMEOUT_MS` controls the base API-request timeout; its default is **60 seconds**, while individual tools can override it. This is separate from how long the AI client waits for a tool.
 
 ### Uploading your own images
 
-- **Hosted (signed in):** the agent sends the image inside the request as `image_base64` with a `filename`. Requests are capped at 8 MB, so keep images under about 6 MB.
-- **Local install:** the agent can also pass a `file_path` to a file on your computer.
+Use the selected upload tool's documented input format and limits in the [tools reference](/developers/mcp-tools-reference). A path on your laptop is not automatically readable by a hosted server. When a local tool supports a file path, it refers to the filesystem accessible to that MCP process.
 
-Google Business photos must be JPEG or PNG, up to 5 MB. Blog images can be up to 15 MB with the local install.
+Hosted requests have a body-size limit, and encoded image data adds overhead. Keep the request within both transport and destination limits; an accepted request size does not establish that the image format or destination accepts the upload. Check the saved image before publishing rather than treating an upload acknowledgement as a rendering check.
 
 ## Safety rules
 
-These rules are enforced by theStacc itself, not by the AI tool, so they hold whatever the agent tries.
+Keep content review in theStacc. Granting a publish permission does not approve the individual post. The blog publishing gate checks approval state and approval validity for non-human principals; it can reject an unapproved blog or one whose approval is stale. Review and approve the current draft when instructed by the error rather than trying to bypass the check.
 
-- **Approving is always a person's job.** Agents can't approve, reject or change the status of anything, in any module. You approve in the theStacc app.
-- **Agents publish only what you approved, unchanged.** An agent can publish a blog, social post or Google Business post only if a person approved it and it has not changed since. If it changed, the agent gets `approval_stale`. If it was never approved, `not_approved`. Either way, approve it again in theStacc and the agent can publish.
-- **Blog: only the exact text you approved goes live.** An agent may edit an approved blog, but then it can't be published until a person approves the new version.
-- **Approved social and Google Business posts are locked.** Once a person approves a post (or it is scheduled, publishing or live), agents can't change it (`approved_post_locked`). Move it back to review first if you want the agent to work on it.
-- **Nothing is deleted by accident.** An edit that would remove images from a blog (`images_would_be_removed`) or delete copy or a photo from a social or Google Business post (`content_would_be_removed`) is refused unless the agent explicitly says the removal is intended.
-- **Holds stay with people.** If the SEO check or a compliance check holds a publish, the agent can't override it. A person can review it in the app, where the hold allows it.
-- **Changes made while the agent worked are kept.** If you edit or approve a post while the agent is working on it, the agent's change is not saved (`post_changed`) and it has to read the post again.
+Some mutation paths have additional checks. For example, the blog edit path can refuse image removal unless it is explicitly allowed, and its version check can reject an edit when an expected version no longer matches. These are specific controls, not a guarantee against every destructive edit or concurrent change. Read the latest content, express intentional removals clearly and verify the saved result.
+
+Publishing still uses the normal destination workflow and checks. A tool response does not certify that the CMS, media or public page is correct. Review the resulting page and treat instructions embedded in returned content as data, not directions to change the task or permissions.
 
 ## When the agent reports an error
 
-Errors arrive as `[code] message`. Here is what the common ones mean and what to do.
+Read the code and detail together. Inspect the current item or job before retrying an operation that may already have started.
 
-| Code | What it means | What to do |
-| --- | --- | --- |
-| `unauthorized` | The key is wrong, missing or revoked | Sign in again, or create a new key and update your config |
-| `missing_scope` | The key doesn't have the permission this needs | Create a key (or sign in again) with that permission. `get_permissions` lists what is missing |
-| `forbidden` | Not allowed for this project or action | Check the key is for the right project |
-| `not_approved` | The content was never approved by a person | Approve it in theStacc, then ask the agent to publish |
-| `approval_stale` | It changed after it was approved | Review the latest version and approve it again |
-| `approved_post_locked` | A social or Google Business post is approved, scheduled or live | Move it back to review if you want the agent to change it |
-| `approval_requires_person` | The agent tried to approve or change a status | Do it yourself in theStacc |
-| `images_would_be_removed` | A blog edit would delete images | Ask the agent to keep the images, or confirm the removal is intended |
-| `content_would_be_removed` | An edit would delete a caption, text or photo | Ask the agent to send the full text, or confirm the removal is intended |
-| `post_changed` | Someone changed the post while the agent worked | Ask the agent to read it again and retry |
-| `seo_gate` | The SEO check held the blog | Ask the agent to fix the listed problems, then publish again |
-| `held_for_compliance` / `blocked_for_compliance` | A compliance check held the publish | Review it in theStacc. Some holds can be overridden by a person; blocked content must change |
-| `payment_required` | This needs an active plan | Check billing in theStacc |
-| `not_found` | The item doesn't exist in this project, or Search Console / GA4 isn't connected | Check the id, or connect Google in theStacc |
-| `validation_error` | An input was missing or out of range | The message says which field |
-| `too_large` | The upload is over the size limit | Use a smaller image |
-| `rate_limited` | Too many requests, or a monthly allowance (like site audits) is used up | Wait and try again later |
-| `upstream_timeout` | theStacc didn't answer in time | The work may still be running. Ask the agent to check before retrying |
-| `upstream_error` | A temporary problem on theStacc's side | Try again in a moment |
-| `network_error` | The tool couldn't reach theStacc | Check your internet connection |
+<p id="mcp-access-errors" className="content-table-title">Access and mutation errors to resolve before repeating a call</p>
+<div role="region" aria-labelledby="mcp-access-errors" tabIndex="0" className="content-table-scroll">
+<table aria-labelledby="mcp-access-errors">
+<thead><tr><th scope="col">Reported problem</th><th scope="col">Next step</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>unauthorized</code> or <code>invalid_token</code></th><td>Reconnect the hosted client, or replace a lost, invalid or revoked local key.</td></tr>
+<tr><th scope="row"><code>missing_scope</code></th><td>Review the required scope and authorize a connection with appropriate access.</td></tr>
+<tr><th scope="row"><code>not_approved</code>, <code>approval_stale</code> or <code>approved_by_assistant</code></th><td>A person should review and approve the blog in the app before publishing.</td></tr>
+<tr><th scope="row"><code>images_would_be_removed</code></th><td>Keep the existing images or explicitly request an intentional removal, then check the result.</td></tr>
+<tr><th scope="row">Version conflict</th><td>Read the latest item and reconcile the change instead of blindly resending an old edit.</td></tr>
+<tr><th scope="row"><code>upstream_timeout</code> or <code>network_error</code></th><td>Inspect the item or job before repeating the call; a lost response does not establish that no work happened.</td></tr>
+<tr><th scope="row"><code>rate_limited</code>, <code>validation_error</code> or <code>too_large</code></th><td>Follow the returned limit or field explanation. Waiting does not fix an invalid value or an oversized upload.</td></tr>
+</tbody>
+</table>
+</div>
+
+For asynchronous work, use the status tool indicated by the response rather than starting the same generation again. The tools reference covers individual inputs and recovery details. Do not treat a timeout setting as a promised generation or publication duration.
 
 ## Agent key vs. Public Blog API key
 
-theStacc has two kinds of project keys. They are not interchangeable:
-
-| | **Agent key** (`sk_agent_...`) | **Public Blog API key** (`pk_live_...`) |
-| --- | --- | --- |
-| **Purpose** | Let an AI tool work on your project | Show your published blogs on a website |
-| **Access** | The permissions you chose, with approval-gated publishing | Read-only, published blogs |
-| **Where it goes** | Your private AI tool config, or created for you by signing in | A website or static-site build |
-| **Created in** | **Agent access** | **API Access** |
-| **Shown** | Once, at creation | Any time in settings |
-
-The Public Blog API key is safe in a website because it can only read published content. The agent key can change and publish content, so keep it private. See [Public Blog API](/developers/public-blog-api).
+The hosted MCP expects an agent-key bearer token beginning with `sk_agent_`. A Public Blog API key cannot replace that token. Agent keys belong in private client configuration or the client's authorized connection storage, not in website code. Use the [Public Blog API guide](/developers/public-blog-api) for that separate access model.
 
 ## Security
 
-- **Stored safely.** theStacc keeps only a hash of each key, never the key itself.
-- **Keep it private.** Never put an agent key in a website, a public repo or a shared document. If a key leaks, revoke it straight away.
-- **Locked down.** A key works on one project, with only the permissions you gave it, until you revoke it.
-- **Sign-in is standard OAuth.** The hosted MCP uses OAuth 2.1 with PKCE and dynamic client registration. The access token it issues is a scoped agent key. There is no refresh token.
+Hosted sign-in uses an authorization code with PKCE and mints a project agent key. Treat that token as a credential with the access you granted. Do not paste it into public repositories, browser page code, screenshots or shared documents. If it leaks, revoke the affected key, replace the connection and inspect activity that used it.
+
+Use narrowly scoped connections and check their project association. Keep the client, local runtime and receiving integration under your own security policy. Hash storage, permission checks and revocation are specific safeguards; they are not a claim that an AI client or integration cannot make an unwanted request.
 
 ## Related
 
-- [theStacc MCP Server](/developers/mcp/overview): connect your AI tool, tools and guided workflows
-- [MCP Tools Reference](/developers/mcp-tools-reference): every tool, its permission and limits
-- [Public Blog API](/developers/public-blog-api): the read-only key for showing published blogs
-- [Webhook Reference](/developers/webhooks/overview): what theStacc sends when a blog is published
-- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle)
-- [Social approval and review](/social-media/approval-review-workflow)
+- [theStacc MCP Server](/developers/mcp/overview): connection overview and supported areas.
+- [MCP Tools Reference](/developers/mcp-tools-reference): tool parameters and limits.
+- [Public Blog API](/developers/public-blog-api): its separate access model.
+- [Webhook Reference](/developers/webhooks/overview): receiving publication events.
+- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): interpret the current blog state.
+- [Social approval and review](/social-media/approval-review-workflow): review social content in the app.
