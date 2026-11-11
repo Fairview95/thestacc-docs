@@ -11,35 +11,43 @@ Publish blog content to your Webflow CMS collections via a Webflow API token.
 - The Webflow site must have been **published at least once from the Designer**. Webflow rejects live CMS publishes if the site has never been published.
 - A CMS Collection for blog posts must exist on the site. If you don't have one, create it in Webflow Designer → CMS → New Collection (recommended fields below).
 
-## Step 1 — Generate a Webflow API token
+## Step 1: generate a Webflow API token
 
-<Frame caption="Webflow Site Settings → Apps &amp; Integrations → API access section">
+1. In Webflow, open the site's **Site settings** and go to **Apps & Integrations**.
+2. Scroll down to **API access** and click **Generate API token**.
 
-![Webflow Site Settings → Apps & Integrations → API access section](/images/integrations/webflow/api-access-page.webp)
-
+<Frame caption="Site settings > Apps & Integrations > API access.">
+  <img src="/images/integrations/webflow/1-api-access.png" alt="Webflow API access section with the Generate API token button" />
 </Frame>
 
-1. In Webflow, open the site you want to connect.
-2. Go to **Site Settings → Apps & Integrations → API Access**. You'll see this:
+3. Name the token `theStacc`.
 
-1. **Click the blue "Generate API token" button on the right — NOT "Generate V1 token".** V1 tokens use Webflow's legacy API which theStacc doesn't support.
-2. On the next screen, name the token `theStacc` and set permissions exactly like this — Webflow shows a dropdown for each scope. The two scopes that need access are CMS and Sites; everything else stays on None.
+<Frame caption="Name the token theStacc. Every permission starts at No access.">
+  <img src="/images/integrations/webflow/2-token-name.png" alt="Webflow Generate an API Token dialog with the name theStacc" />
+</Frame>
 
-| Scope | Permission | Underlying API scope | Why |
-| --- | --- | --- | --- |
-| **CMS** | Read and write | `cms:read` + `cms:write` | Create and update blog items in your collection |
-| **Sites** | Read and write | `sites:read` + `sites:write` | Read site info (for the live URL) and re-publish the site so new posts appear live |
-| **Custom code** | None | — | Not used |
-| **Pages** | None | — | Not used |
-| **Users** | None | — | Not used |
-| **Forms** | None | — | Not used |
-| **Components** | None | — | Not used |
-| **Ecommerce** | None | — | Not used |
-| **Authorized user** | Read only | `authorized_user:read` | Default — leave as-is |
+4. Set exactly two permissions to **Read and write** and leave every other one on **No access**:
 
-> Webflow's UI labels (e.g. "Read and publish") are friendlier names for the underlying scopes. The token Stacc actually receives carries the API scopes shown in the right column. Source: [Webflow Data API scopes reference](https://developers.webflow.com/data/reference/scopes).
+| Permission | Set to | Why |
+|---|---|---|
+| **CMS** | Read and write | Create and update blog items in your collection |
+| **Sites** | Read and write | Read the site and re-publish it so new posts appear live |
 
-1. Click **Generate token** and **copy it immediately** — Webflow won't show it again. The token must be **10 to 500 characters** (real Webflow tokens fall well within that range).
+<Frame caption="CMS: Read and write.">
+  <img src="/images/integrations/webflow/3-cms-read-write.png" alt="Webflow token permissions with CMS set to Read and write" />
+</Frame>
+
+<Frame caption="Sites: Read and write.">
+  <img src="/images/integrations/webflow/4-sites-read-write.png" alt="Webflow token permissions with Sites set to Read and write" />
+</Frame>
+
+5. Click **Generate token**, then copy it with the copy icon. Webflow shows it only once ("This token can't be accessed again"). If you lose it, generate a new one.
+
+<Frame caption="Copy the token before closing this dialog.">
+  <img src="/images/integrations/webflow/5-token-created.png" alt="Webflow Save your API token dialog with the token hidden" />
+</Frame>
+
+Webflow expires a token after 365 days without use. If publishing stops working after a long pause, generate a new token and paste it into theStacc.
 
 ## Step 2 — Connect in theStacc
 

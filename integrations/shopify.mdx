@@ -5,17 +5,36 @@ description: "Publish blog posts to your Shopify store's built-in blog, choose w
 
 Publish blog posts to your Shopify store's built-in blog. Posts become Shopify **blog articles**, so they show up under `yourstore.com/blogs/<blog>/...`, get a date and an author, and are indexed like any other article on your store.
 
-## Connect your store
+## What you need
 
-<Frame caption="Connect Shopify from the Publishing page.">
-  <img src="/images/product/connect-shopify.jpg" alt="theStacc Shopify connection setup" />
+- Admin access to the Shopify store (the store owner, or a staff account that can install apps).
+- Your store's `.myshopify.com` address. In Shopify admin it is under **Settings > Domains**. You can also type your normal store address or just the handle (`your-store`); theStacc works out the rest.
+
+<Frame caption="Shopify admin: Settings > Domains shows your .myshopify.com address.">
+  <img src="/images/integrations/shopify/1-store-domain.png" alt="Shopify Domains settings showing the myshopify.com address" />
 </Frame>
 
-1. Open **Publishing** in the sidebar. Click **Connect** on the **Shopify** card, then **Enter Store Domain**.
+## Connect your store
 
-2. Enter your store domain. You can type just the handle (`your-store`), the full `your-store.myshopify.com`, or a pasted store URL; theStacc normalizes it to `your-store.myshopify.com`. (You'll find it in your Shopify admin URL.)
-3. You're sent to Shopify to approve access. theStacc asks for two permissions: **write content** (to create and update articles) and **read products** (for product-aware content). theStacc never sees your Shopify password.
-4. After you approve, theStacc connects, picks a blog to publish to, and makes Shopify the active destination. If your store has no blog yet, theStacc creates one named **News**.
+1. In theStacc, open **Content SEO > Settings > Publishing**. On the **Shopify** card, click **Connect**, then **Enter Store Domain**.
+
+<Frame caption="Connect Shopify: what you need.">
+  <img src="/images/integrations/shopify/2-connect.png" alt="theStacc Connect Shopify dialog" />
+</Frame>
+
+2. Enter your store address and click **Continue to Shopify**.
+
+<Frame caption="Enter the store domain, then Continue to Shopify.">
+  <img src="/images/integrations/shopify/3-enter-domain.png" alt="theStacc Store domain field with a myshopify.com address" />
+</Frame>
+
+3. Shopify opens **Install app** for theStacc. It asks to **view staff and contributor data** (to set the article author) and to **view and edit store data: Products, Online Store** (to write blog articles). Click **Install**. theStacc never sees your Shopify password.
+
+<Frame caption="Shopify's Install app screen for theStacc. Click Install.">
+  <img src="/images/integrations/shopify/4-install-app.png" alt="Shopify Install app screen listing theStacc's permissions" />
+</Frame>
+
+4. You come back to theStacc, connected. theStacc picks a blog to publish to and makes Shopify the active destination. If your store has no blog yet, theStacc creates one named **News**.
 
 As with every destination, connecting Shopify turns off whatever was active before. One destination at a time per project.
 
@@ -43,6 +62,10 @@ Each post is created as one article with its title, full content, featured image
 ## Reconnecting
 
 If the connection is lost, for example because the theStacc app was uninstalled from your store or a store owner changed, you'll see *"Shopify access token is invalid or expired. Please reconnect."* Click **Reconnect** on the Shopify card (or **Connect Shopify** again) to re-authorize. Your blog choice and publishing behavior are kept.
+
+## For sales and agencies
+
+The store owner (or a staff member allowed to install apps) has to click **Install** in Shopify. Either they connect it themselves in theStacc, or they add you as staff with permission to install apps. Never ask for their Shopify password.
 
 ## Good to know
 
