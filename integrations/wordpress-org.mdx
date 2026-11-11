@@ -1,22 +1,96 @@
 ---
 title: "WordPress.org"
-description: "Self-hosted WordPress sites."
+description: "Connect a self-hosted WordPress site in about 5 minutes."
 ---
 
-Self-hosted WordPress sites. Connect with an **Application Password** — a WordPress feature made specifically for apps like theStacc, so you never share your real login password.
+Use this if your site runs its own WordPress (hosted on Hostinger, GoDaddy, Bluehost, SiteGround, your own server and so on). If your site is on WordPress.com, use [WordPress.com](/integrations/wordpress-com) instead.
 
-<Frame caption="Connect WordPress.org from the Publishing page.">
-  <img src="/images/product/connect-wordpress-org.jpg" alt="theStacc WordPress.org connection setup" />
+You never share your WordPress login password. You create an **Application Password**: a separate password WordPress makes for apps like theStacc, which you can cancel at any time.
+
+## What you need
+
+| Field in theStacc | Where to find it |
+|---|---|
+| **WordPress Site URL** | Your website address, for example `https://example.com`. In WordPress admin it is under **Settings > General > Site Address (URL)**. |
+| **WordPress Username** | The username you log in to WordPress with. Not your display name and not your email. |
+| **Application Password** | Made in WordPress in Step 2 below |
+
+**Before you start:**
+- You can log in to your WordPress admin (`https://yoursite.com/wp-admin`).
+- The account is an **Administrator**, **Editor** or **Author**. We recommend **Editor**.
+- Your site uses `https://`.
+
+<Frame caption="Settings > General: copy the Site Address (URL). Yours shows your own domain.">
+  <img src="/images/integrations/wordpress/0-site-address.png" alt="WordPress General Settings showing the Site Address (URL) field" />
 </Frame>
 
-1. In your WordPress admin, go to **Users \> Profile \> Application Passwords**.
-2. Create a new password and name it `theStacc`.
-3. Copy the generated password.
-4. In theStacc, open **Publishing**. Click **Connect** on the **WordPress.org** card, then **Enter Credentials**, then enter your **site URL**, your **WordPress username** (your login username, not your display name), and the **application password**.
-5. theStacc tests the connection as you save. If it succeeds, you're connected; if not, you'll get a specific reason (see the error table below).
+## Step 1 (recommended): create a user for theStacc
 
-Requires WordPress 5.6+ with the REST API enabled (on by default). HTTPS is recommended.
+You can use your own account, but a separate user is safer: you can remove it any time without changing your own password, and nobody has to share the admin password.
 
-**About the application password field.** WordPress shows application passwords as groups separated by spaces (for example `abcd 1234 efgh 5678 ijkl 9012`). You can paste it with or without the spaces — theStacc strips them for you. After stripping spaces it must be **8 to 200 characters** and contain **only letters and numbers**. If it contains special characters, theStacc rejects it on the spot, because that almost always means you pasted your normal WordPress login password by mistake. Generate a real Application Password from **Users \> Profile \> Application Passwords** instead.
+1. In WordPress admin, go to **Users > Add User**.
+2. Enter a username (for example `thestacc`) and an email address you can receive.
 
-**Publishing permission.** The WordPress user must be an **Administrator, Editor, or Author** — those are the roles that can create posts. If the user can sign in but can't publish, theStacc tells you the exact role it found and which roles are allowed.
+<Frame caption="Users > Add User: enter a username and an email.">
+  <img src="/images/integrations/wordpress/1-add-user.png" alt="WordPress Add User form with username thestacc" />
+</Frame>
+
+3. Scroll down and set **Role** to **Editor**.
+4. Click **Add User**.
+
+<Frame caption="Set the Role to Editor, then click Add User.">
+  <img src="/images/integrations/wordpress/2-add-user-role-editor.png" alt="WordPress Add User form with Role set to Editor" />
+</Frame>
+
+## Step 2: create the Application Password
+
+1. Log in to WordPress as the user from Step 1 (or your own account).
+2. Go to **Users > Profile**.
+3. Scroll down to **Application Passwords**.
+4. Type `theStacc` as the name and click **Add Application Password**.
+
+<Frame caption="Users > Profile > Application Passwords: name it theStacc.">
+  <img src="/images/integrations/wordpress/3-application-password-name.png" alt="WordPress Application Passwords section with the name theStacc" />
+</Frame>
+
+5. Click **Copy** and keep the password safe. WordPress shows it only once.
+
+<Frame caption="Copy the new password. This one is from a test site; yours will be different.">
+  <img src="/images/integrations/wordpress/4-application-password-created.png" alt="WordPress showing a newly created application password for theStacc" />
+</Frame>
+
+## Step 3: connect in theStacc
+
+<Frame caption="The WordPress.org connection in theStacc.">
+  <img src="/images/product/connect-wordpress-org.jpg" alt="theStacc WordPress.org connection form" />
+</Frame>
+
+1. In theStacc, open **Content SEO > Settings > Publishing**.
+2. On the **WordPress.org** card, click **Connect**, then **Enter Credentials**.
+3. Enter the **WordPress Site URL**, the **WordPress Username** and the **Application Password**. You can paste the password with or without its spaces.
+4. Click save. theStacc tests the connection straight away and tells you if anything is wrong.
+
+After connecting you can pick the **default author** your posts appear under.
+
+## What theStacc publishes
+
+Title, article, featured image (with alt text), categories, tags, excerpt and URL slug. If you use the **Yoast SEO** plugin, the SEO title and meta description are filled in too.
+
+## If it does not connect
+
+| What you see | What to do |
+|---|---|
+| "This looks like a regular WordPress password" | You pasted your login password. Create an Application Password in Step 2 and paste that. |
+| No **Application Passwords** section under Users > Profile | A security plugin may have turned it off. In **Wordfence**, go to **All Options** and untick **Disable WordPress application passwords**, then save. Other security plugins can turn it off too; look for an "application passwords" setting. Also check the site uses `https://`. |
+| "Authentication failed" | Check the username is the login username, not the display name, and that the Application Password belongs to that same user. |
+| "...has the role ... which cannot create posts" | Change the user's role to **Editor** (or Author) under **Users**. |
+| "WordPress REST API not found" or "is blocked" | Check the site URL is correct. If it is, a security plugin or your host is blocking `yoursite.com/wp-json`; ask your host or developer to allow it. |
+| "Could not connect to ..." | The site address is wrong or the site is down. Open it in your browser to check. |
+
+## For sales and agencies: what to ask the client
+
+Send the client this, and never ask for their admin password:
+
+> Please create a WordPress user for theStacc with the **Editor** role, then log in as that user and create an **Application Password** named "theStacc" (Users > Profile > Application Passwords). Send us your **site URL**, that user's **username**, and the **Application Password**.
+
+To disconnect later, the client deletes the Application Password or the user in WordPress.

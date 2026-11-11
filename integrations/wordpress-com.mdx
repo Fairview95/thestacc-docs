@@ -1,19 +1,35 @@
 ---
 title: "WordPress.com"
-description: "Hosted WordPress sites."
+description: "Connect a site hosted on WordPress.com in about 2 minutes."
 ---
 
-Hosted WordPress sites. Recommended for WordPress.com users — no passwords to copy, just a secure sign-in.
+Use this if your site is hosted on WordPress.com (the address often ends in `.wordpress.com`, or you manage it at wordpress.com). If your site runs its own WordPress, use [WordPress.org](/integrations/wordpress-org) instead.
 
-<Frame caption="Connect WordPress.com from the Publishing page.">
-  <img src="/images/product/connect-wordpress-com.jpg" alt="theStacc WordPress.com connection setup" />
+There is no password to copy: you sign in to WordPress.com and approve theStacc.
+
+## What you need
+
+- A WordPress.com account that can publish posts on the site (Administrator or Editor).
+
+## Connect
+
+<Frame caption="The WordPress.com connection in theStacc.">
+  <img src="/images/product/connect-wordpress-com.jpg" alt="theStacc WordPress.com connection" />
 </Frame>
 
-1. Open **Publishing** in the sidebar. Click **Connect** on the **WordPress.com** card, then **Continue to WordPress.com**.
-2. You'll be redirected to WordPress.com to securely authorize access (OAuth).
-3. Sign in and grant theStacc access.
-4. Select your target site if your account has more than one.
+1. In theStacc, open **Content SEO > Settings > Publishing**.
+2. On the **WordPress.com** card, click **Connect**, then **Continue to WordPress.com**.
+3. Sign in to WordPress.com and click **Approve**.
+4. If your account has more than one site, pick the site to publish to.
 
-Each published blog includes the title, body content (HTML), featured image, categories, tags, SEO meta data (Yoast/RankMath compatible), and post slug.
+## What theStacc publishes
 
-If the connection ever stops working, you'll see *"WordPress.com token expired or invalid. Please reconnect your account."* — click Connect again to re-authorize.
+Title, article, featured image (with alt text), categories, tags, excerpt and URL slug. WordPress.com does not let apps set an SEO plugin's title or meta description, so those are not sent.
+
+## If it stops working
+
+If you see *"WordPress.com token expired or invalid. Please reconnect your account."*, click **Connect** again and approve once more.
+
+## For sales and agencies
+
+Ask the client to click **Connect** themselves, or to add you to their WordPress.com site as an **Editor** so you can connect it. Never ask for their WordPress.com password.
