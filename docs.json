@@ -231,6 +231,7 @@
           "integrations/webflow",
           "integrations/shopify",
           "integrations/zepio",
+          "integrations/duda",
           "integrations/squarespace",
           "integrations/other-website",
           "integrations/custom-webhook",
