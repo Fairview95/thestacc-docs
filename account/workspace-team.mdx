@@ -1,54 +1,44 @@
 ---
 title: "Workspace & Team"
-description: "Invite project teammates, choose roles, review pending invitations and manage invite links without confusing account and project access."
+description: "Invite teammates and choose who can view or manage your project."
 ---
 
-Select the correct project, then open **Workspace > Members**. This page lists people with access to that project and its current pending invitations. Check the project name before inviting someone or changing a role.
+Choose your project, then open **Workspace > Members**. **People with access** shows the people and pending invitations for that project.
+
+<Frame caption="Review who has access to the selected project.">
+  <img src="/images/product/workspace-members.jpg" alt="Workspace Members page showing people, roles, status, and Invite member" />
+</Frame>
 
 ## Invite a teammate
 
-1. Click **Invite** on the Members page.
-2. Choose **Admin**, **Editor** or **Viewer** under **Role**.
-3. Enter the recipient's **Email Address**, then click **Send Invitation**.
-4. Check the pending invitation in the member list. The recipient must sign in with the invited email address and accept the invitation.
+1. Click **Invite member**.
+2. Enter the person's email under **Invite people**.
+3. Choose an **Invitation role**: Admin, Editor, or Viewer.
+4. Click **Invite**. The person accepts the invitation to join.
 
-An invitation is not the same as joined membership. If the recipient cannot find the email, check the address and ask them to check their inbox and spam folder. An invitation can be created even when email delivery fails; the success message alone does not establish that it arrived.
+<Frame caption="Choose a role before inviting someone.">
+  <img src="/images/product/workspace-invite.jpg" alt="Invite to Linear dialog with email entry and Admin, Editor, and Viewer roles" />
+</Frame>
 
-Owners and project admins can manage invitations. Use **Resend invitation** for an outstanding invitation, or cancel it if the address or access request is wrong. If the invitation has expired, send a fresh invitation. If **Already invited** appears, use the available resend action rather than repeatedly submitting the same request.
-
-If invite controls are missing, ask the project owner or an admin to check your role and the selected project.
+Owners and project admins manage invitations and member access. If these controls are unavailable, ask an owner or admin to make the change.
 
 ## Choose a role
 
-Choose the lowest role that supports the teammate's work. Account access and a role granted for one project are different: an account-level badge cannot be edited through this project's role dropdown.
+| Role | Use it for |
+| --- | --- |
+| **Owner** | The person responsible for the account and its access |
+| **Admin** | Teammates who manage the project, settings, and members |
+| **Editor** | Teammates who create, edit, review, and publish content |
+| **Viewer** | People who need to read content and settings |
 
-<p id="workspace-role-table-title" className="content-table-title">Account responsibility and project collaboration roles</p>
-<div className="content-table-scroll" role="region" aria-labelledby="workspace-role-table-title" tabIndex="0">
-<table aria-labelledby="workspace-role-table-title">
-<thead><tr><th scope="col">Role</th><th scope="col">Use it for</th></tr></thead>
-<tbody>
-<tr><th scope="row">Owner</th><td>Account responsibility and access oversight. Account-level access appears as a fixed badge here.</td></tr>
-<tr><th scope="row">Admin</th><td>Managing project members, roles, settings and integrations.</td></tr>
-<tr><th scope="row">Editor</th><td>Creating, editing and publishing project content.</td></tr>
-<tr><th scope="row">Viewer</th><td>Viewing project content without editing it.</td></tr>
-</tbody>
-</table>
-</div>
-
-For an editable project member, use the role dropdown to change their role. Use **Remove from project** and confirm the removal when they no longer need that access. Your own role is not editable here. Ask the account owner about an account-level access change instead of trying to remove its fixed-badge row.
-
-Wait for the success message, then check the member list again. If a change fails, keep the existing access in mind until you have confirmed the result. The application can also reject removal or demotion of the last project admin.
+For a member with editable project access, use the role dropdown to change their role or their **Actions** menu to manage access. Account-level access may appear as a fixed badge; manage it at the account level. Your own role is not editable here.
 
 ## Invite with a link
 
-The **Invite link** card is on the Members page for owners and project admins. Choose a role and click **Create link**. Copy the resulting link and share it only with the intended collaborators.
+Open **Invite member**, then use **General access**. Choose an **Invite link role** and click **Create link**. Share the resulting link only with the people who should join at that role. An Admin link grants member-management access.
 
-New collaborators can sign in and use a working invite link to join at its selected role. The link does not change an existing member’s role. An **Admin** link grants member-management powers, so choosing that role asks for confirmation. A share link is not restricted to one recipient's email address in the way an email invitation is.
-
-Use **Regenerate** to replace the current link or **Disable link** to stop new joins through it. Changing the link's role also replaces the link, so copy the current URL afterward. These changes do not remove people who already joined; review their access separately in the member list.
+Use the link controls to disable or replace a link that should no longer be used. Disabling a link stops future joins; it does not remove people who already joined.
 
 ## Switch projects and manage billing
 
-Use the project selector to switch businesses, then check the Members list for the selected project. A project invitation does not grant access to every business in an account.
-
-Owners and project admins can see **Workspace > Billing** in the current interface. Billing access and the customer paying a subscription are separate considerations. Use [Billing & Plans](/account/billing) for subscription controls and [Payments, Invoices & Payment Methods](/account/payments-invoices) for payment records and the billing portal.
+Use the project selector at the top of the sidebar to switch businesses. Check the project name before inviting anyone. Open **Workspace > Billing** for subscriptions and invoices, or **View plans** to compare plans. See [Billing & Plans](/account/billing).

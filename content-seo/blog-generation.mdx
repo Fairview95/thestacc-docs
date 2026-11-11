@@ -1,89 +1,123 @@
 ---
 title: "Blog Generation"
-description: "Check your plan and project settings, start blog generation, and review the saved text, images and SEO score before publishing."
+description: "theStacc writes each blog post with a multi-step AI pipeline."
 ---
 
-Blog Generation turns an article plan into a saved draft through separate writing and image steps. Check the plan, keyword and project settings before starting. Afterward, review the saved text, links and pictures. A started request, a high SEO score or a pending-review status does not confirm the article is ready to publish.
+theStacc writes each blog post with a multi-step AI pipeline. Every article is planned, written, illustrated, and scored before it lands in your dashboard for review. This page walks through how generation works, when you can trigger it, and what to do when something needs a second pass.
 
 ## What you need before you generate
 
-You need edit access to the project and an active blog subscription or valid trial for the project owner. Generation also checks the applicable generation allowance. A paid plan alone does not establish that another request is within that allowance. See [Quota & Limits](/content-seo/quota-and-limits) for the separate limits.
+Generating a post makes real AI calls, so it requires an **active subscription** (a live plan or a valid trial) on the project. If the project's plan has lapsed or its trial has ended, the **Generate Content** button is disabled and a generation attempt is refused. Your existing posts stay fully viewable and editable either way - only the steps that spend AI credits are gated.
 
-If Generate is disabled or the request is refused, read the subscription, access or limit message before retrying. Collaboration access does not replace these checks. Existing content and AI actions are different: do not assume that every editing or image tool remains available after a plan expires.
-
-Before starting, check the planned title, assigned keyword and brief. Review [Preferences](/content-seo/preferences), [Sources & Brand Voice](/content-seo/sources-brand-voice) and the post's saved direction for instructions that should apply to this draft. Copy any existing text or images you want to retain before requesting a full replacement.
+If you collaborate on someone else's project through a share link or invite, you can still generate: the **project owner's** plan is what's checked, not yours.
 
 ## When the Generate button is available
 
-Open the blog's detail page. The plan card can show **Generate Blog**; the status action can show **Generate Content** for To be generated, Generation failed or Missed posts. On a Generation failed post, inspect the failure first so you choose between a writing retry and an image-only retry.
+On a blog's detail page, the primary **Generate Content** button appears when the post is in one of these states:
 
-<p id="blog-generation-action-table-title" className="content-table-title">Choose the action for the current post</p>
-<div className="content-table-scroll" role="region" aria-labelledby="blog-generation-action-table-title" tabIndex="0">
-<table aria-labelledby="blog-generation-action-table-title">
-  <thead><tr><th scope="col">Current post</th><th scope="col">Action to look for</th><th scope="col">What to check</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">To be generated or Missed</th><td>Generate Blog or Generate Content</td><td>The plan, keyword, settings and access</td></tr>
-    <tr><th scope="row">Generation failed</th><td>The failure panel or Generate Content</td><td>Whether text is saved and only images are missing</td></tr>
-    <tr><th scope="row">Generated or Modified, pending review</th><td>Edit Article, Approve or Reject</td><td>The existing draft before choosing a replacement</td></tr>
-    <tr><th scope="row">Rejected</th><td>Regenerate</td><td>The refreshed title and brief before generating the article</td></tr>
-  </tbody>
-</table>
-</div>
+- **To be generated** - a fresh slot that has never been written
+- **Generation failed** - a previous run did not finish
+- **Missed** - the scheduler did not fire on the planned day
+- **Generated (pending review)** - already written, but you want to redo it from scratch
+- **Modified (pending review)** - you have edited it, but you want a fresh full rewrite
 
-For a rejected post, **Regenerate** refreshes its plan and returns it to **To be generated**. It does not immediately rewrite the body. Written review drafts offer **Edit Article**, **Approve** and **Reject** in the standard workflow; do not assume a full-rewrite button appears there. See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) for the status labels.
+For a **rejected** post, the action is **Regenerate** instead, which refreshes the title and brief from your current business info and reopens the slot so you can try a different angle.
+
+See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) for what every status means and how posts move between them.
 
 ### If only the images failed
 
-Use **Retry images** when the article text is useful and the post records failed images. It uses the original image plan, skips the writing step and attempts to fill the failed placeholders. A retry can fail again or report that an original plan entry is missing.
+There is one important guardrail. If a run wrote the article text successfully but the images failed (for example, the image service hit a billing limit mid-run), theStacc will **not** let a full Generate re-run the whole pipeline. Re-running would burn AI credits rewriting text that is already saved - and replace your article with a different version.
 
-An older Generation failed post with saved text and failed images can be redirected away from a full generation to this image-only action. That safeguard does not cover every request to replace a written draft. Keep the text you want to retain and read [AI Error Recovery & Retries](/content-seo/ai-error-recovery) before starting another full run.
+Instead, you will see a **Retry images** action. It reuses the original image plan and only re-requests the images that failed, leaving your text untouched. Successful retries drop into place automatically; any that fail again stay flagged so you can try once more. Always reach for **Retry images** when your text is fine and only the pictures are missing.
 
 ## The generation pipeline
 
-A successful start response launches background work; it is not the completed article. The detail page polls for status, word count and image progress. Leaving the page does not itself cancel that work, but background work can still fail or be interrupted. If the displayed progress stops updating, reopen or refresh the post to check its current state before starting another request.
-
-Generation and publication are separate stages. Check the project's [Publishing Modes](/content-seo/publishing-modes): an automated scheduled workflow can hand a completed generation onward for publishing, while manual or approval-required modes keep a separate review step. Do not assume every generated article will wait indefinitely for your approval.
+Once you click **Generate Content**, the work runs in the background and the page shows live progress (status messages, word count, and images completed as they finish). You can navigate away and come back - it keeps going.
 
 ### Step 1 - Plan the post
 
-The planning request asks for an outline, image plan, estimated word count, tags and suggested search metadata. The image-planning instructions recommend two to four images; that is guidance, not an enforced finished-image count.
+The AI first builds a structured plan for the article:
 
-Generation starts from the post's saved planned title. The planning step keeps that title and preserves an existing meta description rather than replacing either with a new AI suggestion. If you want a different title or brief, change or regenerate the plan before writing. Check the saved title, description and URL afterward.
+- An **SEO-optimized title** that works in the target keyword naturally
+- A **meta description** for search engines (roughly 120-155 characters)
+- A **detailed outline** of H2 and H3 sections, each with the key points it should cover
+- An **image plan** of 2-4 images
+- A set of 3-6 **tags**
 
 ### Step 2 - Write the article
 
-The writer receives the plan and project context. Your saved article-length preference supplies a target range, with Standard used as the fallback. This is a prompt instruction, not a guaranteed final word count. Use [Word Count & Targets](/content-seo/word-count-targets) to decide whether the saved draft needs more detail or a tighter scope.
+Using that plan, the AI writes the complete post as clean, semantic HTML. The target length is a comprehensive **2,500-4,000 words** - long enough to cover the topic in real depth, which is also what the SEO score rewards (see below).
 
-The writer is instructed to produce semantic HTML with H2 and H3 headings, paragraphs and useful lists, without adding a body H1. It also receives linking guidance and can place image placeholders such as `IMAGE_1`. Review the actual headings, links and layout: instructions do not establish that every part of the returned draft is correct.
+The HTML it produces follows a deliberate structure:
 
-The text is saved before the normal image phase, with those placeholders still present. **Text ready, images pending** means there is saved writing to inspect while image work continues. It does not mean the article is complete or ready to publish.
+- **No H1** - your CMS displays the title separately, so the body starts at H2
+- **H2** for main sections (numbered, like "1. First Step", for how-to and list posts) and **H3** for subsections
+- Standard **paragraphs**, **bulleted and numbered lists**, and **blockquotes** for highlights
+- **Bold** on key terms
+- **Internal links** to your other published posts and **external links** to authoritative sources, with descriptive anchor text
+- **Image placeholders** named `IMAGE_1`, `IMAGE_2`, and so on, dropped in at the spots where each planned image belongs
+
+The text is written to read naturally for a real audience: plain language, varied sentence structure, the keyword used only where it fits, and no keyword stuffing.
 
 ### Step 3 - Generate the images
 
-After the writing step, image work attempts to replace the planned placeholders with successful images. Some or all images can fail while the saved article still reaches **Generated, pending review**. Check the missing-image notice, remaining placeholders and featured image as part of your review.
+As soon as the text is written, the images generate automatically in parallel - you do not have to do anything. For each entry in the image plan, theStacc creates the picture and swaps it into the matching `IMAGE_N` placeholder in your content. Placeholder replacement is exact, so an image for `IMAGE_1` can never overwrite part of `IMAGE_10`.
 
-Image style, size requests and branding instructions guide generation; they do not verify the finished picture. **Brand & Text** can intentionally include typography, so a blanket promise that images contain no text would be misleading. See [Image Generation](/content-seo/image-generation) for the current image choices and review steps.
+Each image plan entry carries:
+
+- a **purpose** (such as `hero`, `section_illustration`, or `infographic`)
+- the **section heading** it belongs to
+- a **description** and a detailed prompt describing exactly what to draw
+- an **aspect ratio** - one of 16:9, 1:1, 4:3, 3:4, or 9:16 (16:9 by default, used for the hero image)
+
+Images match the image style you have chosen in your project preferences (Photorealistic, Flat Illustration, Cinematic, Watercolor, Sketch, or Brand & Text), and the AI is instructed never to bake text into images.
+
+The **featured image** for the post is chosen automatically: theStacc picks the image whose purpose is `hero`, and falls back to the first generated image if no hero is present.
+
+For a deeper look at image styles, aspect ratios, and replacing or regenerating individual images, see [Image Generation](/content-seo/image-generation).
 
 ### Steering the output
 
-Save per-post direction before generating. The writer receives that saved direction along with available business information, preferences, sources, brand voice and recent-post context. Describe the angle or detail you want and supply verified business facts. These inputs guide the request; they do not guarantee obedience, factual accuracy or a new angle.
+You are not limited to the defaults. Anything you type into the per-post direction field before generating is injected straight into the AI's instructions under an "Additional Direction from User" heading - so you can ask for a specific angle, audience, tone, or detail and the writer will follow it. See [User Direction](/content-seo/user-direction) for how to write direction that actually changes the output.
 
-For example, a direction such as “explain the prerequisite before the steps” describes an editorial change without inventing a customer outcome. See [User Direction](/content-seo/user-direction) for that field's workflow.
+Generation also automatically pulls in your project context: your business details, target audience, features and pain points, brand voice, keyword list, linking preferences, any uploaded source material, and recently published posts (so new articles do not repeat the same openings and angles).
 
 ## SEO scoring
 
-Use the displayed SEO score as a review aid. The headline value can combine rule-based checks with the writer's assessment; when that assessment is absent or unusable, it falls back to the rule-based result. A high score does not verify your business facts, approve an image or guarantee search rankings.
+Every finished post gets an SEO score so you can see, at a glance, how search-ready it is. The headline number blends two checks: a deterministic, rules-based score that measures structure and anti-spam patterns, and the AI's own assessment of topical depth, search intent, and helpfulness. The mechanical side rewards the things this pipeline is built to produce:
 
-Read any available category breakdown and suggestions alongside the article. Fix issues that affect the reader, such as an unclear section or an unsuitable link, rather than padding the draft to chase a score. [SEO Scoring Explained](/content-seo/seo-scoring) describes the scoring view.
+- **Keyword placement** - keyword used naturally in the title, headings, and slug
+- **Content length and depth** - comprehensive coverage with enough subheadings
+- **Readability** - plain language and reasonable sentence length
+- **Heading structure** - a clean H2/H3 hierarchy
+- **Links** - internal and external links with good anchor text
+- **Images and media** - images present with alt text
+
+The score comes with a rating band (Excellent, Good, Needs Work, Poor, or Critical) and specific, plain-English suggestions for what to improve. For the full breakdown of how each category is weighted and how to lift a low score, see [SEO Scoring Explained](/content-seo/seo-scoring).
 
 ## Reviewing and editing in the blog editor
 
-Open the saved blog and choose **Edit Article** when you have edit access. Check the title, URL, body, links, word count, pictures and alt text. Compare prices, service descriptions and other business claims with the material you supplied before approving or publishing.
+Click any blog to open it in the built-in **Tiptap** WYSIWYG editor. From there you can:
 
-Use a manual edit for a direct correction. Use section regeneration or a single-image action when one part needs a new version. A section rewrite can save successful replacements even when another selected section fails, so reopen the post and inspect what was saved.
+- Edit the body with a full formatting toolbar: bold, italic, strikethrough, headings, bulleted and numbered lists, blockquotes, code blocks, links, and images
+- Edit the **title**, **slug**, **meta title**, and **meta description**
+- Replace or regenerate the **featured image**
+- Regenerate an **individual section** or an **individual image** without touching the rest of the post
+- Use undo and redo as you go
+
+Manual edits and section/image regeneration are the gentle, surgical tools - reach for them first when a post is mostly right.
 
 ## Regenerating content
 
-Choose a focused rewrite when the surrounding article is useful. A full generation can replace the current body and image plan, so keep a separate copy of material you want to retain. Do not rely on editor undo as a backup for completed server-side work.
+When a post needs more than a tweak, you can regenerate at three levels:
 
-For the controls and saving behavior of a section rewrite, image replacement, failed-image retry or plan refresh, use [Regenerating Content](/content-seo/regenerating-content). If a run failed or stopped progressing, use [AI Error Recovery & Retries](/content-seo/ai-error-recovery) to choose the next action.
+- **A single section** - rewrite just one part while keeping everything else, with tone and length adjustments
+- **A single image** - redo one image without changing the text
+- **The whole post** - a full rewrite from scratch via **Generate Content** (available in the statuses listed above)
+
+Regenerating also requires an active subscription, since each level makes fresh AI calls.
+
+**No previous versions are kept.** A full regenerate replaces your current article with a brand-new one, and there is no built-in version history to roll back to. So review the post before you regenerate it - if there are parts worth keeping, copy them out first, or use the section-level and image-level tools instead of a full rewrite.
+
+For a step-by-step guide to each option and when to use which, see [Regenerating Content](/content-seo/regenerating-content).

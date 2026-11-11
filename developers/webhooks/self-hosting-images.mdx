@@ -1,70 +1,97 @@
 ---
 title: "Self-hosting images"
-description: "Mirror webhook article images into your own storage, rewrite body image URLs safely, and handle the featured image and Sync separately."
+description: "By default, every img inside content and the featured_image_url point at theStacc's CDN (cdn.thestacc.com), served to your visitors directly."
 ---
 
-Self-hosting images means copying article media into your own storage and updating the URLs your CMS renders. A webhook receiver can use the supplied `images` list for body images and handle `featured_image_url` separately. Plan for missing fields, repeated deliveries and failed downloads before replacing working media URLs.
+By default, every `<img>` inside `content` and the `featured_image_url` point at theStacc's CDN (`cdn.thestacc.com`), served to your visitors directly. That's the simplest setup and works out of the box.
 
-Do not assume every image comes from one CDN hostname. Validate each source URL against your receiver's media policy. The [field reference](/developers/webhooks/field-reference) explains which fields arrive with manual publishing, scheduled publishing and **Sync**.
+For deeper CMS integration, many sites prefer to host blog images on their own storage alongside the rest of their media library. The `images` array makes that a one-pass mirror with no HTML parsing required.
 
 ## How it works
 
-Manual and scheduled article publishing include an `images` array containing `{url, alt}` objects extracted from the prepared body. It lists quoted `src` values in document order and collapses repeated exact URL strings. It does not extract lazy-loading `data-src` values. An absent alt attribute becomes an empty alt string.
+The `images` field is a list of `{url, alt}` objects — one per `<img>` in the `content` body, in document order, with duplicates collapsed. Each `url` is byte-for-byte identical to what's in the corresponding `src=` attribute inside `content`, so a plain string find/replace handles the swap reliably.
 
-Treat the array as input to a receiver workflow, not as a downloader or HTML rewrite already implemented for you:
+```javascript
+let content = body.content;
 
-1. Validate the event and article identity before handling media.
-2. Validate each source URL, download an allowed image, and store it using your media adapter.
-3. Record a mapping from the original source URL to the successfully stored URL.
-4. Parse the article HTML and rewrite the appropriate image attributes using that mapping.
-5. Handle the featured-image field separately, then persist the body and media association against the same article.
-6. Check the rendered page and decide how failed or pending media jobs affect the acknowledgement.
+// 1. Mirror every body image.
+for (const img of body.images || []) {
+  const bytes = await fetch(img.url).then(r => r.arrayBuffer());
+  const newUrl = await uploadToMyStorage(bytes, suggestFilename(img.url));
+  // The URL string IS the stable identifier — find/replace by full src=.
+  content = content.replaceAll(`src="${img.url}"`, `src="${newUrl}"`);
+}
 
-Use exact source strings for matching the supplied list. If your HTML parser decodes entities or normalizes attribute values, make the mapping comparison consistent with that parser. Do not replace every occurrence of an image URL throughout the article: the same string could appear in a link, example or unrelated attribute.
+// 2. Mirror the featured image separately. It's a top-level field, not
+//    in images[] — most CMSes have a dedicated featured-image slot.
+let featuredUrl = body.featured_image_url;
+if (featuredUrl) {
+  const bytes = await fetch(featuredUrl).then(r => r.arrayBuffer());
+  featuredUrl = await uploadToMyStorage(bytes, suggestFilename(featuredUrl));
+}
+
+// 3. Store `content` (with rewritten src=) and `featuredUrl` in your CMS.
+```
+
+That's the entire pattern. No HTML parser, no DOM library, no positional tracking — the URL is the identifier.
 
 ## Python receiver
 
-Keep the Python receiver's downloader, storage adapter and HTML rewrite separate. Download only through the validated media-fetch path described below. Add a mapping entry after the upload succeeds, then use an HTML-aware rewrite to change actual image attributes. Leave unrelated text and links intact.
+```python
+content = body["content"]
 
-These illustrative inputs need the same rewrite even though their attribute formatting differs:
+# 1. Mirror body images.
+for img in body.get("images", []):
+    blob = httpx.get(img["url"]).content
+    new_url = upload_to_my_storage(blob, suggest_filename(img["url"]))
+    content = content.replace(f'src="{img["url"]}"', f'src="{new_url}"')
 
-```html
-<img src="original.jpg" alt="Product detail">
-<img src = 'original.jpg' alt="Product detail">
+# 2. Mirror the featured image separately.
+featured_url = body.get("featured_image_url")
+if featured_url:
+    blob = httpx.get(featured_url).content
+    featured_url = upload_to_my_storage(blob, suggest_filename(featured_url))
+
+# 3. Persist content + featured_url to your CMS.
 ```
-
-A replacement that searches only for `src="original.jpg"` misses the second form. Test your parser and serializer with single and double quotes, spaces around `=`, duplicate images, escaped attribute values and markup your CMS permits. Updating `src` also does not automatically update a site's responsive `srcset` or custom lazy-loading attributes; define those transformations when your site uses them.
-
-Store the original-to-hosted mapping so a repeated delivery can reuse an existing upload rather than create another media file. Choose a deliberate policy for changed images at the same URL. A filename alone is not a reliable article or media identity. The [idempotency guide](/developers/webhooks/idempotency) covers repeated deliveries without suppressing later edits.
 
 ## Security: allowlist your fetch host
 
-A server-side image downloader needs more than a hostname check. Define approved media origins for your integration and reject URLs outside that policy. Apply the same checks to body images and the featured image.
+Whenever a server-side handler downloads URLs from any external source, allowlist trusted hosts before issuing the request. For theStacc images, the trusted host is `cdn.thestacc.com`:
 
-Your download policy should cover:
+```javascript
+const ALLOWED_HOSTS = new Set(['cdn.thestacc.com']);
 
-- HTTPS, the allowed host and port, and resolved addresses that cannot reach private or internal services.
-- Redirect handling: disable redirects or validate every destination before following one.
-- Request and download time limits, a streaming byte limit, and an accepted HTTP result before storing the response.
-- Accepted image formats and content validation instead of trusting a filename or response header alone.
-- Bounded concurrency and storage access appropriate to the receiver.
+async function safeFetch(url) {
+  const parsed = new URL(url);
+  if (parsed.protocol !== 'https:') throw new Error(`Refusing non-HTTPS URL: ${url}`);
+  if (!ALLOWED_HOSTS.has(parsed.hostname)) throw new Error(`Untrusted host: ${parsed.hostname}`);
+  return fetch(url);
+}
 
-Avoid logging credentials or signed URL query values. Review the fetcher's actual DNS, connection and redirect behaviour rather than treating a parsed hostname as proof that the network request is safe. The controls above are receiver responsibilities; receiving a theStacc webhook does not implement them for you.
+for (const img of body.images || []) {
+  const bytes = await safeFetch(img.url).then(r => r.arrayBuffer());
+  // ...then upload + find/replace as before.
+}
+```
+
+Apply the same allowlist to `featured_image_url`. With it in place, every body and featured image fetches through a single auditable choke point.
 
 ## Notes
 
-The featured image is a separate top-level field. Body preparation removes the **first** inline image matching that featured-image URL, allowing a query string or fragment. It leaves the content unchanged when no matching image exists or no featured-image URL is supplied. A later copy can therefore remain in the body and appear in `images`; do not assume the featured image is always absent from the list.
-
-Repeated exact body URLs appear once in `images`, so apply the stored mapping to every intended occurrence in the HTML. Different URL strings are not automatically the same media asset, even if they differ only in a query parameter.
-
-An empty `alt` value does not establish that an image is decorative. Review which images need a useful description and preserve appropriate alt text during rewriting. Re-hosting bytes alone does not settle accessibility, captioning or media rights.
-
-Your receiver can keep using the original URLs if that matches its media policy. If mirroring fails, do not replace a working URL with an unavailable storage destination. Either retain it, fail the operation with a useful error, or persist a durable media job under your documented policy. Use the [response contract](/developers/webhooks/response-contract) to separate acknowledgement from completed work.
+- **Featured image is NOT in `images[]`.** It's a separate top-level field (`featured_image_url`). theStacc strips the inline hero from `content` before sending so the page doesn't render the same image twice.
+- **Duplicate URLs are deduped.** If the same body image appears twice, the array lists it once. Your `content.replaceAll(...)` swaps every occurrence in one pass anyway.
+- **`alt` may be empty.** Decorative images and images the generator didn't caption ship with `alt: ""`. Pass it through verbatim to preserve accessibility on your re-hosted copy.
+- **Backward compatible.** Receivers that ignore `images` continue working unchanged — every other field is identical to before this field was added.
+- **The URL is the stable identifier.** theStacc does not inject any per-image marker attribute into the `<img>` tags. URLs in `images[]` mirror `content` verbatim, so a one-to-one find/replace works without any normalization step.
 
 ## Migrating blogs already published with theStacc's URLs
 
-Start with a test article and an existing `blog_id` mapping. Back up the stored body and featured-image association, mirror permitted media, rewrite the intended attributes, and update the same CMS record. Verify the public page before retiring its original media URLs.
+If you have blogs already in your CMS with theStacc CDN URLs and you want to switch them to self-hosted images:
 
-**Sync** sends updated body HTML and featured-image fields, but the Sync payload described in the field reference does not include `images`. A receiver migrating through Sync needs to discover body images itself, or use an image-bearing publish path appropriate to the article's state. Confirm the fields for that path before starting a larger migration.
+1. Open each blog in theStacc and click **Publish** to re-publish.
+2. The webhook fires as `blog.updated` with the `images` array.
+3. Your receiver runs the mirror loop above and updates the post (same `blog_id` means the same CMS record).
+4. The CMS post now stores your URLs instead of theStacc's.
 
-Keep migration progress and failed downloads separately from article identity. Repeating the work should update the intended article, not create a fresh post because its URLs changed. Finish by checking the hero, repeated body images, alt text and any responsive-image attributes your site renders.
+There's no bulk-republish API — for most accounts this is a one-shot migration of a handful of posts.

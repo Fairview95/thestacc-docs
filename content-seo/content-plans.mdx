@@ -1,119 +1,143 @@
 ---
 title: "Content Plans & Keywords"
-description: "Review planned blog topics, edit eligible rows, refresh titles or keywords, and manage the pool without confusing planning with publication."
+description: "Your keyword pool and your content plan are the two things that decide what theStacc writes about."
 ---
 
-Content Plans & Keywords connects your topic pool with the blogs planned for your project. Open **Content Plan** to review dates, titles, types and keywords before writing starts. Keep the pool useful, inspect changed rows after saving or refreshing them, and check generation and publishing separately from the plan.
+Your keyword pool and your content plan are the two things that decide what theStacc writes about. You curate a pool of topics; theStacc builds a 30-day plan from it and rotates through your keywords so you never get two posts chasing the same term back to back. This page covers both, plus the promotions calendar that layers timely, event-based content on top.
 
 ## How content plans work
 
-A content plan groups dated blog ideas. The current plan setup uses a **30-day window**, but the number and spacing of its slots can depend on the project's publishing cadence. The legacy schedule uses 30 consecutive daily placeholders. Read the actual dates in your calendar rather than assuming every project has one article per day.
+When you turn on Content SEO, theStacc builds a content plan for your project. A plan is a **30-day window** with one blog scheduled per day.
 
-A placeholder means topic planning is still pending. Filling it supplies a title, keyword, format and description; it does not mean the article body has been written. Check the completed titles and descriptions before starting article generation.
+- There is **one plan per project per 30-day window**. The first plan runs from the day you start it through day 30.
+- All 30 days are created as **placeholders up front** - empty slots, one per day, dated across the month - so you can see the whole month's shape immediately.
+- Each placeholder is then **filled in sequentially**, day by day, with a keyword, a blog title, a content category, and a short description (2-3 sentences) of what that post should cover.
+- A placeholder day stays empty until it's filled. As generation works through the plan, you'll see slots turn from blank into real planned topics.
 
-Choose the correct project, then select **Content Plan** in the sidebar. The table shows **Date**, **Blog**, **Type** and **Keyword**. Use the month arrows to inspect another month, and open a row to review the post's detail page.
+To view your plan, go to **Content SEO \> Content Plan**. You'll see a table of all 30 days with their date, blog title, type, and target keyword. Use the month arrows at the top to move between months.
 
 ### Editing a planned post
 
-In the Content Plan table, the **Edit plan** pencil is available to project editors for a row marked **To be generated**. You can change its date, title, type and focus keyword. Other post states can offer different actions on the detail page; absence of the table pencil does not describe every editing action in the product.
+Before a post is generated, you can edit its plan. In **Content Plan**, click the edit (pencil) icon on any row that hasn't generated yet (status **To be generated**). You can change:
 
-1. Select the pencil on the intended row.
-2. Review the date, title, type and keyword together.
-3. Make the change, then select **Save**.
-4. Inspect the saved row and its description. Use **Cancel** to leave the unsaved edit.
+- **Date** - when the post is scheduled
+- **Title** - the working headline
+- **Type** - the blog format
+- **Keyword** - the focus keyword for the post
 
-Changing a title or keyword also requests a matching description. That refresh is best effort: the main edits can save even if the AI refresh is skipped, fails or times out. Check the description yourself, including after a **Plan updated** confirmation. A date-only change does not request a new description.
+If you change the title or keyword, theStacc automatically refreshes that day's short description to match the new topic. Once a post has started generating, been drafted, approved, or published, its plan is locked - this protects in-flight and signed-off content from being overwritten.
 
 ### Regenerating stale plans
 
-When business information changes, a banner can flag plans that use older context. Review the changed business details and the affected rows before choosing a refresh. The available banner actions have different effects.
+If you update your business details after a plan was built, the planned topics can drift out of date. theStacc flags this with a staleness banner. You can:
 
-<p id="plan-refresh-actions-title" className="content-table-title">Choose the plan action that matches your change</p>
-<div className="content-table-scroll" role="region" aria-labelledby="plan-refresh-actions-title" tabIndex="0">
-<table aria-labelledby="plan-refresh-actions-title">
-  <thead><tr><th scope="col">Action</th><th scope="col">What it requests</th><th scope="col">What to check afterward</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">Edit plan</th><td>Your changes to a row's date, title, type or keyword.</td><td>The saved row and any refreshed description.</td></tr>
-    <tr><th scope="row">Regenerate titles</th><td>Fresh titles and descriptions using existing focus keywords.</td><td>Which eligible rows changed and whether the new angle fits.</td></tr>
-    <tr><th scope="row">Full refresh (new keywords)</th><td>Fresh titles, descriptions and focus keywords after confirmation.</td><td>The replacement topics before generating articles.</td></tr>
-    <tr><th scope="row">Generate Blog or Generate Content</th><td>Article generation through the post's available action.</td><td>The resulting draft, images and status.</td></tr>
-  </tbody>
-</table>
-</div>
+- **Regenerate all stale plans** to rewrite the titles and keywords of every not-yet-generated (and any missed) slot using your latest business info, or
+- Select specific rows with the checkboxes and use the floating toolbar to **regenerate just those plans**.
 
-The banner's **Regenerate titles** action keeps existing focus keywords. **Full refresh (new keywords)** also replaces those keywords, so read the confirmation before proceeding. Both work on eligible completed topic plans in the latest content plan. Refreshing a missed row does not change its date or move it back into the automatic generation queue.
-
-For a smaller change, select rows and use **Regenerate … blog plans** in the floating toolbar. Inspect the result: some rows can be skipped or fail. A **Rejected** row may be selectable in this view, but the current bulk refresh accepts completed plans marked **To be generated** or **Missed**. Open a skipped post's detail page to check its individual plan actions.
-
-For partial failures, use **View details** to inspect the affected slots and their messages. The dialog can offer **Retry** for an individual slot. Check the next result rather than assuming the retry succeeded. AI refresh actions require an active blog plan; follow an access or subscription error before trying again.
+Only slots that are still safe to change - **To be generated**, **missed**, or **rejected** - can be regenerated. Approved, scheduled, and published posts are never touched. If a slot fails to regenerate, you'll get a details dialog showing exactly which slot failed and why, with a one-click retry.
 
 ### Creating the next plan
 
-Navigate to an empty month after the latest plan's end date. When eligible, the page offers **Generate Next Month's Plan**; an inactive plan shows an upgrade action instead. Creating another plan requires editor access and an active blog subscription.
+When your current 30-day window is ending, theStacc can create the next one. Use **Create Next Plan** (shown as "Generate Next Month's Plan" when you navigate to a month after your current plan ends).
 
-The next window starts after the previous plan ends, or from the current day if that plan has already expired. It is another 30-day window, rather than necessarily the next calendar month. Previous keywords are passed into planning to help avoid repetition, but inspect the returned topics for overlapping intent.
+- The new plan covers the **next 30 days** - days 31-60. Run it again later and you get days 61-90, and so on.
+- If your current plan ends in the future, the next plan starts the day after it ends, so the two never overlap.
+- theStacc passes your already-used topics to the AI so the new plan avoids repeating anything from the previous one.
 
-Check the displayed dates and completed topic rows after generation. A progress counter reaching its end does not prove every article body exists or that anything has been published. See [Blog Generation](/content-seo/blog-generation) for the separate writing step.
+Generating a new plan requires an active blog subscription. If your plan is inactive, you'll see an upgrade prompt instead.
 
 ## Managing your keyword pool
 
-Select **Keywords** in the Content sidebar to manage the pool. Add topics your business can explain accurately, then inspect the planned posts they produce. Adding a phrase is not a reservation for a particular date or a promise of search traffic.
+Go to **Content SEO \> Settings \> Keywords** to manage the topics theStacc draws from. This is a **pool**, not a fixed list: you add as many topics as you like, and theStacc decides which one fills each calendar slot.
 
 ### What each keyword shows
 
-The table shows **Keyword**, **Status**, **Used**, **Last used** and **Enabled**. The star marks **Always-On** priority. Read usage separately from publication: a keyword can have generated content that still needs review. Check its linked post when the badge or usage looks different from what you expected.
+Every row in the Keywords table shows:
+
+- **Keyword** - the topic phrase. Best results come from specific, long-tail phrases a real customer would type (for example, "best crm for solar installers" rather than just "crm").
+- **Status** - a lifecycle badge (see below).
+- **Used** - how many published-or-in-progress blogs this keyword has produced.
+- **Last used** - when it was last picked ("Never", "3d ago", "2mo ago").
+- **Enabled** - a toggle that includes or excludes the keyword from rotation without deleting it.
+
+Keywords you add are unlimited. At any moment, the calendar can hold up to **31 active** slots (one full month of in-pipeline posts); everything else waits in the pool until a slot opens.
 
 ### Keyword lifecycle badges
 
-- **Active:** associated with a scheduled or in-progress post.
-- **Queued:** enabled and available for selection.
-- **Cooling:** resting after recorded use.
-- **Off:** disabled for rotation.
+Each keyword carries one status badge:
 
-These badges describe pool state, rather than guaranteeing the next publishing action. Always-On is a separate priority flag; a starred keyword can still be occupied by a post. See [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation) for eligibility and cooldown details.
+- **Active** (green) - currently scheduled or moving through the generation pipeline.
+- **Queued** (grey) - idle and eligible to be picked next.
+- **Cooling** (amber) - used recently and resting through its cooldown. theStacc holds a keyword for **60 days** after it's used before it can be picked again, so the same topic never repeats too soon.
+- **Off** (grey/faded) - disabled. It stays in your pool but theStacc will never schedule it until you re-enable it.
 
 ### Adding, generating, enabling, and renaming keywords
 
-Paste phrases one per line or separated by commas, then select **Add to pool**. Keep each phrase within **80 characters**. The input parser trims and lowercases entries, removes duplicates from the pasted list, and omits empty or overlong phrases. Check the response for added entries, existing keywords, items left in the pool and failures.
+**Add keywords manually.** Type or paste topics into the box - one per line or comma-separated - and click **Add to pool**. Manual adds are **unlimited**. Each keyword can be up to 80 characters; duplicates and ones that overflow the active calendar simply wait in the pool.
 
-Manual additions are subject to pool capacity checks. If a limit blocks an addition, follow the returned message instead of assuming unlimited keywords can be stored. Disabling a keyword excludes it from selection; deleting it is a separate action. Check any associated article before removing a topic.
+**Generate keywords with AI.** Click **Generate keywords** and theStacc uses your analyzed business context to write a fresh batch of specific, long-tail SEO keywords straight into your pool, where rotation picks them up. AI generation is **rate-limited per project per month** (5 runs per month by default). After each run, the success message tells you how many were added and **how many generations you have left this month**; the count resets at the start of the next month. (Manual adds are never limited.)
 
-**Generate keywords** requests an AI-suggested batch. Inspect the topics and the displayed number added and generation requests left that month. A request can return fewer usable additions than you expected; duplicates and unsuccessful saves are not new pool entries.
+**Enable or disable.** Use the toggle on any row to take a keyword in or out of rotation without losing it.
 
-Use search and status filters to find a group, then select rows to **Enable**, **Disable** or **Delete**. Keyword selection can cover the filtered group across pages. Individual actions can fail, so check the summary and follow any locked or in-use message. Renaming also depends on the linked post's state; use the returned error to decide whether the post needs attention first.
+**Bulk actions.** Tick the checkboxes (search and the status filter both help here) to **Enable**, **Disable**, or **Delete** many keywords at once. Selection works across pages, so "select all" plus a search lets you act on a whole filtered group.
+
+**Rename.** Click the edit icon to rename a keyword. Renaming is **blocked once a keyword has generated content** - so a published or drafted blog's topic can never silently drift away from what's on your site. To change a generated blog's topic, edit the blog itself.
+
+**Delete.** Removing a keyword takes it out of the pool. Any blog already generated for it is kept, and its calendar slot is reused. Keywords locked inside an approved or in-flight blog are skipped.
 
 ### Always-On keywords (priority)
 
-Star an important keyword to make it **Always-On**. Priority puts it ahead of other eligible keywords and exempts it from the configured cooldown. It still cannot bypass a post already occupying that keyword.
+If a topic is core to your business and you want it to keep coming back, star it to make it **Always-On**. An Always-On keyword:
 
-Use priority for a topic with a continuing purpose. Before commissioning another article, check whether an existing page already answers the same reader question. Treat the interface's monthly repetition suggestion as guidance, rather than a verified Google allowance or ranking threshold.
+- **Skips the 60-day cooldown** - it stays eligible the moment its last blog finishes, instead of resting.
+- Is **scheduled first** - it leads the rotation order ahead of other eligible keywords.
+
+Use this sparingly. Because Always-On skips the resting period, the same keyword can be picked far more often, and search engines can penalize over-repetition of one topic. theStacc reminds you of this when you turn it on: aim for **at most 2-3 blogs a month on a single keyword**, spread across the month.
+
+For the strategy behind picking and weighting keywords, see [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation).
 
 ## How rotation fills the calendar
 
-Selection looks for an enabled keyword that is free from an occupying post and eligible under the cooldown rules. Among eligible choices, it prefers Always-On, then unused keywords, then the oldest recorded use, with earlier additions breaking a tie. This order helps planning select a topic; it does not guarantee which finished article you will receive.
+You never have to assign keywords to days yourself - theStacc does it automatically. Each day, the system **claims the next eligible keyword** from your pool for that day's post. A keyword is eligible when it is:
 
-A keyword can be unavailable because it is disabled, cooling or already occupied by a post. Keyword selection can also fail. Check the pool and the actual planned rows before generating articles; selection alone does not establish that every calendar slot has been filled.
+- **Enabled**, and
+- not already tied to a scheduled or in-progress post, and
+- **Always-On**, or never used, or last used longer ago than the 60-day cooldown.
+
+When choosing between eligible keywords, theStacc picks in this order: Always-On first, then never-used keywords, then the ones used longest ago. That keeps your blog varied and stops any topic from dominating.
+
+If your pool is dry - everything is disabled, cooling down, or already in flight - theStacc won't leave a gap. As a last resort it **invents a fresh, on-topic keyword** for that day from your business context, so the calendar always stays full. The cleanest way to avoid invented keywords is to keep a healthy pool of enabled topics (add your own or hit **Generate keywords**).
+
+For a deeper look at eligibility, ordering, and the cooldown, see [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation).
 
 ## A note on volume, difficulty, and relevance
 
-The Keywords table focuses on pool status and usage. A suggested phrase is not, by itself, evidence of search demand or ranking difficulty. Review customer questions, the services you actually offer and existing pages before accepting a topic. Use measured search data when that information is needed for the decision.
+Good keywords balance three things, and theStacc weighs all of them when it builds your plan and generates keywords:
 
-For detailed topic selection and the limits of generated suggestions, use [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation). Avoid turning an AI suggestion into a forecast of traffic or a promise that a long phrase will rank quickly.
+- **Search volume** - roughly how many people search that phrase each month. Higher volume means more potential traffic, but usually more competition too.
+- **Difficulty** - how hard it is to rank, on a **0-100** scale. Lower is easier. As a rule of thumb, under ~30 is easy, the **moderate** range sits around the middle (roughly 30-60), and 70+ is very competitive. For most small businesses, specific long-tail phrases in the moderate-or-lower range win fastest.
+- **Relevance** - how closely the phrase matches what your business actually does. A perfectly winnable keyword is still the wrong choice if it doesn't map to your services and audience.
+
+In Content SEO, theStacc favors specific, long-tail, high-relevance phrases automatically - so the keyword pool focuses on the topic, its status, and how often it's been used rather than asking you to read raw metric numbers. If you want live, number-by-number search-volume and difficulty data for individual keywords, the **Local SEO** module surfaces those metrics directly in its keyword tracker (powered by real search data). See the [Local SEO overview](/local-seo/overview).
 
 ## Promotions
 
-The dedicated Promotions Calendar is retired in the current Content SEO interface. Older Promotions settings links lead to business information rather than a monthly event-generation screen. Use the current plan and per-post direction workflow for seasonal topics; see [Promotions Calendar](/content-seo/promotions-calendar) for the change and the available alternatives.
+Under **Content SEO \> Settings \> Promotions**, theStacc detects timely, location-based events and festivals so you can publish content right when it's relevant.
+
+- **Automatic event detection** based on your target locations.
+- A **monthly calendar view** of detected events, with month navigation.
+- Events come categorized - **National Holiday**, **Cultural Festival**, **Religious Holiday**, **Commercial Event**, **Awareness Day**, **Local Event**, and **Industry Event** - each with a relevance score so you can see which events fit your business best.
+- **Generate promotion plans** tied to an event and save them into your content calendar, so the post is ready to publish around the date.
+
+For the full walkthrough of detecting events, scoring relevance, and scheduling promotional posts, see [Promotions Calendar](/content-seo/promotions-calendar).
 
 ## What happens after a plan is set
 
-Review the planned topic before starting article generation. The saved date and completed plan are inputs to later workflow checks, not proof that the post will be written or published on that day. See [Scheduling & Missed Posts](/content-seo/scheduling-missed-posts) when a date has passed.
-
-Check the project's [publishing mode](/content-seo/publishing-modes) and destination separately. If you need human review before a post goes live, confirm the review-first setup before relying on an approval queue. A planned calendar row alone does not establish that review is required.
+You don't schedule "posts per week" or pick publishing days - the 30-day plan already places one post per day. Each day, theStacc generates that day's scheduled post and then follows your **publishing mode** (auto-publish, require approval, or draft only). Set your mode and connect your site under **Content SEO \> Settings \> Publishing** - see [Publishing](/content-seo/publishing) for the details.
 
 ## Related
 
-- [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation): choose useful phrases and inspect eligibility.
-- [Promotions Calendar](/content-seo/promotions-calendar): current alternatives to the retired calendar.
-- [Blog Generation](/content-seo/blog-generation): turn a planned topic into a draft.
-- [Quota & Limits](/content-seo/quota-and-limits): distinguish planning, generation allowance and publishing.
-
+- [Keyword Strategy & Rotation](/content-seo/keyword-strategy-rotation) - the deep dive on choosing keywords and how rotation, cooldown, and Always-On work.
+- [Promotions Calendar](/content-seo/promotions-calendar) - detect events and schedule timely promotional content.
+- [Blog Generation](/content-seo/blog-generation) - how each planned post is written, scored, and edited.
+- [Publishing](/content-seo/publishing) - publishing modes and connecting your site.

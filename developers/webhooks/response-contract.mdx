@@ -1,56 +1,22 @@
 ---
 title: "Response contract"
-description: "Accepted webhook statuses, explicit rejection flags and response fields used by manual publishing, scheduled publishing and Sync."
+description: "Your receiver should return a JSON body."
 ---
 
-A webhook acknowledgement tells theStacc whether the receiver accepted the request. It does not prove that the public article has rendered. Return a supported status and, when available, a JSON object with the actual stored CMS ID and public article URL. Do not acknowledge a change your receiver deliberately ignored.
-
-## Accepted statuses and response fields
-
-The Custom Webhook paths differ. Use `id` and `url` as the common response field names for publication, rather than depending on aliases that only one path reads.
-
-<p id="webhook-response-paths" className="content-table-title">Custom Webhook acknowledgement handling by delivery path</p>
-<div role="region" aria-labelledby="webhook-response-paths" tabIndex="0" className="content-table-scroll">
-<table aria-labelledby="webhook-response-paths">
-<thead><tr><th scope="col">Delivery path</th><th scope="col">HTTP statuses accepted before body checks</th><th scope="col">Response fields read</th></tr></thead>
-<tbody>
-<tr><th scope="row">Manual publish or republish</th><td><code>200</code>, <code>201</code>, <code>202</code>, <code>204</code></td><td>URL: <code>url</code> or <code>published_url</code>. CMS ID: <code>id</code>.</td></tr>
-<tr><th scope="row">Scheduled publish</th><td>Any <code>2xx</code>, subject to response-body rejection checks</td><td>URL: <code>url</code>, <code>post_url</code> or <code>permalink</code>. CMS ID: <code>id</code>, <code>post_id</code> or <code>external_id</code>.</td></tr>
-<tr><th scope="row">Sync</th><td><code>200</code>, <code>201</code>, <code>202</code>, <code>204</code></td><td>Checks for an explicit rejection. Does not use response <code>url</code> or <code>id</code> to refresh the stored article identity or live link.</td></tr>
-</tbody>
-</table>
-</div>
-
-This illustrative successful publication response uses the shared field names:
+Your receiver should return a JSON body. theStacc reads two fields from it:
 
 ```json
 {
   "ok": true,
-  "url": "https://example.com/blog/article-slug/",
-  "id": "cms-42"
+  "url": "https://your-cms.com/blog/10-seo-mistakes-to-avoid-in-2026",
+  "id": "your-internal-cms-post-id"
 }
 ```
 
-Return values from the article actually stored by your receiver. Keep a `blog_id`-to-CMS-record mapping for later updates. The publication and Sync payloads described in the [field reference](/developers/webhooks/field-reference) do not include a separate `external_post_id` field, so do not assume a returned ID will appear in every subsequent update request.
+| What theStacc reads | Required for | What theStacc does with it |
+| --- | --- | --- |
+| HTTP status `2xx` | every request | Only `200`, `201`, `202`, and `204` count as success. Anything else (`3xx`, `4xx`, `5xx`) fails the publish. |
+| `url` (also accepts `post_url` or `permalink`) | a clickable "View live post" link in theStacc | Stored against the blog. If omitted, theStacc shows a *"Sent to webhook — your receiver didn't return a public URL"* notice. |
+| `id` (also accepts `post_id` or `external_id`) | future updates / unpublishes to target the right CMS record | Stored as the external post id and sent back to you on later `blog.updated` / `blog.unpublished` events. |
 
-## Explicit rejection in a successful HTTP response
-
-An accepted status can still carry a failure. The response parser recognizes these explicit boolean flags: `ignored: true`, `applied: false`, `handled: false`, `processed: false`, `ok: false` and `success: false`. A flag must be a JSON boolean; a count or a string is not the same indication.
-
-For example, this illustrative response reports an unhandled event even if the HTTP status is `200`:
-
-```json
-{"ignored": true, "reason": "Unsupported event: blog.updated"}
-```
-
-The scheduled publisher classifies an explicit rejection by its reason. Temporary conditions can remain eligible for a bounded retry; unsupported or permanent refusals stop that path. An explicit validation rejection can also make a server-error response permanent. Manual publishing and Sync surface the rejection without entering that scheduled backoff solely because the response says to retry. See [idempotency and retries](/developers/webhooks/idempotency) for the delivery policy.
-
-Describe a failure accurately and do not return `ok: true` for an event you skipped without applying it. If your receiver accepts work into a durable queue, define what is acknowledged and how the later result is checked. An acknowledgement is not a substitute for completing or tracking the job.
-
-## Missing JSON, IDs or public URLs
-
-An empty or non-JSON body can acknowledge a supported publication request, but it supplies no JSON ID or URL fields to extract. Prefer a JSON object when you want those fields recorded. A non-object JSON value also does not supply the expected named fields. This does not waive the status and explicit-rejection checks above.
-
-A public-URL template can provide a dashboard link when the publication response has no usable URL. The current resolver can also replace a section-root URL with a templated or slug-appended article URL. These are link-construction rules, not requests that verify the public page. Return the correct absolute article URL instead of a generic blog index, and check the resulting link on your website.
-
-Handle `test.ping` and preview-prefixed sample blog IDs as tests rather than inserting production articles. A successful test does not establish that your receiver handles a real `blog.updated` event, maps its fields correctly or completes downstream publication. Confirm those behaviours with your own receiver fixtures before enabling writes.
+A non-JSON `2xx` response still counts as a successful publish — theStacc just won't have a URL or external id to store. For preview / test calls (`test.ping`, or `blog_id` starts with `preview-`), it's fine to skip both fields and return `{"ok": true, "skipped": true}`.

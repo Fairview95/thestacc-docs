@@ -1,93 +1,108 @@
 ---
 title: "Automated Generation (Cron)"
-description: "Check how scheduled generation selects posts, applies access and quota checks, handles missed dates, and hands completed content to review or publishing."
+description: "When you put Content SEO on autopilot, you don't have to click anything to get a blog."
 ---
 
-Automated generation selects eligible blog ideas from your calendar and queues them for writing in the background. A date alone is not enough: the idea's status, completed topic plan, project settings, available allowance, and account access affect whether it runs.
-
-If a post has not appeared, inspect those conditions before triggering more work. Generation and publishing are separate steps, so a finished draft can still be waiting for review or delivery.
+When you put Content SEO on autopilot, you don't have to click anything to get a blog. theStacc runs a quiet background job that checks your calendar, picks up the posts that are due, and writes them for you - then, if you've asked it to, publishes them too. This page explains exactly what that automation does, the guardrails that keep it safe, and what you'll see while it works.
 
 ## Turning automation on
 
-Open **Publishing** in the **Content SEO** section of the sidebar and select the correct project. **Draft for me** enables scheduled generation with approval-required publishing. **Full autopilot** enables scheduled generation and automatic publishing. **Manual** selects manual publishing and turns scheduled generation off.
+Automated generation only runs when you've opted in. You choose how hands-off you want to be under **Content SEO \> Settings \> Publishing**, where three presets fold everything into one choice:
 
-The settings screen requires a destination before enabling either automated preset. The underlying generation selection rules also depend on publishing mode and the publishing setup, so the presence of a connection is not a complete eligibility check.
+- **Full autopilot** - theStacc writes a new post on its scheduled date and publishes it automatically to your connected destination. No review step.
+- **Draft for me** - theStacc writes a new post on its scheduled date, then it lands in your review queue as **Pending Review**. Nothing goes live until you approve it.
+- **Manual** - Nothing runs on a schedule. You create and publish posts yourself.
 
-After a change, verify the resulting settings, especially if saving reports an error. The preset uses separate saves, and changing it is not a cancellation action for all queued work. See [Publishing Modes & Autopilot](/content-seo/publishing-modes).
+Both **Full autopilot** and **Draft for me** turn on automatic generation. **Full autopilot** additionally turns on auto-publish. Both require an active publishing integration so theStacc has somewhere to send the finished post - see [Publishing Modes & Autopilot](/content-seo/publishing-modes).
+
+You can switch presets at any time from the same setting, and the change takes effect on the next run.
 
 ## What runs automatically
 
-The current generation scan selects ideas that:
+Once automation is on, a background task wakes up on a schedule and looks for posts that are due. A post is **due** when:
 
-- are **To be generated** (`to_be_generated`);
-- have a scheduled date matching the server's current day;
-- have completed topic planning;
-- belong to a project with auto-generation enabled;
-- are not already claimed by another operation;
-- meet the applicable publishing-setup and access conditions.
+- Its **scheduled date is today**, and
+- Its status is still **To be generated** (it hasn't already been written), and
+- Its project has automatic generation switched on, and
+- The project has an active publishing integration connected.
 
-The scanner and worker check access at different stages. A selected or queued idea is not proof that generation will complete: the worker can stop on an expired entitlement, exhausted allowance, unavailable configuration, or another failure before writing.
+For every due post it finds, the task hands the work off to a writer that runs the full AI pipeline - research, writing, images, and SEO scoring (see [Blog Generation](/content-seo/blog-generation)). You don't have to keep a browser tab open; this all happens on theStacc's servers.
 
-The scheduler is configured around UTC and a daily generation scan window. Your browser's local date can differ from the server's day. A post scheduled for your local today should not be assumed to start immediately or exactly at local midnight.
-
-Generation runs on the server; keeping the dashboard open is not a prerequisite for already queued work. Check the dashboard afterward to see its actual result.
+The due-post check runs **regularly throughout the day** (roughly every half hour during daytime hours), so a post scheduled for today gets picked up soon after its day begins - you don't have to wait until midnight or babysit the calendar.
 
 ## Per-run safety caps
 
-The current scanner limits candidates per scan and limits selected work from an individual project. It also staggers dispatch. These controls bound a scan's work; they do not certify content quality or guarantee that every eligible project receives an equal turn.
+The automation is deliberately bounded so a large calendar can never trigger a runaway burst of generation. Two hard caps apply to every run:
 
-If several posts remain pending, inspect their dates and statuses rather than assuming they will all finish in the next run. Selection order, queue availability, eligibility, and the scan window can affect which work proceeds.
+- **Up to about 50 blogs total per run.** This is a global ceiling across all projects in a single pass. It protects against a backlog ever flooding the queue.
+- **Up to 3 blogs per project per run.** This keeps things fair: one project with a huge calendar can't crowd out everyone else, and your own account spreads its work over multiple runs instead of all at once.
+
+If you have more than three posts due for the same project on the same day, that's fine - the extras simply get picked up on the following runs throughout the day rather than all in one go.
 
 ## Quota safety net
 
-The worker checks the project's applicable generation allowance and access before writing. Generation usage and planning headroom are separate counters; see [Quota & Limits](/content-seo/quota-and-limits).
+Your plan includes a set number of posts per billing period (see [Quota & Limits](/content-seo/quota-and-limits)). The automation respects that limit as a hard safety net:
 
-For a quota-exhausted idea, the current worker can defer it into a later cycle where its deferral conditions permit. Other quota or access failures can block the attempt instead. A reset alone does not promise resumed generation: access, auto-generation settings, completed planning, and the future date still matter.
+- Before each post is written, theStacc checks how many posts the project has already used in its current period.
+- **If the project is at or over its quota, nothing generates.** The automation skips it rather than writing a post you're not entitled to.
+- This check is a backstop that sits behind the normal limit checks, so even in an unusual edge case the system fails safe - it would rather skip a post than over-generate.
 
-Do not interpret these checks as a billing guarantee or a promise that every failure returns an allowance. Read the specific status and error for the affected idea.
+This means you'll never be surprised by extra posts beyond your plan. When your next billing period begins and your quota resets, the automation resumes on schedule.
 
 ## Missed posts
 
-The normal automatic scan selects the current server day, rather than generating every past-dated idea. A separate sweep can move unclaimed, past-dated **To be generated** ideas to **Missed**, shown as **Schedule Missed** in the detail view.
+The automation only picks up posts scheduled for **today**. So what happens to a post that was scheduled for an earlier day but never got generated - for example, because automation was off, your quota was used up, or no integration was connected at the time?
 
-A missed idea needs your attention. Open it, review whether the topic still matters, and use its available manual generation action if you want the article written. Changing its date alone does not change a Missed status back to To be generated. See [Time-Based Scheduling & Missed Posts](/content-seo/scheduling-missed-posts).
+Once a day, theStacc sweeps the calendar and marks any still-ungenerated posts whose scheduled date has already passed as **Missed**. A missed post leaves the active queue and will not be generated automatically. Reviving it is a deliberate, manual action: open the post and use the **Generate** button on your dashboard whenever you want it written.
 
-The sweep is bounded, so a past date does not establish that every overdue idea has already been marked Missed. Check its actual state.
+This is the boundary between "the autopilot will handle it" and "this one needs your attention." It keeps stale posts from quietly piling up and surprising you later.
 
 ## The auto-publish path
 
-In automatic publishing mode, a successful generation can schedule a later publishing attempt. The handoff includes a randomized delay and a separate publishing scan. That is queue behavior, not a promised time from writing to a live page.
+If you've chosen **Full autopilot**, publishing is automated too - but it's handled as a separate, paced step rather than fired off the instant a post finishes.
 
-Check both outcomes:
+Here's what happens after a post is written:
 
-1. Did generation produce the intended draft and images?
-2. Did publishing deliver the intended version to the actual destination?
+1. The post finishes generation and passes its SEO scoring.
+2. Instead of publishing immediately, theStacc schedules it to go live a short, random moment from now - a small **jitter** of up to about fifteen minutes.
+3. A separate publish task runs every few minutes, finds posts whose scheduled publish time has arrived, and pushes them to your connected destination (WordPress, Webflow, Ghost, a custom webhook, and so on).
 
-In an approval-required workflow, the generated draft waits for a review decision. Approval does not independently establish accuracy or mean delivery has finished. Follow [Draft & Approval Workflow](/content-seo/draft-approval-workflow).
+The jitter is intentional. If a batch of posts all finish writing within the same minute, sending them to your CMS at the exact same instant could overwhelm it or hit its rate limits. Spreading the publishes across a short window lets them trickle out smoothly. You won't notice the delay in practice - posts still go live within minutes of being written.
 
-If delivery fails, use [Publishing Errors & Retries](/content-seo/publishing-errors) to inspect the destination and the correct retry action before sending another request.
+If a publish attempt fails for a transient reason (your CMS is briefly unreachable, say), theStacc retries automatically with a backoff before giving up and flagging the post for you. See [Publishing](/content-seo/publishing) for how each integration behaves and what a failed publish looks like.
+
+In **Draft for me** mode there is no auto-publish step at all: the written post simply waits in **Pending Review** until you approve it.
 
 ## Why generation is paced
 
-Staggering dispatch helps spread requests across the queue instead of launching all selected jobs together. It does not establish that a slower job is more accurate or that busy periods cannot fail.
+You might expect the automation to write everything the moment it can. It deliberately doesn't. Within a single run, theStacc spaces the posts out - starting each one a short interval after the last rather than launching them all simultaneously.
 
-When diagnosing a delay, distinguish a pending idea from an active generation and a generated draft waiting to publish. Clicking generation repeatedly can conflict with work already in progress; inspect the existing job before requesting another one.
+Pacing matters for a few reasons:
+
+- **Quality stays consistent.** The AI engines that write your posts and create your images work best at a steady pace, not in a sudden flood.
+- **No bursts.** Smoothing the work avoids spikes that could slow things down or trip external limits.
+- **Fairness.** Combined with the per-project cap, pacing means every project gets a turn instead of one account monopolizing the run.
+
+The net effect: your posts arrive reliably and in good shape, even on a busy publishing day.
 
 ## What you'll see in the dashboard
 
-Use the calendar and blog detail page to inspect the current status. **Generating** means writing is underway. **Pending Review**, **Scheduled**, **Published**, **Generation Failed**, and **Publish Failed** describe different later outcomes. Read the accompanying error or action rather than treating all non-published statuses as the same delay.
+Automation runs in the background, but it's not invisible. As a run progresses, your **Content SEO** dashboard reflects it in real time:
 
-Refresh or reopen the page if its information appears stale. A progress message or internal SEO score is not an accuracy certificate, and **Published** should be checked against the actual website. See [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) for the state names.
+- A post that's currently being written shows as **Generating** (blue) on the calendar and in the blog list.
+- When a post finishes, it moves to its next state depending on your preset - **Pending Review** (amber) in Draft for me mode, or straight toward **Published** (green) in Full autopilot.
+- The content generation panel shows live progress while a post is being written, including rotating status messages and a preview of recently completed posts.
+- A post that was skipped because its scheduled day has passed appears as **Missed** after the daily sweep.
+
+Because posts are paced rather than generated all at once, you'll typically see them tick from **Generating** to done a few at a time across the day - exactly as designed. If you leave and come back, the dashboard simply reflects wherever the automation has gotten to.
 
 ## A note for regulated businesses
 
-A configured compliance profile can place holds or block publication. Its findings do not replace the appropriate professional review, and absence of a warning does not prove that such a review happened.
-
-If a reviewer must decide on factual, legal, medical, or other specialist claims, use a review-first workflow and assign that responsibility explicitly. Check [Compliance Profiles](/content-seo/compliance-profiles) for configured publishing behavior rather than treating autopilot as professional approval.
+If your project uses theStacc's compliance layer (for regulated professions such as healthcare or legal), the auto-publish path is stricter on purpose. A post that doesn't clearly pass the compliance check won't be pushed live automatically - it's held for a human to review instead, since the autopilot has no one in the loop to approve an exception. See [Quality & safety](/how-it-works/quality-safety) for more.
 
 ## Related
 
-- [Publishing Modes & Autopilot](/content-seo/publishing-modes): select and verify the controls.
-- [Quota & Limits](/content-seo/quota-and-limits): interpret generation access and counters.
-- [Time-Based Scheduling & Missed Posts](/content-seo/scheduling-missed-posts): inspect dates and recover relevant missed ideas.
-- [Publishing Errors & Retries](/content-seo/publishing-errors): investigate delivery after generation.
+- [Publishing Modes & Autopilot](/content-seo/publishing-modes) - choosing Full autopilot, Draft for me, or Manual
+- [Quota & Limits](/content-seo/quota-and-limits) - how many posts your plan generates per period
+- [Time-Based Scheduling](/content-seo/scheduling-missed-posts) - how scheduled dates are set across your calendar
+- [Publishing](/content-seo/publishing) - connecting a destination and how each integration publishes

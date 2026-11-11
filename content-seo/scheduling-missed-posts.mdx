@@ -1,85 +1,90 @@
 ---
 title: "Time-Based Scheduling & Missed Posts"
-description: "Check blog dates and statuses, schedule bonus ideas, recover missed posts, and learn why changing a date does not guarantee generation or publication."
+description: "Every blog in your content plan has a scheduled date — the day it's meant to be created and (if you've set up auto-publishing) sent to your website."
 ---
 
-A blog's **scheduled date** places it in the content calendar and helps determine when it is eligible for generation. Its **status** tells you which stage it has reached. Check both before moving a date, requesting generation, or assuming a page should already be live.
-
-The generation date is separate from the publishing queue's timestamp and the actual website's result. Choosing a date is not a guarantee of a finished article or publication that day.
+Every blog in your content plan has a **scheduled date** — the day it's meant to be created and (if you've set up auto-publishing) sent to your website. That date is the single thing that tells theStacc *when* to act. This page explains how scheduling works, what "Missed" means, and how to get a missed post back on track.
 
 ## How the scheduled date drives your calendar
 
-Open the selected project's **Content SEO** dashboard and inspect the idea's date and state. The normal automatic scan selects ideas dated for the server's current day and still marked **To be generated**, with completed planning and the other eligibility conditions in place.
+When your content plan is generated, each blog is stamped with a scheduled date and a starting status of **To be generated**. Those dates are what you see laid out across your content calendar in **Content SEO \> Dashboard**.
 
-A future-dated idea awaiting its first generation remains **To be generated**. **Scheduled** is a different workflow state associated with publishing; do not use it as a general label for every dated idea.
+The automated generation engine checks once every half hour during the day and looks for blogs that meet **both** of these conditions:
 
-The current scheduler is configured around UTC, while a date picker can use your local day. Near midnight, inspect the date actually saved. For other conditions affecting selection, see [Automated Generation](/content-seo/automated-generation).
+- The scheduled date is **today**, and
+- The status is **To be generated**.
+
+When it finds one, it generates the post for you in the background. Posts dated for the future simply sit on the calendar as **Scheduled** and wait their turn — automation never reaches ahead and generates them early. For the full picture of how the engine decides what to run, see [Cron / Automated Generation](/content-seo/automated-generation).
+
+> Automation only generates for projects that have a publishing platform connected and auto-generation switched on. If neither is set up, your To-be-generated posts wait on the calendar until you generate them yourself. See [Connect Platforms](/integrations/overview).
 
 ## What "Missed" means
 
-The missed-post sweep looks for unclaimed **To be generated** ideas whose date has passed and changes qualifying ones to **Missed**. The detail view labels this **Schedule Missed**. The normal generation scan does not automatically revive that state.
+If a blog's scheduled date arrives and passes while the post is still **To be generated** — for example, a publishing platform wasn't connected yet, or automation was paused — theStacc doesn't keep retrying it forever. Once a day, the system sweeps for posts whose scheduled date is now in the past and still haven't been generated, and marks them **Missed** (shown in the app as **Schedule Missed**).
 
-Missed tells you that the idea needs attention; it does not independently establish a charge, refund, or quota outcome. Check [Quota & Limits](/content-seo/quota-and-limits) when interpreting usage. The sweep also has a workload bound, so an overdue idea can remain To be generated until it is processed.
+A Missed post:
 
-<h3 id="missing-a-day-or-two-is-fine">Decide which missed topics to recover</h3>
+- **Drops out of the automated queue.** The generation engine only ever looks at *today's* date, so a post dated in the past is invisible to it. Marking it Missed makes that explicit on your calendar instead of leaving it in limbo.
+- **Will not generate on its own.** From this point, automation will never touch it again. Reviving a Missed post is always a manual action — that's by design, so you stay in control of which older topics are worth catching up on.
+- **Doesn't cost you anything.** A Missed post never consumed any AI generation, so it doesn't count against your monthly plan usage.
 
-Review whether the topic is still useful before catching up. A promotion that has ended may need a new angle; a useful evergreen explanation may still be worth generating. These are illustrative editorial decisions, not evidence that a particular posting total determines SEO results.
+If you have Missed posts, the dashboard shows a small nudge at the top of your blog list (for example, "2 blogs behind schedule"). Missed posts appear in **orange** on the calendar so they're easy to spot.
 
-Choose recovery dates and review responsibilities based on what the team can finish well. Generating several drafts together does not promise that search performance will compensate for a missed day.
+### Missing a day or two is fine
+
+What matters for SEO is your **monthly total**, not posting on every single calendar day. If a couple of posts slip, you can catch up by generating two or three in a day — it evens out. You don't need to recover every Missed post; recover the ones whose topics still matter to you.
 
 ## Recovering a missed post
 
-1. Open the idea from the selected project's calendar or blog list.
-2. Inspect its **Schedule Missed** state, topic, and saved plan.
-3. Use **Edit Plan** or **Regenerate plan** when available if the topic needs work.
-4. When ready, use the manual generation action. The pre-generation plan card labels it **Generate Blog**; another status-action view can label it **Generate Content**.
-5. Inspect the resulting status and any error. A started request is not a completed article.
+Because automation won't revive a Missed post, you bring it back manually:
 
-Generation still needs eligible access, quota, and a launchable state. If blocked, resolve the reported cause before retrying. Do not assume a Missed post bypasses these checks.
+1. Open the post from your calendar or blog list in **Content SEO \> Dashboard**.
+2. You'll see a **Schedule Missed** banner: *"This blog's scheduled date has passed without being auto-generated. You can still generate it manually."*
+3. Click **Generate Content**.
 
-Changing the date alone leaves a Missed idea in that state. Use its available generation action when you want the content created. Regenerating the plan changes the topic plan rather than serving as proof that the article body was generated.
+The post generates immediately, the same way an on-time post would, and moves through the normal review and publishing flow from there. (For what each later status means, see [Blog Status Lifecycle](/content-seo/blog-status-lifecycle).)
+
+A few things to know about recovery:
+
+- **Changing the date alone does not un-miss a post.** If you only edit the scheduled date of a Missed post (see below), it stays Missed — automation still won't pick it up, because Missed posts are permanently outside the automated queue. To actually create the content, you must click **Generate Content**.
+- **You can refresh the topic first if you want.** On a Missed post you can use **Regenerate** to get a fresh title and description (the underlying keyword stays the same) before generating. This rewrites the plan but doesn't change the status — you still click **Generate Content** when you're ready.
+- **You need an active plan.** The **Generate Content** button is disabled if your subscription doesn't currently allow generation.
 
 ## Bonus blogs that are "awaiting a date"
 
-Bonus ideas added through **Generate More** begin in **Awaiting date**. They stay outside normal automatic generation until you successfully commit a date. The system can store a placeholder date without treating that idea as ready to run.
+When you ask for extra posts beyond your plan using **Generate more**, they don't go straight onto the calendar. Each one is created as a draft idea (title and keyword filled in) but with **no date yet**, and it lands in a **Pick a date for your bonus blogs** panel on the dashboard.
 
-In the dashboard's bonus **Pick a date** panel, choose today or a future date and click **Set date**. On success, the idea becomes **To be generated** and joins the regular calendar. Inspect the saved date, especially near a timezone boundary.
+Automation deliberately ignores these until you choose a date — they're not part of the automated queue while they're waiting. To activate one:
 
-If its topic planning was incomplete, setting a date can attempt that planning first. A failure can leave the idea in Awaiting date instead of activating it. Read the error; see [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs) for recovery.
+1. In the **Pick a date for your bonus blogs** panel, find the blog.
+2. Choose a date (today or any future date).
+3. Click to confirm.
 
-The bonus date picker does not limit you to the current billing window. A saved future date still does not establish future access or promise that generation will run then.
+The blog then moves onto your calendar as **To be generated**, and from that point it's treated exactly like any other scheduled post — automation will generate it on the date you picked (and, like any post, it can become Missed if that date passes before it's generated). For more on requesting and dating these, see [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs).
+
+> You can schedule a bonus blog into a future billing period if you like — it's your plan to use as you see fit. You can't pick a date in the past.
 
 ## Changing a scheduled date
 
-For an idea showing the editable pre-generation plan card:
+You can move a post that hasn't been generated yet to a different day:
 
-1. Open the blog and choose **Edit Plan**.
-2. Change **Scheduled Date** and inspect the other plan fields.
-3. Click **Save Changes**.
-4. Reopen or inspect the idea to confirm the saved date and status.
+1. Open the post from the calendar or blog list.
+2. Open its **Plan** (the title, keyword, type, and scheduled date), and choose **Edit**.
+3. Update the **scheduled date** field and save.
 
-The editing controls are disabled while generation or plan regeneration is in progress. Do not treat an accepted date change as a reschedule of a completed CMS publication, a cancellation of a queued operation, or a reversal of already recorded generation usage.
+A couple of notes:
 
-The bonus **Set date** action and **Edit Plan** use different paths. The former validates an awaiting idea and changes its state on success; a regular date edit does not automatically move Missed back into the generation queue. If the desired control is absent, inspect the current state rather than assuming every blog supports the same scheduling action.
+- This works for posts that are still **To be generated** (and for bonus blogs once they've been dated). Posts that are already generating, generated, approved, or published can't be rescheduled this way — their date reflects work that's already happened.
+- **Rescheduling a Missed post moves its date but leaves it Missed.** Automation still won't generate it just because it now has a future date. If you want a Missed post to actually run, recover it with **Generate Content** as described above.
 
 ## Quick reference
 
-<p id="schedule-status-table-title" className="content-table-title">Calendar dates and workflow states</p>
-<div className="content-table-scroll" role="region" aria-labelledby="schedule-status-table-title" tabIndex={0}>
-  <table aria-labelledby="schedule-status-table-title">
-    <thead><tr><th scope="col">State</th><th scope="col">What to check</th><th scope="col">Useful next action</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">To be generated</th><td>Date, completed plan, access, and generation settings</td><td>Inspect eligibility or use available manual generation</td></tr>
-      <tr><th scope="row">Missed</th><td>Whether the topic is still relevant</td><td>Review the plan and request generation when ready</td></tr>
-      <tr><th scope="row">Awaiting date</th><td>Topic planning and the saved date-setting result</td><td>Choose a date and inspect any planning error</td></tr>
-      <tr><th scope="row">Scheduled</th><td>Publishing workflow and delivery status</td><td>Inspect the publishing outcome separately from the generation calendar</td></tr>
-    </tbody>
-  </table>
-</div>
+- **Scheduled (To be generated):** Dated for today or later, waiting. Automation generates it on its date.
+- **Missed (Schedule Missed):** Its date passed before it was generated. Out of the automated queue. Recover with **Generate Content**.
+- **Awaiting a date (bonus blogs):** Created by **Generate more**, no date yet. Automation ignores it until you pick a date.
 
 ## Related articles
 
-- [Automated Generation](/content-seo/automated-generation): understand selection and worker checks.
-- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle): distinguish writing, review, and publishing states.
-- [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs): add and schedule bonus ideas.
-- [Publishing Errors & Retries](/content-seo/publishing-errors): investigate a delivery failure after writing.
+- [Cron / Automated Generation](/content-seo/automated-generation)
+- [Blog Status Lifecycle](/content-seo/blog-status-lifecycle)
+- [Generate More & Bonus Blogs](/content-seo/generate-more-bonus-blogs)

@@ -1,104 +1,114 @@
 ---
 title: "Publishing Modes & Autopilot"
-description: "Choose Manual, Draft for me, or Full autopilot. Check saved settings, approval requirements, destinations, and queued posts before relying on automation."
+description: "Your publishing mode is the one setting that decides how hands-on you want to be."
 ---
 
-Publishing presets control whether theStacc generates scheduled content and whether a finished draft needs approval. Choose **Manual** to work on posts yourself, **Draft for me** to review generated drafts, or **Full autopilot** to send generated posts into publishing without that approval step.
+Your publishing mode is the one setting that decides how hands-on you want to be. Pick from three simple presets and theStacc handles the rest - from "I'll write everything myself" all the way to "write and publish for me automatically."
 
-Open **Publishing** in the **Content SEO** section of the sidebar. Check the selected project before changing **How should posts go out?** A preset belongs to that project, so another project's settings can differ.
+You set this under **Content SEO \> Settings \> Publishing**, in the section titled **How should posts go out?** Each project has its own setting, so you can run one site fully hands-off and review every post on another.
 
 ## The three presets
 
+You choose one of three presets. They appear as a single list with a radio button next to each - only one can be active at a time.
+
 ### Manual
 
-Manual turns auto-generation off and selects manual publishing. Use it when you want to decide which posts to generate and when to publish them from the dashboard. Selecting Manual does not require a connected destination; sending a post to a website still requires an appropriate publishing setup.
+*You create and publish posts yourself. Nothing runs automatically.*
 
-Manual is also a useful starting point while you configure a destination or review your first drafts. Account access, quota, and publishing checks still apply to actions you trigger yourself.
+- Automatic daily generation is turned **off** - nothing runs on a schedule.
+- You create and publish posts yourself from your dashboard, when you want them.
+- You keep full control over timing, edits, and which posts go live.
+
+Manual is always available, even before you connect a website. It is the safest starting point if you want to try a few posts by hand before letting theStacc run on its own.
 
 ### Draft for me
 
-Draft for me turns scheduled auto-generation on and selects approval-required publishing. Finished drafts wait in **Pending Review** rather than going straight from generation to automatic publication. Read the draft, make edits, and approve or reject the version you have reviewed.
+*We write a post on your schedule; you review and publish each one.*
 
-Use this preset when someone needs to check sources, offers, product details, language, or professional requirements before publication. Approval is a workflow decision, not a factual or specialist review performed by the software.
+- theStacc generates a new blog on its scheduled date using AI.
+- Each finished post lands in your review queue as **Pending Review** - nothing goes live on its own.
+- You approve it (or edit it first), and then it publishes to your connected destination.
+
+Draft for me is the best balance of automation and control: theStacc does the writing, you stay the final check before anything reaches your audience.
 
 ### Full autopilot
 
-Full autopilot turns auto-generation on and selects automatic publishing. A successfully generated post can enter the publishing queue without a separate human approval action.
+*We write and publish a new post on your schedule. Completely hands-off.*
 
-Choose this only when the project's content requirements and destination are ready for that workflow. Automatic publishing does not certify accuracy or guarantee delivery. Account eligibility, connection failures, and configured compliance holds can still stop a post.
+- theStacc generates a new blog on its scheduled date using AI.
+- Each post publishes **automatically** to your connected destination - there is no review step.
+- You can still unpublish or edit posts after they go live.
+
+Full autopilot is for when you trust theStacc to run your blog end to end without you in the loop.
 
 ## What each preset actually changes
 
-A preset combines **Auto-generation**, which controls scheduled writing, and **Publishing mode**, which controls the next step for generated content.
+Every preset is a friendly name for two underlying switches working together:
 
-<p id="publishing-preset-table-title" className="content-table-title">Publishing preset settings</p>
-<div className="content-table-scroll" role="region" aria-labelledby="publishing-preset-table-title" tabIndex={0}>
-  <table aria-labelledby="publishing-preset-table-title">
-    <thead><tr><th scope="col">Preset</th><th scope="col">Auto-generation</th><th scope="col">Publishing mode</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Manual</th><td>Off</td><td>Manual</td></tr>
-      <tr><th scope="row">Draft for me</th><td>On</td><td>Approval required</td></tr>
-      <tr><th scope="row">Full autopilot</th><td>On</td><td>Auto</td></tr>
-    </tbody>
-  </table>
-</div>
+- **Auto-generation** - whether theStacc writes a new post for you on each scheduled date. This is **off by default** on every project; a preset that automates turns it on.
+- **Publishing mode** - what happens to a post once it has been written: hold it for review, or push it live.
 
-The current settings screen saves these values through separate requests. A change can therefore partially apply if one request succeeds and the other fails. The selected preset is not conclusive proof that both saved values agree, especially after an error.
+Here is exactly how the three presets map to those switches:
 
-If a save fails, stop before relying on the new workflow. Reload the page, inspect the status information, and ask a project admin to confirm or correct the settings. Do not assume that the previous preset was restored automatically.
+| Preset | Auto-generation | Publishing mode |
+| --- | --- | --- |
+| **Manual** | Off | Manual |
+| **Draft for me** | On | Approval required |
+| **Full autopilot** | On | Auto |
+
+You never have to set these two switches separately - choosing a preset sets both at once, and it deliberately prevents mismatched combinations (like "publish automatically" while "writing is off"). The preset shown as selected always reflects the real, saved state of your project.
 
 ## What happens to your posts in each mode
 
+This is the part most people want to know: once a post exists, where does it go?
+
 ### Manual
 
-New scheduled writing is disabled when the saved auto-generation setting is off. Work already underway or already queued for publishing can continue. Switching to Manual is not a cancellation action for an existing publishing queue.
-
-If your goal is to prevent a particular post from going live, inspect that post's status and schedule as well as the project settings. Do not rely on the preset switch alone to stop it.
+Nothing happens on a schedule. No post is generated automatically and nothing publishes on its own. You generate posts yourself and publish them yourself from the dashboard. This mode gives you complete manual control over the whole process.
 
 ### Draft for me
 
-New drafts generated through the review-first workflow wait for your decision. **Approve** moves a reviewed draft toward publication; it does not mean the page is already live. Scheduling, a manual publishing action, destination availability, and configured publishing checks affect what happens next.
-
-Follow [Draft & Approval Workflow](/content-seo/draft-approval-workflow) for the review steps. Check [Blog Status Lifecycle](/content-seo/blog-status-lifecycle) when distinguishing a draft waiting for review from an approved or scheduled post.
+On each post's scheduled date, theStacc writes the blog (text and images) and then **stops and waits for you**. The finished draft lands in your review queue marked **Pending Review**. It does not publish until you approve it. From the review queue you can edit it, approve it (which sends it to your connected destination), or reject it. See [Draft & Approval Workflow](/content-seo/draft-approval-workflow) for how to review, edit, and approve.
 
 ### Full autopilot
 
-Successfully generated content is handed to publishing without waiting for a human to approve it. Check the post's status afterward. A generation success and a publishing success are separate outcomes; a failed destination request can leave the content generated but not delivered.
+On each post's scheduled date, theStacc writes the blog and then **hands it straight to publishing**. The post is queued to go live and publishes automatically to your connected destination - no review step. To avoid a flood of simultaneous publishes when several posts finish at the same time, theStacc spreads the live pushes out over a short window rather than firing them all at the exact same second. Once live, you can still go back and edit or unpublish any post.
 
-When **View Live** is available, open the destination and inspect the actual page. A recorded publishing result does not independently confirm every downstream build, webhook handler, or CMS site update.
+In every mode, you can always create and publish a one-off post by hand - the preset only controls what happens automatically on your schedule.
 
 ## You need a destination for the automated presets
 
-The settings screen requires an active destination before enabling **Draft for me** or **Full autopilot**. Use the **Destination** section on the same page to connect or inspect it. Supported connections shown there include WordPress, Webflow, Ghost, Zepio, Shopify (shown as Beta), and custom webhooks.
+**Full autopilot** and **Draft for me** both require an active publishing destination - somewhere for the posts to go (WordPress, Webflow, Ghost, Zepio, Shopify, or a custom webhook). You connect one in the **Destination** section on the same Publishing page. Only one destination is active at a time.
 
-Check the destination for the selected project, including its URL and connection state. A destination being listed does not prove that its credentials remain valid or that the receiving website will publish the next request successfully.
+Until a destination is connected, those two presets are locked and you'll see a prompt to *"Connect a destination above to turn on scheduled posts."* This protects you from paying for AI to write posts every day that have nowhere to be published.
 
-See [Publishing](/content-seo/publishing) for setup and [Publishing Errors & Retries](/content-seo/publishing-errors) if a post fails to arrive.
+**Manual** does not require a destination - it is always available, because in Manual you decide when and where to publish each post yourself.
+
+For setup steps on each platform, see [Publishing](/content-seo/publishing).
 
 ## Only one preset per project, and who can change it
 
-The screen presents a single preset choice for a project. Project admin access is required to change these settings; members without that access can view them. If you cannot change the preset, ask a project admin rather than attempting to bypass the restriction.
-
-Changes affect the settings used by subsequent work. They do not remove drafts, establish that past content was reviewed, or cancel every operation already in progress.
+- **One preset is active per project at any time.** Switching presets simply replaces the previous one - you don't combine them.
+- **Changing the preset requires project admin access.** If you're not an admin on the project, the presets are read-only and you'll see a note that *"Only project admins can change this setting."* Editors and other members can view the current mode but can't change it.
+- You can switch between presets anytime from **Content SEO \> Settings \> Publishing**. The change takes effect for posts going forward.
 
 ## How to set or change your publishing mode
 
-1. Select the correct project and open **Content SEO > Publishing**.
-2. Inspect its destination before choosing an automated preset.
-3. Select **Manual**, **Draft for me**, or **Full autopilot**.
-4. Read the confirmation dialog and confirm the intended behavior.
-5. Check the resulting status information. If the save reports an error, reload and verify the settings before continuing.
-6. Review any existing scheduled or publishing posts separately when changing how the project should operate.
+1. Go to **Content SEO \> Settings \> Publishing**.
+2. (For Full autopilot or Draft for me) Make sure a destination is connected in the **Destination** section.
+3. In **How should posts go out?**, click the preset you want.
+4. Confirm in the dialog that appears - it summarizes exactly what the preset will do.
+
+That's it. The status line under the presets confirms what theStacc will do from now on.
 
 ## A quick way to choose
 
-Choose **Manual** while setting up or when you want to trigger the work yourself. Choose **Draft for me** when a reviewer must decide what is ready. Choose **Full autopilot** when the project can send generated posts into publishing without that approval step.
-
-For example, a review-first workflow is appropriate when a draft contains an offer that a team member must verify. This is an illustrative decision, not a claim that approval automatically checks the offer or meets a professional review requirement.
+- **Just exploring, or want to write posts yourself?** Choose **Manual**.
+- **Want theStacc to write for you, but you have the final say?** Choose **Draft for me**.
+- **Want a fully hands-off blog?** Choose **Full autopilot**.
 
 ## Related
 
-- [Draft & Approval Workflow](/content-seo/draft-approval-workflow): read and decide on a generated draft.
-- [Publishing Errors & Retries](/content-seo/publishing-errors): inspect failed delivery and retry safely.
-- [Quota & Limits](/content-seo/quota-and-limits): distinguish generation allowance from publishing settings.
-- [Publishing](/content-seo/publishing): configure the receiving destination.
+- [Publishing](/content-seo/publishing) - connect WordPress, Webflow, Ghost, Zepio, Shopify, or a webhook destination.
+- [Draft & Approval Workflow](/content-seo/draft-approval-workflow) - review, edit, and approve posts in Draft for me.
+- [Automated Generation](/content-seo/automated-generation) - how scheduled, automatic writing works behind Draft for me and Full autopilot.
