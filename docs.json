@@ -231,6 +231,8 @@
           "integrations/webflow",
           "integrations/shopify",
           "integrations/zepio",
+          "integrations/squarespace",
+          "integrations/other-website",
           "integrations/custom-webhook",
           "integrations/managing-connections"
         ]

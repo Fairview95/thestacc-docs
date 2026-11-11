@@ -5,15 +5,21 @@ description: "theStacc publishes your generated blog posts straight to your webs
 
 theStacc publishes your generated blog posts straight to your website. Connect one of the supported destinations and, depending on your publishing mode, new posts go live (or land as drafts) automatically. Manage every connection under **Content SEO \> Settings \> Publishing**, in the **Destination** section.
 
-Supported destinations:
+## Which option fits my site?
 
-- **WordPress.com** (hosted WordPress)
-- **WordPress.org** (self-hosted WordPress)
-- **Custom Webhook** (any system that accepts an HTTP POST)
-- **Ghost**
-- **Webflow**
-- **Shopify**
-- **Zepio**
+| Your site is on | Use | How it posts |
+|---|---|---|
+| WordPress.com (you manage it at wordpress.com) | [WordPress.com](/integrations/wordpress-com) | Automatic. Sign in and approve, no password to copy |
+| WordPress on your own hosting (Hostinger, GoDaddy, Bluehost, SiteGround...) | [WordPress.org](/integrations/wordpress-org) | Automatic, with an Application Password |
+| Webflow | [Webflow](/integrations/webflow) | Automatic, with an API token |
+| Shopify | [Shopify](/integrations/shopify) | Automatic. Approve theStacc in Shopify |
+| Ghost | [Ghost](/integrations/ghost) | Automatic, with an Admin API key |
+| Zepio | [Zepio](/integrations/zepio) | Automatic, with a Developer API key |
+| Squarespace | [Squarespace](/integrations/squarespace) | Copy and paste: theStacc gets it ready, you paste it in |
+| Wix, Framer or any other site | [Other website](/integrations/other-website) | Copy and paste: theStacc gets it ready, you paste it in |
+| Your own system or app | [Custom Webhook](/integrations/custom-webhook) | Automatic, theStacc sends each post to your endpoint |
+
+Not sure what your site runs on? Open your website, right-click, choose **View page source** and search for `wp-content` (WordPress), `squarespace`, `wix`, `webflow` or `shopify`.
 
 ## Two rules that apply to every destination
 
