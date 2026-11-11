@@ -11,7 +11,7 @@ You never share your WordPress login password. You create an **Application Passw
 
 | Field in theStacc | Where to find it |
 |---|---|
-| **WordPress Site URL** | Your website address, for example `https://example.com` |
+| **WordPress Site URL** | Your website address, for example `https://example.com`. In WordPress admin it is under **Settings > General > Site Address (URL)**. |
 | **WordPress Username** | The username you log in to WordPress with. Not your display name and not your email. |
 | **Application Password** | Made in WordPress in Step 2 below |
 
@@ -20,24 +20,44 @@ You never share your WordPress login password. You create an **Application Passw
 - The account is an **Administrator**, **Editor** or **Author**. We recommend **Editor**.
 - Your site uses `https://`.
 
+<Frame caption="Settings > General: copy the Site Address (URL). Yours shows your own domain.">
+  <img src="/images/integrations/wordpress/0-site-address.png" alt="WordPress General Settings showing the Site Address (URL) field" />
+</Frame>
+
 ## Step 1 (recommended): create a user for theStacc
 
 You can use your own account, but a separate user is safer: you can remove it any time without changing your own password, and nobody has to share the admin password.
 
-1. In WordPress admin, go to **Users > Add New User**.
+1. In WordPress admin, go to **Users > Add User**.
 2. Enter a username (for example `thestacc`) and an email address you can receive.
-3. Set **Role** to **Editor**.
-4. Click **Add New User**.
 
-[Screenshots of the Add New User screen and the Role options](https://yoast.com/user-roles-in-wordpress/)
+<Frame caption="Users > Add User: enter a username and an email.">
+  <img src="/images/integrations/wordpress/1-add-user.png" alt="WordPress Add User form with username thestacc" />
+</Frame>
+
+3. Scroll down and set **Role** to **Editor**.
+4. Click **Add User**.
+
+<Frame caption="Set the Role to Editor, then click Add User.">
+  <img src="/images/integrations/wordpress/2-add-user-role-editor.png" alt="WordPress Add User form with Role set to Editor" />
+</Frame>
 
 ## Step 2: create the Application Password
 
 1. Log in to WordPress as the user from Step 1 (or your own account).
 2. Go to **Users > Profile**.
 3. Scroll down to **Application Passwords**.
-4. Type `theStacc` as the name and click **Add New Application Password**.
-5. Copy the password WordPress shows, for example `abcd 1234 efgh 5678 ijkl 9012`. WordPress shows it only once.
+4. Type `theStacc` as the name and click **Add Application Password**.
+
+<Frame caption="Users > Profile > Application Passwords: name it theStacc.">
+  <img src="/images/integrations/wordpress/3-application-password-name.png" alt="WordPress Application Passwords section with the name theStacc" />
+</Frame>
+
+5. Click **Copy** and keep the password safe. WordPress shows it only once.
+
+<Frame caption="Copy the new password. This one is from a test site; yours will be different.">
+  <img src="/images/integrations/wordpress/4-application-password-created.png" alt="WordPress showing a newly created application password for theStacc" />
+</Frame>
 
 ## Step 3: connect in theStacc
 
